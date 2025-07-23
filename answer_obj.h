@@ -1,6 +1,5 @@
 #ifndef ANSWER_OBJ_H
 #define ANSWER_OBJ_H
-#include "alias.h"
 #include "constants.h"
 #include <QString>
 #include <QJsonObject>
@@ -8,10 +7,20 @@
 
 namespace  ans_obj {
 //ERROR
-json_obj MakeErrorObject(QString reason, ACTIONS act);
+json_obj MakeErrorObject(str_type reason, ACTIONS act);
 json_obj MakeSuccessTemplate(ACTIONS act);
 
-json_obj SuccessCreateRoom(QString name);
+json_obj SuccessCreateRoom(str_type name);
+json_obj SuccessCreateUser(str_type name);
+json_obj SuccessDeleteRoom(str_type name);
+json_obj SuccessDeleteUser(str_type name);
+
+json_obj SuccessDisconnect();
+json_obj SuccessRoomUsers (str_type roomname, str_type users_serialized);
+json_obj SuccessServerRooms (str_type rooms_serialized);
+json_obj SuccessLogin(str_type token, str_type messages_serialized);
+json_obj SuccessPrivateMessage();
+json_obj SuccessPublicMessage();
 
 template<typename Foo>
 json_obj GuardExceptSetter(Foo foo, ACTIONS this_act){

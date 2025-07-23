@@ -62,3 +62,15 @@ QJsonDocument ReadJsonDocument(const QString &path){
 void FatalErrorMessageBox(const QString &what, QString framename ){
     QMessageBox::critical(nullptr, std::move(framename), what);
 }
+
+bool ChooseBox(const QString& question){
+    auto result = QMessageBox::warning(nullptr, "", std::move(question),
+QMessageBox::StandardButton::Yes,QMessageBox::StandardButton::No);
+    if (result == QMessageBox::StandardButton::Yes){
+        return true;
+    }
+    return false;
+}
+
+
+

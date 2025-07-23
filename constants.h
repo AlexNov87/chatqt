@@ -1,7 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
-#include"alias.h"
+#include "alias.h"
 #include<unordered_map>
+#include<cassert>
 
 struct CONSTANTS
 {
@@ -34,6 +35,9 @@ struct CONSTANTS
     static chart LF_ROOMNAME;
     static chart LF_TOKEN;
     static chart LF_USERS;
+    static chart LF_USER_RECIEVER;
+    static chart LF_USER_TO_DELETE;
+
 
     static chart RF_ERROR ;
     static chart RF_SUCCESS;

@@ -24,6 +24,10 @@ const std::unordered_set<QString>& ServerBase::GetRooms() const {
     return _roomlist;
 }
 
+QString ServerBase::GetSerializatedRoomList(){
+    return GetMapMembers(_rooms);
+}
+
 ///////////////////////////////////////////////////////////////////////
 
 
@@ -56,3 +60,30 @@ void GraphicsServer::InitAndRun(){
     SetDefaultValues();
     _maiwin->show();
 }
+
+QJsonObject GraphicsServer::GetRoomsJs() {
+
+    ACTIONS this_act = ACTIONS::GET_ROOMS_LIST;
+    auto lam = [&]{
+        return ans_obj::SuccessServerRooms(GetSerializatedRoomList());
+    };
+    return ans_obj::GuardExceptSetter(lam, this_act);
+}
+
+QJsonObject GraphicsServer::GetRoomUsers(QString roomname) {
+
+    ACTIONS this_act = ACTIONS::GET_ROOM_USERS;
+    auto lam = [&]{
+        LG(_mtx_room);
+        if(!_rooms.contains(roomname)){
+            return ans_obj::MakeErrorObject
+                ("Not found room "+ roomname , ACTIONS::GET_ROOM_USERS);
+        }
+        auto room = _rooms.at(roomname);
+        auto users = room->SerializatedJsonUsers();
+        return ans_obj::SuccessRoomUsers(std::move(roomname), std::move(users));
+    };
+    return ans_obj::GuardExceptSetter(lam, this_act);
+}
+
+

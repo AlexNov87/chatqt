@@ -80,3 +80,8 @@ bool IsCorrectIP(const QString &ip){
 bool IsCorrectConnections(int conn){
     return bool(conn > 0);
 }
+
+bool IsCorrertInitiator(const str_type & initiator){
+    return( (initiator == CONSTANTS::RF_DIRECTION_CHATROOM )||
+            (initiator == CONSTANTS::RF_DIRECTION_SERVER));
+}

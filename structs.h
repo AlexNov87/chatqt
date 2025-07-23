@@ -6,6 +6,7 @@
 #include<QHostAddress>
 #include<mutex>
 #include<QListWidget>
+#include<QTcpSocket>
 
 enum class Role {
     USER , SUPERUSER , ADMIN , MASTER

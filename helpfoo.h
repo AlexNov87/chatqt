@@ -1,5 +1,7 @@
 #ifndef HELPFOO_H
 #define HELPFOO_H
+#include"alias.h"
+
 #include<thread>
 #include<mutex>
 #include<QString>
@@ -22,6 +24,26 @@ void FatalErrorMessageBox(const QString& what , QString framename = "Error");
 
 QJsonDocument ReadJsonDocument(const QString &path);
 QJsonObject ReadFromFileConfig(const QString& path);
+bool ChooseBox(const QString& question);
+
+template<typename K, typename U, template<typename, typename> class MapType>
+QString GetMapMembers (const MapType<K, U>& map){
+
+        QTextStream stream;
+        int cnt = 0;
+        int max = map.size() - 1;
+        stream << "[\n";
+        {
+            for(auto&& elem : map){
+                stream <<'"'<< elem.first << '"';
+                ++cnt;
+                if(cnt == max){break;}
+                stream << ',';
+            }
+        }
+        stream << "\n]\n";
+        return *stream.string();
+}
 
 template<typename Foo>
 void AnotherThreadRunFoo(Foo foo){
@@ -31,7 +53,7 @@ void AnotherThreadRunFoo(Foo foo){
 }
 
 template<typename JSON>
-void WritetoFileJson(const JSON& json){
+void WritetoFileJson(JSON& json){
     QString write_pth = QFileDialog::getSaveFileName
         (nullptr,"Save JSON To file", QDir::currentPath(), "*.txt;*.conf;*.json");
     if(write_pth.isEmpty()){
@@ -46,6 +68,12 @@ void WritetoFileJson(const JSON& json){
     file.write(doc.toJson());
     file.close();
     QMessageBox::information(nullptr, "SaveSucess", "File successfully was writen to: " + write_pth);
+}
+
+template<typename JSON>
+QString WritetoQStringJson(const JSON& json){
+    QJsonDocument doc(json);
+    return doc.toJson(QJsonDocument::Indented);
 }
 
 #endif // HELPFOO_H

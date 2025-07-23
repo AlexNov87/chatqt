@@ -15,8 +15,6 @@
 #include "ui_roomsform.h"
 #include "./ui_mainwindow.h"
 //
-
-
 class MainWindow;
 class GraphicsServer;
 class MainWindowDesigner;
@@ -30,7 +28,7 @@ QT_END_NAMESPACE
 namespace Ui {
 class RoomsForm;
 }
-///////////////////
+
 class RoomsForm : public QWidget
 {
     Q_OBJECT
@@ -40,25 +38,9 @@ public:
     ~RoomsForm();
 protected:
 
-    bool AddRoomTolist(const QString& room){
-        if(HasRoom(room)) {return false;}
-        ui->lw_rooms->addItem(room);
-        return true;
-    }
-
-    bool HasRoom(const QString& room){
-        auto rooms = ui->lw_rooms->findItems(room, Qt::MatchExactly);
-        return (!rooms.isEmpty());
-    }
-
-    bool RemoveRoomFromList(const QString& room){
-       if(!HasRoom(room)) {return false;}
-       auto rooms = ui->lw_rooms->findItems(room, Qt::MatchExactly);
-       for (auto&& room : rooms){
-           delete ui->lw_rooms->takeItem(ui->lw_rooms->row(room));
-       }
-       return true;
-    }
+    bool AddRoomTolist(const QString& room);
+    bool HasRoom(const QString& room);
+    bool RemoveRoomFromList(const QString& room);
 
     std::shared_ptr<GraphicsServer> _srv;
     friend class GraphicsServer;
@@ -82,6 +64,9 @@ protected:
     std::shared_ptr<GraphicsServer> _srv;
 private slots:
     void on_actionRooms_triggered();
+    void on_pb_run_server_clicked();
+    void on_pb_stop_server_clicked();
+    void on_pb_setoptions_clicked();
 };
 
 class MainWindowDesigner
@@ -109,7 +94,13 @@ protected:
 
 class GraphicsServer : public ServerBase, public GraphicWidgets,
         public std::enable_shared_from_this<GraphicsServer> {
+      Q_OBJECT
 public:
+
+    GraphicsServer(){
+         connect(this, &QTcpServer::newConnection,
+                this, &GraphicsServer::OnNewConnection);
+    }
 
     void InitAndRun();
 
@@ -124,34 +115,33 @@ public:
     QJsonObject RegisterUserJs(QString name, QString password) override ;
     QJsonObject DeleteUserJs(QString name, QString password, QString to_delete) override ;
 
-    QJsonObject GetRoomsJs() override {
+    QJsonObject GetRoomsJs() override ;
+    QJsonObject GetRoomUsers(QString roomname) override;
 
-        ACTIONS this_act = ACTIONS::GET_ROOMS_LIST;
-        auto lam = [&]{
+private slots:
+    void OnNewConnection(){
+        QMessageBox::critical(nullptr, "NC", "NC");
+        // while (server->hasPendingConnections()) {
+        //     QTcpSocket *clientSocket = server->nextPendingConnection();
+        //     int socketDescriptor = clientSocket->socketDescriptor();
 
-            QJsonArray arr;
-            {
-                LG(_mtx_room);
-                for(auto&& room : _rooms){
-                    arr.push_back(room.first);
-                }
-            }
+        //     clients[socketDescriptor] = clientSocket;
 
-
-            //!!!!!!!!!!!!!!!!!!!!!!!!!
-            return QJsonObject{};
-        };
-        return ans_obj::GuardExceptSetter(lam, this_act);
-
+        //     // Обработчики данных и отключения для клиента
+        //     connect(clientSocket, &QTcpSocket::readyRead,
+        //             this, &TcpServer::onReadyRead);
+        //     connect(clientSocket, &QTcpSocket::disconnected,
+        //             this, &TcpServer::onDisconnected);
+        // }
     }
+
+
 private:
 
     friend class MainWindow;
     void InitGraphicForms();
     void SetDefaultValues();
-
 };
-
 
 
 #endif // MAINWINDOW_H

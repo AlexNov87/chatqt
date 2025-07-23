@@ -13,7 +13,7 @@ void MainWindowDesigner::EditStatusLabel(QString text, QColor color){
 }
 
 void MainWindowDesigner::StatusLabelOn(){
-    EditStatusLabel("Server is running...", Qt::darkGreen);
+    EditStatusLabel("Server is running... ", Qt::darkGreen);
 }
 
 void MainWindowDesigner::StatusLabelOff(){
