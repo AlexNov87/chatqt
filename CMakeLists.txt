@@ -46,6 +46,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         tokenizer.h
         tokenizer.cpp
         alias.h
+        server_sigslots.cpp
+        server_session.cpp
 
 
     )

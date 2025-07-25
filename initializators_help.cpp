@@ -5,6 +5,22 @@ bool IsCorrectPort(int port){
     return true;
 }
 
+bool IsCorrectIP(const QString &ip){
+    QHostAddress adress;
+    bool result = adress.setAddress(ip);
+    return result;
+}
+
+bool IsCorrectConnections(int conn){
+    return bool(conn > 0);
+}
+
+bool IsCorrertInitiator(const str_type & initiator){
+    return( (initiator == CONSTANTS::RF_DIRECTION_CHATROOM )||
+            (initiator == CONSTANTS::RF_DIRECTION_SERVER));
+}
+
+namespace json {
 std::optional<std::unordered_set<QString> > FromJSONUsetByName(const QString &name, const QJsonObject &obj){
 
     if(!obj.contains(name)){
@@ -71,17 +87,5 @@ std::optional<QString> FromJSONQStringByName(const QString &name, const QJsonObj
 
 }
 
-bool IsCorrectIP(const QString &ip){
-    QHostAddress adress;
-    bool result = adress.setAddress(ip);
-    return result;
 }
 
-bool IsCorrectConnections(int conn){
-    return bool(conn > 0);
-}
-
-bool IsCorrertInitiator(const str_type & initiator){
-    return( (initiator == CONSTANTS::RF_DIRECTION_CHATROOM )||
-            (initiator == CONSTANTS::RF_DIRECTION_SERVER));
-}

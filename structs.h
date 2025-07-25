@@ -5,6 +5,8 @@
 #include"initializators_help.h"
 #include<QHostAddress>
 #include<mutex>
+#include <memory>
+#include <chrono>
 #include<QListWidget>
 #include<QTcpSocket>
 
@@ -31,6 +33,38 @@ protected:
     int _port = 80;
     int _max_conn = 100;
     std::unordered_set<QString> _roomlist;
+};
+
+struct SocketComplect{
+    QTcpSocket* socket;
+    QByteArray buffer;
+    QChar terminator = CONSTANTS::SERIAL_SYM;
+
+    std::optional<QByteArray> ToExecute(){
+        int cnt = 0;
+        QTextStream stream;
+        for (QChar ch : buffer){
+            if(ch != terminator){
+                stream << ch;
+                ++cnt;
+            }
+            else{
+                buffer.remove(0, cnt+1);
+                return stream.string()->toUtf8();
+            }
+        }
+        return std::nullopt;
+    }
+
+    int ReadToBuffer(){
+        QByteArray arr = socket->readAll();
+        buffer.append(std::move(arr));
+        return arr.size();
+    }
+
+
+
+
 };
 
 #endif // STRUCTS_H

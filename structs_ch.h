@@ -82,7 +82,7 @@ public:
 
     QString SerializatedJsonUsers(){
         LG(_mtx);
-        return GetMapMembers(_users);
+        return json::GetMapMembersJsonArrayView(_users);
     }
 
 protected:
@@ -99,6 +99,8 @@ public QTcpServer,
 /*Для установки настроек из файла или по умолчанию*/
 public ConfigInit {
 public:
+
+    ServerBase() : QTcpServer(), ConfigInit() {}
 
   virtual QJsonObject SetIP(QString ip) = 0;
   virtual QJsonObject SetPort(int port) = 0;
@@ -125,6 +127,9 @@ protected:
         Role role;
     };
 
+
+
+
     std::unordered_map<QString, std::shared_ptr<ChatRoom>> _rooms;
     std::unordered_map<QString, UserRole> _pass_hash;
 
@@ -142,6 +147,7 @@ protected:
     mutable std::mutex _mtx_room;
     mutable std::mutex _mtx_net;
     Service::TokenGen _token_generator;
+
 };
 
 #endif // STRUCTS_CH_H

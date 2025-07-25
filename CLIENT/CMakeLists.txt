@@ -17,6 +17,11 @@ set(PROJECT_SOURCES
         clientwin.cpp
         clientwin.h
         clientwin.ui
+
+        ../initializators_help.cpp
+        ../helpfoo.cpp
+        ../constants.cpp
+        ../answer_obj.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

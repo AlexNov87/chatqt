@@ -83,4 +83,3 @@ void MainWindow::on_pb_setoptions_clicked()
     _srv->SetPort(ui->sb_port->value());
     _srv->SetMaxUsers(ui->sb_maxconn->value());
 }
-

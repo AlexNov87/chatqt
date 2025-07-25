@@ -11,9 +11,12 @@
 #include <QJsonArray>
 #include <QMessageBox>
 
+bool IsCorrertInitiator(const str_type& initiator);
 bool IsCorrectPort(int port);
 bool IsCorrectIP(const QString& ip);
 bool IsCorrectConnections(int conn);
+
+namespace json {
 
 std::optional<QString> FromJSONQStringByName(const QString& name,
                                              const QJsonObject& obj);;
@@ -22,15 +25,10 @@ std::optional<QString> FromJSONIP(const QString& name,const QJsonObject& obj);
 std::optional<int> FromJSONintByName(const QString& name,
                                      const QJsonObject& obj);
 
-
 std::optional<std::unordered_set<QString>>
 FromJSONUsetByName(const QString& name, const QJsonObject& obj);
 
-
 ///////////////////////////////////////////////////////////////
-
-bool IsCorrertInitiator(const str_type& initiator);
-
 template<typename... Args>
 std::optional<str_type> IsContainsFieldAndNotEmpty
     (const json_obj&obj, Args... args){
@@ -53,6 +51,8 @@ std::optional<str_type> IsContainsFieldAndNotEmpty
     }
     return std::nullopt;
 }
+
+}//NAMESPACE
 #endif // INITIALIZATORS_HELP_H
 
 

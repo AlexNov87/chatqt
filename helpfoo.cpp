@@ -1,23 +1,28 @@
 #include "helpfoo.h"
-
+//DIALOGS
 QString SelectConfigFile(QString comment){
     return QFileDialog::getOpenFileName(nullptr, std::move(comment),
                                         QDir::currentPath(), "*.txt;*.json;*.conf");
 }
 
-bool SetEnvVariable(QString name, QString param){
-    try
-    {
-        return qputenv(name.toUtf8().constData() , param.toUtf8());
-    }
-    catch(const std::exception& ex){
-        QMessageBox::critical(nullptr, "Mistake", "SetEnvVariable EX:" + QString(ex.what()));
+void FatalErrorMessageBox(const QString &what, QString framename ){
+    QMessageBox::critical(nullptr, std::move(framename), what);
+}
+
+bool ChooseBox(const QString& question){
+    auto result = QMessageBox::warning(nullptr, "", std::move(question),
+                                       QMessageBox::StandardButton::Yes,QMessageBox::StandardButton::No);
+    if (result == QMessageBox::StandardButton::Yes){
+        return true;
     }
     return false;
 }
 
+//JSON
+namespace json {
 
-QJsonObject ReadFromFileConfig(const QString &path){
+
+QJsonObject ReadJsonFromFileConfig(const QString &path){
 
     try{
         QJsonDocument doc = ReadJsonDocument(path);
@@ -59,18 +64,69 @@ QJsonDocument ReadJsonDocument(const QString &path){
     return {};
 }
 
-void FatalErrorMessageBox(const QString &what, QString framename ){
-    QMessageBox::critical(nullptr, std::move(framename), what);
+std::optional<QJsonDocument> ReadJsonFromQByte(QByteArray array){
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(array,&err);
+    if(err.error != QJsonParseError::NoError){
+        return std::nullopt;
+    }
+    return doc;
 }
 
-bool ChooseBox(const QString& question){
-    auto result = QMessageBox::warning(nullptr, "", std::move(question),
-QMessageBox::StandardButton::Yes,QMessageBox::StandardButton::No);
-    if (result == QMessageBox::StandardButton::Yes){
+std::optional<json_obj> ReadJsonObjectFromSocket(QTcpSocket* socket){
+
+    try{
+    if(!socket){
+        return std::nullopt;
+    }
+
+    QByteArray data = socket->readAll();
+    std::optional<QJsonDocument> readjson = ReadJsonFromQByte(data);
+
+    //Произошла ошибка во время чтения JSON.
+    if(!readjson.has_value()){
+        FatalErrorMessageBox("READJSONERR: "+ QString(data));
+        return  ans_obj::MakeErrorObject("Errors occurs while readind json", ACTIONS::SYSTEM);
+    }
+
+    //документ JSON не объект.
+    if(!(readjson->isObject())){
+        return  ans_obj::MakeErrorObject("The json-document is not an json-object", ACTIONS::SYSTEM);
+    }
+    const auto& obj = readjson->object();
+
+    //Проверка, что все значения по ключу имеют string представления.
+    for (auto && key : obj.keys()){
+        if(!obj.value(key).isString()){
+            return  ans_obj::MakeErrorObject("The member: "+key +" of the object is not string" , ACTIONS::SYSTEM);
+        }
+    }
+
+    FatalErrorMessageBox("READJSONOK : "+QString(data));
+    return obj;
+    }
+    catch(const std::exception&ex){
+        return  ans_obj::MakeErrorObject("ReadJsonObjectFromSocket EX:" + QString(ex.what()) , ACTIONS::SYSTEM);
+    }
+}
+
+bool IsErrorJsonObject(const json_obj& obj){
+    if(!obj.contains(CONSTANTS::LF_RESULT)) {return false;}
+    if(obj.value(CONSTANTS::LF_RESULT).toString() == CONSTANTS::RF_ERROR){
         return true;
     }
     return false;
 }
 
+}
 
+//OTHER
+void WriteToSocketWithFlush(QTcpSocket* socket, const QByteArray& arr){
+    socket->write(arr);
+    socket->flush();
+}
 
+void WriteToSocketWithFlushAddingSplitSym(QTcpSocket* socket,QByteArray& arr){
+    arr.push_back(CONSTANTS::SERIAL_SYM);
+    WriteToSocketWithFlush(socket, arr);
+}

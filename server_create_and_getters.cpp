@@ -25,11 +25,15 @@ const std::unordered_set<QString>& ServerBase::GetRooms() const {
 }
 
 QString ServerBase::GetSerializatedRoomList(){
-    return GetMapMembers(_rooms);
+    return json::GetMapMembersJsonArrayView(_rooms);
 }
 
 ///////////////////////////////////////////////////////////////////////
 
+GraphicsServer::GraphicsServer()  :  ServerBase(), GraphicWidgets() {
+    connect(this, &QTcpServer::newConnection,
+            this, &GraphicsServer::OnNewConnection);
+}
 
 void GraphicsServer::InitGraphicForms(){
     _maiwin = std::make_shared<MainWindow>(shared_from_this());

@@ -4,7 +4,7 @@
 File_Json::File_Json() {
     SetConfigFile();
     if(!_file_config.isEmpty()){
-        _values = ReadFromFileConfig(_file_config);
+        _values = json::ReadJsonFromFileConfig(_file_config);
     }
 }
 
@@ -25,21 +25,21 @@ void  File_Json::SetConfigFile(){
         File_Json json_defaults;
         const auto& obj = json_defaults.JsonValues();
 
-        auto ip = FromJSONIP(CONSTANTS::IP, obj);
+        auto ip = json::FromJSONIP(CONSTANTS::IP, obj);
         if(ip){
             _ip.setAddress(ip.value());
         }
 
-        auto port = FromJSONintByName(CONSTANTS::PORT, obj);
+        auto port = json::FromJSONintByName(CONSTANTS::PORT, obj);
         if(port){
             _port = port.value();
         }
 
-        auto max_conn = FromJSONintByName(CONSTANTS::MAX_CONNECTIONS, obj);
+        auto max_conn = json::FromJSONintByName(CONSTANTS::MAX_CONNECTIONS, obj);
         if(port){
             _max_conn = max_conn.value();
         }
-        auto rooms = FromJSONUsetByName(CONSTANTS::CHATROOMS,obj);
+        auto rooms = json::FromJSONUsetByName(CONSTANTS::CHATROOMS,obj);
         if(rooms) {
             _roomlist = std::move(rooms.value());
         }

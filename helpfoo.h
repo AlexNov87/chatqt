@@ -1,6 +1,7 @@
 #ifndef HELPFOO_H
 #define HELPFOO_H
-#include"alias.h"
+#include"answer_obj.h"
+
 
 #include<thread>
 #include<mutex>
@@ -9,6 +10,7 @@
 #include<QFileDialog>
 #include<unordered_set>
 #include <QFile>
+#include <QTcpSocket>
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -18,16 +20,21 @@
 
 #define LG(mutex_name) std::lock_guard<std::mutex> lg(mutex_name)
 
+//DIALOGS
 QString SelectConfigFile(QString comment);
-bool SetEnvVariable(QString name, QString param);
 void FatalErrorMessageBox(const QString& what , QString framename = "Error");
-
-QJsonDocument ReadJsonDocument(const QString &path);
-QJsonObject ReadFromFileConfig(const QString& path);
 bool ChooseBox(const QString& question);
 
+//JSON
+
+namespace  json {
+
+QJsonDocument ReadJsonDocument(const QString &path);
+std::optional<QJsonDocument> ReadJsonFromQByte(QByteArray array);
+QJsonObject ReadJsonFromFileConfig(const QString& path);
+
 template<typename K, typename U, template<typename, typename> class MapType>
-QString GetMapMembers (const MapType<K, U>& map){
+QString GetMapMembersJsonArrayView (const MapType<K, U>& map){
 
         QTextStream stream;
         int cnt = 0;
@@ -43,13 +50,6 @@ QString GetMapMembers (const MapType<K, U>& map){
         }
         stream << "\n]\n";
         return *stream.string();
-}
-
-template<typename Foo>
-void AnotherThreadRunFoo(Foo foo){
-    std::jthread jth ([=]{
-        foo();
-    });
 }
 
 template<typename JSON>
@@ -71,10 +71,26 @@ void WritetoFileJson(JSON& json){
 }
 
 template<typename JSON>
-QString WritetoQStringJson(const JSON& json){
+QByteArray WritetoQByteArrayJson(const JSON& json){
     QJsonDocument doc(json);
-    return doc.toJson(QJsonDocument::Indented);
+    return doc.toJson();
 }
+
+bool IsErrorJsonObject(const json_obj& obj);
+std::optional<json_obj> ReadJsonObjectFromSocket(QTcpSocket* socket);
+
+}//NANESPACE JSON
+
+//OTHER
+template<typename Foo>
+void AnotherThreadRunFoo(Foo foo){
+    std::jthread jth ([=]{
+        foo();
+    });
+}
+void WriteToSocketWithFlush(QTcpSocket* socket, const QByteArray& arr);
+void WriteToSocketWithFlushAddingSplitSym(QTcpSocket* socket,QByteArray& arr);
+
 
 #endif // HELPFOO_H
 

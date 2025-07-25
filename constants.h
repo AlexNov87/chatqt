@@ -2,7 +2,9 @@
 #define CONSTANTS_H
 #include "alias.h"
 #include<unordered_map>
+#include<set>
 #include<cassert>
+#include<QString>
 
 struct CONSTANTS
 {
@@ -18,7 +20,7 @@ struct CONSTANTS
     static chart ACT_ROOM_LIST ;
     static chart ACT_SEND_PRIVATE_MESSAGE;
     static chart ACT_SEND_PUBLIC_MESSAGE ;
-    static chart ACT_USER_MESSAGE ;
+    static chart ACT_SYSTEM;
 
     // Map Parameters
     static chart LF_ACTION;
@@ -37,7 +39,6 @@ struct CONSTANTS
     static chart LF_USERS;
     static chart LF_USER_RECIEVER;
     static chart LF_USER_TO_DELETE;
-
 
     static chart RF_ERROR ;
     static chart RF_SUCCESS;
@@ -83,4 +84,8 @@ enum class ACTIONS {
 
 extern const std::unordered_map<chart, ACTIONS> _NAME_ACTION;
 extern const std::unordered_map<ACTIONS, chart> _ACTION_NAME;
+extern const std::set<str_type> _ACT_SERVER;
+extern const std::set<str_type> _ACT_ROOM;
+
+
 #endif // CONSTANTS_H
