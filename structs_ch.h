@@ -113,14 +113,14 @@ public:
   virtual   json_obj DeleteUserJs(str_type name, str_type password,
                                   str_type to_delete) = 0;
   virtual   json_obj GetRoomsJs() = 0;
-  virtual   json_obj GetRoomUsers(str_type roomname) = 0;
+  virtual   json_obj GetRoomUsersJs(str_type roomname) = 0;
 
-  virtual json_obj Disconnect(str_type token, str_type room_name) = 0;
+  virtual json_obj DisconnectJs(str_type token, str_type room_name) = 0;
 
-  virtual json_obj MakeRequestPublicMessage
+  virtual json_obj PublicMessageJs
       (str_type token, str_type message, str_type room_name) =0;
 
-  virtual json_obj MakeRequestPrivateMessage
+  virtual json_obj PrivateMessageJs
       (str_type token, str_type message, str_type user_to, str_type room_name) =0;
 
 
@@ -148,7 +148,7 @@ protected:
     }
 
     bool IsUserInBase(QString name, QString password){
-        return true;
+        return (_pass_hash.contains(name));
     }
 
     QString GetSerializatedRoomList();

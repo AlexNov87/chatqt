@@ -105,6 +105,7 @@ private:
     void MakeErrorAnsweToSocket(const json_obj& answer_obj);
     std::optional<json_obj> FirstStepCheckErrors(const json_obj& js_obj);
     bool IsPointersValid();
+    json_obj ExecuteExternal(const json_obj& obj);
 
     std::shared_ptr<GraphicsServer> _srv;
     SocketComplect* _sock;
@@ -133,14 +134,14 @@ public:
     json_obj DeleteUserJs( str_type name,  str_type password,  str_type to_delete) override ;
 
     json_obj GetRoomsJs() override ;
-    json_obj GetRoomUsers( str_type roomname) override;
+    json_obj GetRoomUsersJs( str_type roomname) override;
 
-    json_obj Disconnect( str_type token,  str_type room_name) override;
+    json_obj DisconnectJs( str_type token,  str_type room_name) override;
 
-    json_obj MakeRequestPublicMessage
+    json_obj PublicMessageJs
         ( str_type token,  str_type message,  str_type room_name) override;
 
-    json_obj MakeRequestPrivateMessage
+    json_obj PrivateMessageJs
         ( str_type token,  str_type message,
     str_type user_to, str_type room_name) override;
 

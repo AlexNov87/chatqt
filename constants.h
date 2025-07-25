@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 #include "alias.h"
-#include<unordered_map>
+#include<map>
 #include<set>
 #include<cassert>
 #include<QString>
@@ -82,10 +82,10 @@ enum class ACTIONS {
     EARLIER_MESSAGES, SYSTEM
 };
 
-extern const std::unordered_map<chart, ACTIONS> _NAME_ACTION;
-extern const std::unordered_map<ACTIONS, chart> _ACTION_NAME;
+extern const std::map<str_type, ACTIONS> _NAME_ACTION;
+extern const std::map<ACTIONS, str_type> _ACTION_NAME;
 extern const std::set<str_type> _ACT_SERVER;
-extern const std::set<str_type> _ACT_ROOM;
+
 
 
 #endif // CONSTANTS_H

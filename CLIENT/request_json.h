@@ -27,7 +27,7 @@ json_obj MakeRequestDisconnect(str_type token, str_type room_name);
 
 json_obj MakeRequestPublicMessage(str_type token, str_type message, str_type room_name) ;
 
-json_obj MakeRequestPublicMessage
+json_obj MakeRequestPrivateMessage
     (str_type token, str_type message, str_type user_to, str_type room_name) ;
 
 

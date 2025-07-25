@@ -74,7 +74,7 @@ QJsonObject GraphicsServer::GetRoomsJs() {
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
 
-QJsonObject GraphicsServer::GetRoomUsers(QString roomname) {
+QJsonObject GraphicsServer::GetRoomUsersJs(QString roomname) {
 
     ACTIONS this_act = ACTIONS::GET_ROOM_USERS;
     auto lam = [&]{

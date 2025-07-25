@@ -97,7 +97,7 @@ json_obj MakeRequestPublicMessage(str_type token, str_type message, str_type roo
     return obj;
 }
 
-json_obj MakeRequestPublicMessage
+json_obj MakeRequestPrivateMessage
     (str_type token, str_type message, str_type user_to, str_type room_name) {
     json_obj obj = MakeRequestTemplate
         (CONSTANTS::RF_DIRECTION_CHATROOM, ACTIONS::PRIVATE_MESSAGE);

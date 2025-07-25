@@ -155,12 +155,12 @@ QJsonObject GraphicsServer::LoginUserJs(QString name, QString password, QString 
 
         //Если юзера нет в базе
         if(!IsUserInBase(name,password)){return ans_obj::MakeErrorObject
-                ("Can not find user", this_act);}
+                ("Can not find user:"+ name , this_act);}
 
         //Если неверен пароль
         if(password != this->_pass_hash.at(name).password ){
             return ans_obj::MakeErrorObject
-                ("Wrong password", this_act);
+                ("Wrong password:"+ name, this_act);
         }
         QString token = QString(this->_token_generator.GenerateHEXToken().data());
 
@@ -267,18 +267,18 @@ QJsonObject GraphicsServer::DeleteUserJs(QString name, QString password, QString
 
 }
 
-json_obj GraphicsServer::Disconnect(str_type token,  str_type room_name) {
+json_obj GraphicsServer::DisconnectJs(str_type token,  str_type room_name) {
 
     return {};
 }
 
-json_obj GraphicsServer::MakeRequestPublicMessage
+json_obj GraphicsServer::PublicMessageJs
     ( str_type token,  str_type message,  str_type room_name) {
 
     return {};
 }
 
-json_obj GraphicsServer::MakeRequestPrivateMessage
+json_obj GraphicsServer::PrivateMessageJs
     ( str_type token,  str_type message,
     str_type user_to, str_type room_name) {
     return {};
