@@ -39,9 +39,9 @@ public:
     ~RoomsForm();
 protected:
 
-    bool AddRoomTolist(const QString& room);
-    bool HasRoom(const QString& room);
-    bool RemoveRoomFromList(const QString& room);
+    bool AddRoomTolist(const  str_type& room);
+    bool HasRoom(const  str_type& room);
+    bool RemoveRoomFromList(const  str_type& room);
 
     std::shared_ptr<GraphicsServer> _srv;
     friend class GraphicsServer;
@@ -75,7 +75,7 @@ class MainWindowDesigner
 {
 public:
     MainWindowDesigner(std::shared_ptr<MainWindow> mainwin);
-    void EditStatusLabel(QString text, QColor color);
+    void EditStatusLabel( str_type text, QColor color);
     void StatusLabelOn();
     void StatusLabelOff();
 protected:
@@ -98,114 +98,56 @@ protected:
 class ServerSession {
 
 public:
-    ServerSession(const std::shared_ptr<GraphicsServer> srv, QTcpSocket* sock)
-        : _srv(srv), _sock(sock){}
-
-    void Execute(){
-
-        //Проверяем валидность указателей на сокет и сервер.
-        if(!IsPointersValid()){return;}
-
-        //Reading to Json-object from socket
-        std::optional<json_obj> answer_obj = json::ReadJsonObjectFromSocket(_sock);
-        if (!answer_obj){
-            return;
-        }
-
-        //Проверяем текущий объект на валидность. Если объект будет не вален,
-        //то вернется объект, содержащий ошибку.
-        std::optional<json_obj> err_obj = FirstStepCheckErrors(*answer_obj);
-        if(err_obj){
-            MakeErrorAnsweToSocket(*err_obj);
-            return;
-        }
-
-        WriteToSocketWithFlush(_sock, QString("RESPONCE").toUtf8());
-    }
-
+    ServerSession(const std::shared_ptr<GraphicsServer> srv
+                  , SocketComplect* sock);
+    void Execute();
 private:
     void MakeErrorAnsweToSocket(const json_obj& answer_obj);
-
-    std::optional<json_obj> FirstStepCheckErrors(const json_obj& js_obj){
-        //Проверка, если данный объект является объектом ошибки.
-        bool is_err = json::IsErrorJsonObject(js_obj);
-        if(is_err){
-            return js_obj;
-        }
-
-        //Есть ли в объекте поле действия.
-        auto reason = json::IsContainsFieldAndNotEmpty(js_obj, CONSTANTS::LF_ACTION);
-        if(reason){
-            return ans_obj::MakeErrorObject(*reason, ACTIONS::SYSTEM);
-        }
-
-        //Если это действие есть в списке
-        str_type act_value = (js_obj).value(CONSTANTS::LF_ACTION).toString();
-        if(!_ACT_SERVER.contains(act_value)){
-            return ans_obj::MakeErrorObject("Can not find action:" + act_value, ACTIONS::SYSTEM);
-        };
-        return std::nullopt;
-
-    }
-
-    bool IsPointersValid(){
-        if(!_srv || !_sock){
-            if(!_srv){FatalErrorMessageBox("The server is null");}
-            if(!_sock){FatalErrorMessageBox("The socket is null");}
-            return false;
-        }
-        return true;
-    }
+    std::optional<json_obj> FirstStepCheckErrors(const json_obj& js_obj);
+    bool IsPointersValid();
 
     std::shared_ptr<GraphicsServer> _srv;
-    QTcpSocket* _sock;
+    SocketComplect* _sock;
     std::shared_ptr<ServerSession> _self;
+
 };
 
 
 class GraphicsServer : public ServerBase, public GraphicWidgets,
-        public std::enable_shared_from_this<GraphicsServer> {
-      Q_OBJECT
+                       public std::enable_shared_from_this<GraphicsServer> {
+    Q_OBJECT
 public:
 
-      GraphicsServer();
-      void InitAndRun();
+    GraphicsServer();
+    void InitAndRun();
 
-    QJsonObject SetIP(QString ip) override ;
-    QJsonObject SetPort(int port) override ;
-    QJsonObject SetMaxUsers(int max) override;
+    json_obj SetIP( str_type ip) override ;
+    json_obj SetPort(int port) override ;
+    json_obj SetMaxUsers(int max) override;
 
-    QJsonObject AddRoomJs(QString name, QString password, QString roomname) override ;
-    QJsonObject DeleteRoomJs(QString name, QString password, QString roomname) override;
+    json_obj AddRoomJs( str_type name,  str_type password,  str_type roomname) override ;
+    json_obj DeleteRoomJs( str_type name,  str_type password,  str_type roomname) override;
 
-    QJsonObject LoginUserJs(QString name, QString password, QString roomname) override ;
-    QJsonObject RegisterUserJs(QString name, QString password) override ;
-    QJsonObject DeleteUserJs(QString name, QString password, QString to_delete) override ;
+    json_obj LoginUserJs( str_type name,  str_type password,  str_type roomname) override ;
+    json_obj RegisterUserJs( str_type name,  str_type password) override ;
+    json_obj DeleteUserJs( str_type name,  str_type password,  str_type to_delete) override ;
 
-    QJsonObject GetRoomsJs() override ;
-    QJsonObject GetRoomUsers(QString roomname) override;
+    json_obj GetRoomsJs() override ;
+    json_obj GetRoomUsers( str_type roomname) override;
+
+    json_obj Disconnect( str_type token,  str_type room_name) override;
+
+    json_obj MakeRequestPublicMessage
+        ( str_type token,  str_type message,  str_type room_name) override;
+
+    json_obj MakeRequestPrivateMessage
+        ( str_type token,  str_type message,
+    str_type user_to, str_type room_name) override;
 
 private slots:
     void OnNewConnection();
-    void OnReadyRead()
-    {
-        QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
-        if(!clientSocket){
-            FatalErrorMessageBox("sock is nullpiiiiiiiiiiiii");
-        }
-        std::shared_ptr<ServerSession> session =
-        std::make_shared<ServerSession>(shared_from_this(), clientSocket);
-        session->Execute();
-    }
-
-    void OnDisconnected()
-    {
-        QTcpSocket *clientSocket = qobject_cast<QTcpSocket*>(sender());
-        if (!clientSocket)
-            return;
-        clientSocket->deleteLater();
-        QMessageBox::critical(nullptr, "", "Client disconnected");
-    }
+    void OnReadyRead();
+    void OnDisconnected();
 
 private:
     friend class MainWindow;

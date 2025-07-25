@@ -31,12 +31,12 @@ void ClientWin::on_commandLinkButton_clicked()
 
     auto js = req_obj::MakeRequestLogin("qwe","rty", "uio");
     auto jsq = req_obj::MakeRequestLogin("www","www", "www");
-    QByteArray bt = json::WritetoQByteArrayJson(js);
+    QByteArray bt = json::WritetoQByteArrayJson (js);
     QByteArray btx = json::WritetoQByteArrayJson(jsq);
 
     if(sock.waitForConnected(5000)) {
-        WriteToSocketWithFlush(&sock,bt);
-        WriteToSocketWithFlush(&sock,btx);
+        WriteToSocketWithFlushAddingSplitSym (&sock,bt);
+        WriteToSocketWithFlushAddingSplitSym(&sock,btx);
 
     //    sock.write(bt);
      //   sock.write(btx);

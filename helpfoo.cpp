@@ -73,15 +73,11 @@ std::optional<QJsonDocument> ReadJsonFromQByte(QByteArray array){
     return doc;
 }
 
-std::optional<json_obj> ReadJsonObjectFromSocket(QTcpSocket* socket){
+json_obj ReadJsonObjectFromQbyteArray(QByteArray& data){
 
-    try{
-    if(!socket){
-        return std::nullopt;
-    }
-
-    QByteArray data = socket->readAll();
-    std::optional<QJsonDocument> readjson = ReadJsonFromQByte(data);
+    try
+    {
+      std::optional<QJsonDocument> readjson = ReadJsonFromQByte(data);
 
     //Произошла ошибка во время чтения JSON.
     if(!readjson.has_value()){
@@ -101,9 +97,7 @@ std::optional<json_obj> ReadJsonObjectFromSocket(QTcpSocket* socket){
             return  ans_obj::MakeErrorObject("The member: "+key +" of the object is not string" , ACTIONS::SYSTEM);
         }
     }
-
-    FatalErrorMessageBox("READJSONOK : "+QString(data));
-    return obj;
+       return obj;
     }
     catch(const std::exception&ex){
         return  ans_obj::MakeErrorObject("ReadJsonObjectFromSocket EX:" + QString(ex.what()) , ACTIONS::SYSTEM);

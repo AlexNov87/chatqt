@@ -80,28 +80,31 @@ json_obj MakeRequestGetRoomUsers(str_type roomname){
 }
 
 //ROOM
-json_obj MakeRequestDisconnect(str_type token){
+json_obj MakeRequestDisconnect(str_type token, str_type room_name){
     json_obj obj = MakeRequestTemplate
         (CONSTANTS::RF_DIRECTION_CHATROOM, ACTIONS::DISCONNECT);
     obj.insert(CONSTANTS::LF_TOKEN , std::move(token));
+    obj.insert(CONSTANTS::LF_ROOMNAME, std::move(room_name));
     return obj;
 }
 
-json_obj MakeRequestPublicMessage(str_type token, str_type message) {
+json_obj MakeRequestPublicMessage(str_type token, str_type message, str_type room_name) {
     json_obj obj = MakeRequestTemplate
         (CONSTANTS::RF_DIRECTION_CHATROOM, ACTIONS::PUBLIC_MESSAGE);
     obj.insert(CONSTANTS::LF_TOKEN , std::move(token));
     obj.insert(CONSTANTS::LF_PUBLIC_MESSAGE , std::move(token));
+    obj.insert(CONSTANTS::LF_ROOMNAME, std::move(room_name));
     return obj;
 }
 
 json_obj MakeRequestPublicMessage
-    (str_type token, str_type message, str_type user_to) {
+    (str_type token, str_type message, str_type user_to, str_type room_name) {
     json_obj obj = MakeRequestTemplate
         (CONSTANTS::RF_DIRECTION_CHATROOM, ACTIONS::PRIVATE_MESSAGE);
     obj.insert(CONSTANTS::LF_TOKEN , std::move(token));
     obj.insert(CONSTANTS::LF_PRIVATE_MESSAGE , std::move(message));
     obj.insert(CONSTANTS::LF_USER_RECIEVER , std::move(user_to));
+    obj.insert(CONSTANTS::LF_ROOMNAME, std::move(room_name));
     return obj;
 }
 

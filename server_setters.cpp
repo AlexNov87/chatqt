@@ -266,3 +266,20 @@ QJsonObject GraphicsServer::DeleteUserJs(QString name, QString password, QString
     return ans_obj::GuardExceptSetter(lam, this_act);
 
 }
+
+json_obj GraphicsServer::Disconnect(str_type token,  str_type room_name) {
+
+    return {};
+}
+
+json_obj GraphicsServer::MakeRequestPublicMessage
+    ( str_type token,  str_type message,  str_type room_name) {
+
+    return {};
+}
+
+json_obj GraphicsServer::MakeRequestPrivateMessage
+    ( str_type token,  str_type message,
+    str_type user_to, str_type room_name) {
+    return {};
+}

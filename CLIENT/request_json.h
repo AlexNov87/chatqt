@@ -23,12 +23,12 @@ json_obj MakeRequestDeleteUser
 json_obj MakeRequestGetRoomUsers(str_type roomname);
 
 //ROOM
-json_obj MakeRequestDisconnect(str_type token);
+json_obj MakeRequestDisconnect(str_type token, str_type room_name);
 
-json_obj MakeRequestPublicMessage(str_type token, str_type message) ;
+json_obj MakeRequestPublicMessage(str_type token, str_type message, str_type room_name) ;
 
 json_obj MakeRequestPublicMessage
-    (str_type token, str_type message, str_type user_to) ;
+    (str_type token, str_type message, str_type user_to, str_type room_name) ;
 
 
 }//namespace

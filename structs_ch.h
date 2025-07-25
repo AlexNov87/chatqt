@@ -102,17 +102,29 @@ public:
 
     ServerBase() : QTcpServer(), ConfigInit() {}
 
-  virtual QJsonObject SetIP(QString ip) = 0;
-  virtual QJsonObject SetPort(int port) = 0;
-  virtual QJsonObject SetMaxUsers(int max) = 0;
+  virtual json_obj SetIP(str_type ip) = 0;
+  virtual json_obj SetPort(int port) = 0;
+  virtual json_obj SetMaxUsers(int max) = 0;
 
-  virtual   QJsonObject AddRoomJs(QString name, QString password, QString roomname) = 0;
-  virtual   QJsonObject DeleteRoomJs(QString name, QString password, QString roomname) = 0;
-  virtual   QJsonObject LoginUserJs(QString name, QString password, QString roomname) = 0;
-  virtual   QJsonObject RegisterUserJs(QString name, QString password) = 0;
-  virtual   QJsonObject DeleteUserJs(QString name, QString password, QString to_delete) = 0;
-  virtual   QJsonObject GetRoomsJs() = 0;
-  virtual   QJsonObject GetRoomUsers(QString roomname) = 0;
+  virtual   json_obj AddRoomJs(str_type name, str_type password, str_type roomname) = 0;
+  virtual   json_obj DeleteRoomJs(str_type name, str_type password, str_type roomname) = 0;
+  virtual   json_obj LoginUserJs(str_type name, str_type password, str_type roomname) = 0;
+  virtual   json_obj RegisterUserJs(str_type name, str_type password) = 0;
+  virtual   json_obj DeleteUserJs(str_type name, str_type password,
+                                  str_type to_delete) = 0;
+  virtual   json_obj GetRoomsJs() = 0;
+  virtual   json_obj GetRoomUsers(str_type roomname) = 0;
+
+  virtual json_obj Disconnect(str_type token, str_type room_name) = 0;
+
+  virtual json_obj MakeRequestPublicMessage
+      (str_type token, str_type message, str_type room_name) =0;
+
+  virtual json_obj MakeRequestPrivateMessage
+      (str_type token, str_type message, str_type user_to, str_type room_name) =0;
+
+
+
 
   QHostAddress GetIP() const;
   QString GetIPStr() const;
@@ -127,11 +139,9 @@ protected:
         Role role;
     };
 
-
-
-
     std::unordered_map<QString, std::shared_ptr<ChatRoom>> _rooms;
     std::unordered_map<QString, UserRole> _pass_hash;
+    std::unordered_map<QTcpSocket*, SocketComplect> _socket_db;
 
     bool HasPermission(QString name, QString password, ACTIONS act){
         return true;

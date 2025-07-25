@@ -77,7 +77,7 @@ QByteArray WritetoQByteArrayJson(const JSON& json){
 }
 
 bool IsErrorJsonObject(const json_obj& obj);
-std::optional<json_obj> ReadJsonObjectFromSocket(QTcpSocket* socket);
+json_obj ReadJsonObjectFromQbyteArray(QByteArray& arr);
 
 }//NANESPACE JSON
 

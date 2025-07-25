@@ -36,33 +36,34 @@ protected:
 };
 
 struct SocketComplect{
+
+
     QTcpSocket* socket;
     QByteArray buffer;
     QChar terminator = CONSTANTS::SERIAL_SYM;
 
-    std::optional<QByteArray> ToExecute(){
+    std::optional<QByteArray> GetExecuteObject(){
+
         int cnt = 0;
-        QTextStream stream;
+        QString tempString;
         for (QChar ch : buffer){
             if(ch != terminator){
-                stream << ch;
+                tempString.append(ch);
                 ++cnt;
             }
             else{
                 buffer.remove(0, cnt+1);
-                return stream.string()->toUtf8();
+                QByteArray arr = tempString.toUtf8();
+                return arr;
             }
         }
         return std::nullopt;
     }
 
-    int ReadToBuffer(){
-        QByteArray arr = socket->readAll();
-        buffer.append(std::move(arr));
+    int AddToBuffer(const QByteArray& arr){
+        buffer.append(arr);
         return arr.size();
     }
-
-
 
 
 };
