@@ -6,6 +6,7 @@
 #include<QHostAddress>
 #include<mutex>
 #include <memory>
+#include <deque>
 #include <chrono>
 #include<QListWidget>
 #include<QTcpSocket>

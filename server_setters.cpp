@@ -68,7 +68,6 @@ QJsonObject GraphicsServer::AddRoomJs(QString name, QString password, QString ro
             return  ans_obj::MakeErrorObject
                 ("You have no permission to create room", this_act);
         }
-        //Crit section
         {
             LG(_mtx_room);
             bool res =  _rooms.insert( {roomname , std::make_shared<ChatRoom>(this, name)}).second;
@@ -76,17 +75,14 @@ QJsonObject GraphicsServer::AddRoomJs(QString name, QString password, QString ro
                 return ans_obj::MakeErrorObject
                     ("Can not insert room", this_act);
             }
-
+            //добавляем в ф орму комнату
             res = this->_rooms_form->AddRoomTolist(roomname);
             if(!res){
                 _rooms.erase(roomname);
                 return ans_obj::MakeErrorObject
                     ("Can not insert room to visual form", this_act);
             }
-
         }
-
-        //!!!!!!!!!!!!!!!!!!!!!!!!!
         return ans_obj::SuccessCreateUser(std::move(roomname));
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
@@ -122,25 +118,10 @@ QJsonObject GraphicsServer::DeleteRoomJs(QString name, QString password, QString
             }
         }
 
-        //Пытаемся удалить комнату из сервера
-        bool res = _rooms.erase(roomname);
-          if(!res){
-              return ans_obj::MakeErrorObject
-                  ("Can not delete room", this_act);
-          }
-
-          //Пытаемся удалить комнату из формы
-          res = this->_rooms_form->RemoveRoomFromList(roomname);
-          if(!res){
-              //Не получилось удалить - восстанавливаем.
-              _rooms.insert({roomname, rm});
-              return ans_obj::MakeErrorObject
-                  ("Can not delete room to visual form", this_act);
-          }
-
-
-        //!!!!!!!!!!!!!!!!!!!!!!!!!
-          return ans_obj::SuccessDeleteRoom(std::move(roomname));
+        //удаляем формы комнату
+         this->_rooms_form->RemoveRoomFromList(roomname);
+        _rooms.erase(roomname);
+        return ans_obj::SuccessDeleteRoom(std::move(roomname));
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 
@@ -169,22 +150,13 @@ QJsonObject GraphicsServer::LoginUserJs(QString name, QString password,
                 ("The is no room:"+ roomname, this_act);
         }
 
+        std::shared_ptr<ChatRoom> room = _rooms.at(roomname);
+        QString token = QString(this->_token_generator.GenerateHEXToken().data());
 
-       // _rooms.at(roomname).a
+        std::shared_ptr<ChatUser> new_user =
+            std::make_shared<ChatUser>(name,complect);
 
-
-
-
-       QString token = QString(this->_token_generator.GenerateHEXToken().data());
-
-
-
-
-        /*
-        EARLIER MESSAGES
-        */
-        //!!!!!!!!!!!!!!!!!!!!!!!!!
-        return ans_obj::SuccessLogin(token, "MESSSSSSSSSSSSSSSSSSSSSSSSSS");
+        return room->AddUser(new_user);
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
@@ -241,12 +213,15 @@ QJsonObject GraphicsServer::DeleteUserJs(QString name, QString password, QString
                 ("Can not find user, who must be deleted", this_act);
         }
 
+        //Если удаляющий и удаляемый разные имена
         if(name!= to_delete){
+            //Если есть разрешения удалить пользователя
             if(!HasPermission(name, password,this_act)){
                 return ans_obj::MakeErrorObject
                     ("You have no permission to delete users", this_act);
             }
 
+            //Если ранг равен или больше удаляемого то не разрешить удаление
             if(_pass_hash.at(name).role <= _pass_hash.at(to_delete).role){
                 return ans_obj::MakeErrorObject
                     ("Your rank doesn't allow you to delete this user", this_act);
@@ -256,36 +231,23 @@ QJsonObject GraphicsServer::DeleteUserJs(QString name, QString password, QString
         //Резервируем на случай отката
         auto pair = *_pass_hash.find(to_delete);
 
-        //Пытаемся удалить с сервера
-        bool delete_from_server = _pass_hash.erase(to_delete);
-        if(!delete_from_server){
-            return ans_obj::MakeErrorObject
-                ("Failed to delete user(server)",
-                 ACTIONS::CREATE_USER);
-        }
-
-        //Пытаемся удалить с SQL
-        bool sql_deleted = true;
-        //Удаляем из SQL
-        /*
-          Add TO SQL;
-
-        */
-        if(!sql_deleted){
-            _pass_hash.insert(pair);
-            return ans_obj::MakeErrorObject
-                ("Failed to delete user(SQL)",
-                 ACTIONS::CREATE_USER);
-        }
-
-        //!!!!!!!!!!!!!!!!!!!!!!!!!
-        return ans_obj::SuccessDeleteUser(std::move(name));
+         _pass_hash.erase(to_delete);
+         //Удаляем из SQL в отдельном потоке
+         std::jthread delete_sql([&]{
+             /*  DELETE SQL; */
+         });
+         return ans_obj::SuccessDeleteUser(std::move(name));
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 
 }
 
 json_obj GraphicsServer::DisconnectJs(str_type token,  str_type room_name) {
+
+
+
+
+
 
     return ans_obj::SuccessDisconnect();
 }

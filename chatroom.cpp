@@ -3,7 +3,6 @@
 ChatRoom::ChatRoom(ServerBase* srv, QString creator) : _srv(srv),
     _creator(std::move(creator)) {
     assert(srv != nullptr);
-
 }
 
 json_obj ChatRoom::AddUser(std::shared_ptr<ChatUser> user){
@@ -14,7 +13,11 @@ json_obj ChatRoom::AddUser(std::shared_ptr<ChatUser> user){
     };
     _users[user->GetName()] = user;
     _tokens[user->GetName()] = user;
-    return ans_obj::SuccessLogin(user->GetToken(), "MEEEEEEEEEEEEEEEEEEEEESSSSSSSSSSSSSSSSSSS");
+
+    UpdateRoomMembersForAll();
+    return ans_obj::SuccessLogin(user->GetToken(),
+    _manager.SerializedLastMessages());
+
 }
 
 json_obj ChatRoom::DeleteUser(const QString& name){
@@ -26,6 +29,8 @@ json_obj ChatRoom::DeleteUser(const QString& name){
     auto user = _users.at(name);
     _users.erase(name);
     _tokens.erase(user->GetToken());
+
+    UpdateRoomMembersForAll();
     return ans_obj::SuccessDisconnect();
 }
 
@@ -37,10 +42,11 @@ json_obj ChatRoom::PublicMessage(const QString&token, QString message){
     }
 
     auto mess_author = _tokens.at(token);
+    _manager.IncomePublicMessage(mess_author->GetName(), message);
 
     for (auto && user : _users){
-        user.second->RecievePublicMessage(mess_author->GetName(),
-                                          std::move(message));
+        user.second->RecievePublicMessage
+            (mess_author->GetName(),message);
     }
     return ans_obj::SuccessPublicMessage();
 }

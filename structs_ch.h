@@ -42,13 +42,35 @@ public:
         _socket->GuardSendMessageOtherSide(arr);
     }
 
-private:
+protected:
+
     friend class ChatRoom;
     str_type _name;
     str_type _token;
     SocketComplect* _socket;
 };
 
+
+class MessageManager{
+public:
+  void  IncomePublicMessage(const str_type& author,const str_type& message){
+        LG(mtx);
+        json_obj obj;
+        obj.insert(author, message);
+        _archive_public.push_back(std::move(obj));
+        while(_archive_public.size() > 30){
+            _archive_public.pop_front();
+        }
+    }
+
+   QByteArray SerializedLastMessages(){
+         LG(mtx);
+         return json::WritetoQByteAnyJson(_archive_public);
+     }
+protected:
+    std::mutex mtx;
+    json_arr _archive_public;
+};
 
 class ChatRoom
 {
@@ -61,15 +83,24 @@ public:
                             const QString& user_to,QString message);
     const QString& GetCreator() const;
     QString SerializatedJsonUsers() const;
+    const MessageManager& MessageMan() const {
+        return _manager;
+    }
 protected:
+
     std::optional<json_obj> MessageCheckErrorTemplate
         (const QString&token,const QString& message, ACTIONS action);
 
+    void UpdateRoomMembersForAll(){
+
+    }
+
     ServerBase* _srv;
-    std::map<str_type, std::shared_ptr<ChatUser>> _users;
     QString _creator;
     mutable std::mutex _mtx;
     std::map<str_type, std::shared_ptr<ChatUser>> _tokens;
+    std::map<str_type, std::shared_ptr<ChatUser>> _users;
+    MessageManager _manager;
 };
 
 class ServerBase :
