@@ -239,28 +239,5 @@ QJsonObject GraphicsServer::DeleteUserJs(QString name, QString password, QString
          return ans_obj::SuccessDeleteUser(std::move(name));
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
-
 }
 
-json_obj GraphicsServer::DisconnectJs(str_type token,  str_type room_name) {
-
-
-
-
-
-
-    return ans_obj::SuccessDisconnect();
-}
-
-json_obj GraphicsServer::PublicMessageJs
-    ( str_type token,  str_type message,  str_type room_name) {
-
-    return ans_obj::SuccessPublicMessage();
-}
-
-json_obj GraphicsServer::PrivateMessageJs
-    ( str_type token,  str_type message,
-    str_type user_to, str_type room_name) {
-
-    return ans_obj::SuccessPrivateMessage();
-}

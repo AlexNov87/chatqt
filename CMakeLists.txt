@@ -49,6 +49,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         server_sigslots.cpp
         server_session.cpp
         chatroom.cpp
+        server_room.cpp
 
 
     )

@@ -20,19 +20,35 @@ json_obj ChatRoom::AddUser(std::shared_ptr<ChatUser> user){
 
 }
 
-json_obj ChatRoom::DeleteUser(const QString& name){
+json_obj ChatRoom::DeleteUserByName(const QString& name){
     LG(_mtx);
     if(!_users.contains(name)){
         return ans_obj::MakeErrorObject
             ("There is no user with name: "+ name, ACTIONS::DISCONNECT);
     }
-    auto user = _users.at(name);
+     auto user = _users.at(name);
     _users.erase(name);
     _tokens.erase(user->GetToken());
 
     UpdateRoomMembersForAll();
     return ans_obj::SuccessDisconnect();
 }
+
+json_obj ChatRoom::DeleteUserByToken(const QString& token){
+
+    LG(_mtx);
+    if(!_tokens.contains(token)){
+        return ans_obj::MakeErrorObject
+            ("This room has not this token", ACTIONS::DISCONNECT);
+    }
+    auto user = _tokens.at(token);
+    _users.erase(user->GetName());
+    _tokens.erase(token);
+
+    UpdateRoomMembersForAll();
+    return ans_obj::SuccessDisconnect();
+}
+
 
 json_obj ChatRoom::PublicMessage(const QString&token, QString message){
     LG(_mtx);
@@ -72,7 +88,7 @@ json_obj ChatRoom::PrivateMessage(const QString&token,
 }
 
 
-const QString& ChatRoom::GetCreator() const{
+const QString& ChatRoom::GetCreator() const {
     return _creator;
 }
 

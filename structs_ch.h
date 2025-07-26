@@ -77,7 +77,8 @@ class ChatRoom
 public:
     ChatRoom(ServerBase* srv, QString creator);
     json_obj AddUser(std::shared_ptr<ChatUser> user);
-    json_obj DeleteUser(const QString& name);
+    json_obj DeleteUserByName(const QString& name);
+    json_obj DeleteUserByToken(const QString& name);
     json_obj PublicMessage(const QString&token, QString message);
     json_obj PrivateMessage(const QString&token,
                             const QString& user_to,QString message);
