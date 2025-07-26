@@ -2,7 +2,7 @@
 void ServerSession::MakeErrorAnsweToSocket(const QJsonObject &answer_obj){
     QByteArray arr;
     auto wg = _srv->_maiwin->ui->lw_events;
-    arr = json::WritetoQByteArrayJson(answer_obj);
+    arr = json::WritetoQByteAnyJson(answer_obj);
 
     wg->addItem(QString(arr));
     WriteToSocketWithFlushAddingSplitSym(_sock->socket, arr);
@@ -28,8 +28,10 @@ void ServerSession::Execute(){
             continue;
         }
         json_obj answer = ExecuteExternal(json_stuff);
-        QByteArray arr = json::WritetoQByteArrayJson(answer);
-        WriteToSocketWithFlushAddingSplitSym(_sock->socket, arr);
+        QByteArray arr = json::WritetoQByteAnyJson(answer);
+        _sock->GuardSendMessageOtherSide(arr);
+
+       // WriteToSocketWithFlushAddingSplitSym(_sock->socket, arr);
     }
 
 }
@@ -66,6 +68,7 @@ bool ServerSession::IsPointersValid(){
 }
 
 json_obj ServerSession::ExecuteExternal(const json_obj& obj){
+
     QString action_str = obj.value(CONSTANTS::LF_ACTION).toString();
     ACTIONS act =  _NAME_ACTION.at(action_str);
     switch (act) {
@@ -162,13 +165,14 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
         str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
         str_type roomname = obj.value(CONSTANTS::LF_ROOMNAME).toString();
         return _srv->LoginUserJs(std::move(name),std::move(password),
-                                  std::move(roomname));
+                                  std::move(roomname), _sock);
     }
         break;
     //////////////////////////////////////
     case ACTIONS::GET_ROOMS_LIST :
     {
-         return _srv->GetRoomsJs();
+
+        return _srv->GetRoomsJs();
     }
         break;
     //////////////////////////////////////
@@ -184,6 +188,7 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
         str_type roomname = obj.value(CONSTANTS::LF_ROOMNAME).toString();
         str_type reciever = obj.value(CONSTANTS::LF_USER_RECIEVER).toString();
         str_type message = obj.value(CONSTANTS::LF_PRIVATE_MESSAGE).toString();
+
         return _srv->PrivateMessageJs(std::move(token),std::move(message),
         std::move(reciever),std::move(roomname));
     }
@@ -206,6 +211,8 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
         break;
     //////////////////////////////////////
     default:
+        return ans_obj::MakeErrorObject("UNKNOWN ACTION", ACTIONS::SYSTEM);
+
         break;
     }
 

@@ -37,13 +37,17 @@ protected:
 
 struct SocketComplect{
 
+    SocketComplect(){
+        _mtx = std::make_shared<std::mutex>();
+    }
+
 
     QTcpSocket* socket;
     QByteArray buffer;
     QChar terminator = CONSTANTS::SERIAL_SYM;
 
     std::optional<QByteArray> GetExecuteObject(){
-
+        LG(*_mtx);
         int cnt = 0;
         QString tempString;
         for (QChar ch : buffer){
@@ -61,11 +65,19 @@ struct SocketComplect{
     }
 
     int AddToBuffer(const QByteArray& arr){
+        LG(*_mtx);
         buffer.append(arr);
         return arr.size();
     }
 
+   void GuardSendMessageOtherSide(QByteArray arr){
+        LG(*_mtx);
+        WriteToSocketWithFlushAddingSplitSym(socket, arr);
+    }
 
+
+private:
+     std::shared_ptr<std::mutex> _mtx;
 };
 
 #endif // STRUCTS_H

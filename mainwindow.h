@@ -69,6 +69,7 @@ private slots:
     void on_pb_run_server_clicked();
     void on_pb_stop_server_clicked();
     void on_pb_setoptions_clicked();
+    void on_pb_stop_server_clicked(bool checked);
 };
 
 class MainWindowDesigner
@@ -129,7 +130,8 @@ public:
     json_obj AddRoomJs( str_type name,  str_type password,  str_type roomname) override ;
     json_obj DeleteRoomJs( str_type name,  str_type password,  str_type roomname) override;
 
-    json_obj LoginUserJs( str_type name,  str_type password,  str_type roomname) override ;
+    json_obj LoginUserJs( str_type name,  str_type password,
+                         str_type roomname, SocketComplect* complect) override ;
     json_obj RegisterUserJs( str_type name,  str_type password) override ;
     json_obj DeleteUserJs( str_type name,  str_type password,  str_type to_delete) override ;
 

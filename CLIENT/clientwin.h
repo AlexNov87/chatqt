@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTcpSocket>
 #include"request_json.h"
+#include"../structs.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,22 +21,12 @@ public:
     ~ClientWin();
 
 private slots:
-    void onReadyRead()
-    {
-        QTcpSocket *clientSocket = qobject_cast<QTcpSocket*>(sender());
-        if (!clientSocket)
-            return;
-
-        QByteArray data = clientSocket->readAll();
-        QMessageBox::critical(nullptr, "CLIENT", data);
-        data.clear();
-    }
-
-    void on_commandLinkButton_pressed();
+    void onReadyRead();
     void on_commandLinkButton_clicked();
+    void on_commandLinkButton_2_clicked();
 
 private:
     Ui::ClientWin *ui;
-    QTcpSocket sock;
+    SocketComplect sock;
 };
 #endif // CLIENTWIN_H

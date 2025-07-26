@@ -33,25 +33,6 @@ QJsonDocument ReadJsonDocument(const QString &path);
 std::optional<QJsonDocument> ReadJsonFromQByte(QByteArray array);
 QJsonObject ReadJsonFromFileConfig(const QString& path);
 
-template<typename K, typename U, template<typename, typename> class MapType>
-QString GetMapMembersJsonArrayView (const MapType<K, U>& map){
-
-        QTextStream stream;
-        int cnt = 0;
-        int max = map.size() - 1;
-        stream << "[\n";
-        {
-            for(auto&& elem : map){
-                stream <<'"'<< elem.first << '"';
-                ++cnt;
-                if(cnt == max){break;}
-                stream << ',';
-            }
-        }
-        stream << "\n]\n";
-        return *stream.string();
-}
-
 template<typename JSON>
 void WritetoFileJson(JSON& json){
     QString write_pth = QFileDialog::getSaveFileName
@@ -71,9 +52,17 @@ void WritetoFileJson(JSON& json){
 }
 
 template<typename JSON>
-QByteArray WritetoQByteArrayJson(const JSON& json){
+QByteArray WritetoQByteAnyJson(const JSON& json){
     QJsonDocument doc(json);
     return doc.toJson();
+}
+
+template<typename K, typename U, template<typename, typename> class MapType>
+QString GetMapMembersJsonArrayView (const MapType<K, U>& map){
+
+    QJsonArray arr;
+    for(auto&& elem : map){ arr.append(elem.first);}
+    return QString(WritetoQByteAnyJson(arr));
 }
 
 bool IsErrorJsonObject(const json_obj& obj);

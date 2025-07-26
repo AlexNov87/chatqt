@@ -25,6 +25,7 @@ const std::unordered_set<QString>& ServerBase::GetRooms() const {
 }
 
 QString ServerBase::GetSerializatedRoomList(){
+
     return json::GetMapMembersJsonArrayView(_rooms);
 }
 
@@ -69,7 +70,8 @@ QJsonObject GraphicsServer::GetRoomsJs() {
 
     ACTIONS this_act = ACTIONS::GET_ROOMS_LIST;
     auto lam = [&]{
-        return ans_obj::SuccessServerRooms(GetSerializatedRoomList());
+        QString roomlist = GetSerializatedRoomList();
+        return ans_obj::SuccessServerRooms(roomlist);
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }

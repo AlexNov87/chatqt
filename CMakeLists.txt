@@ -48,6 +48,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         alias.h
         server_sigslots.cpp
         server_session.cpp
+        chatroom.cpp
 
 
     )

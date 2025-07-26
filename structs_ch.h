@@ -15,8 +15,9 @@ class ServerBase;
 class ChatUser
 {
 public:
-    ChatUser(QString name, QTcpSocket* socket, ChatRoom* chatroom) :
-        _name(std::move(name)), _socket(std::move(socket)), _chatroom(chatroom){}
+    ChatUser(QString name, SocketComplect* socket) :
+        _name(std::move(name)),
+        _socket(std::move(socket)) {}
 
     QString GetName() const{
         return _name;
@@ -25,72 +26,50 @@ public:
     QString GetToken() const{
         return _token;
     }
+
+    void RecievePublicMessage(const str_type& author, str_type message){
+
+
+
+        QByteArray arr;
+        _socket->GuardSendMessageOtherSide(arr);
+    }
+
+    void RecievePrivateMessage(const str_type& author, str_type message){
+
+
+        QByteArray arr;
+        _socket->GuardSendMessageOtherSide(arr);
+    }
+
 private:
     friend class ChatRoom;
-    QString _name;
-    QString _token;
-    QTcpSocket* _socket;
-    ChatRoom* _chatroom;
+    str_type _name;
+    str_type _token;
+    SocketComplect* _socket;
 };
+
 
 class ChatRoom
 {
 public:
-    ChatRoom(ServerBase* srv, QString creator) : _srv(srv),
-    _creator(std::move(creator)) {
-        assert(srv != nullptr);
-
-    }
-
-    std::optional<QString> AddUser(std::shared_ptr<ChatUser> user){
-
-        try{
-            LG(_mtx);
-            if(_users.contains(user->GetName())){
-                return "User " + user->GetName() + " is already in room" ;
-            };
-
-            _users[user->GetName()] = user;
-            _tokens.insert(user->GetToken());
-            return std::nullopt;
-        }
-        catch(const std::exception&ex){
-            return  "AddUser exception: " + QString(ex.what());
-        }
-    }
-
-    std::optional<QString> DeleteUser(const QString& name){
-
-        try{
-            LG(_mtx);
-            if(!_users.contains(name)){
-                return "There is no user with name: "+ name;
-            }
-           auto user = _users.at(name);
-            _users.erase(name);
-            _tokens.erase(user->GetToken());
-            return std::nullopt;
-        }
-        catch(const std::exception&ex){
-            return  "DeleteUser exception: " + QString(ex.what());
-        }
-    }
-
-    const QString& GetCreator(){
-        return _creator;
-    }
-
-    QString SerializatedJsonUsers(){
-        LG(_mtx);
-        return json::GetMapMembersJsonArrayView(_users);
-    }
-
+    ChatRoom(ServerBase* srv, QString creator);
+    json_obj AddUser(std::shared_ptr<ChatUser> user);
+    json_obj DeleteUser(const QString& name);
+    json_obj PublicMessage(const QString&token, QString message);
+    json_obj PrivateMessage(const QString&token,
+                            const QString& user_to,QString message);
+    const QString& GetCreator() const;
+    QString SerializatedJsonUsers() const;
 protected:
+    std::optional<json_obj> MessageCheckErrorTemplate
+        (const QString&token,const QString& message, ACTIONS action);
+
     ServerBase* _srv;
-    std::unordered_map<QString, std::shared_ptr<ChatUser>> _users;
+    std::map<str_type, std::shared_ptr<ChatUser>> _users;
     QString _creator;
-    std::mutex _mtx;
-    std::unordered_set<QString> _tokens;
+    mutable std::mutex _mtx;
+    std::map<str_type, std::shared_ptr<ChatUser>> _tokens;
 };
 
 class ServerBase :
@@ -108,7 +87,8 @@ public:
 
   virtual   json_obj AddRoomJs(str_type name, str_type password, str_type roomname) = 0;
   virtual   json_obj DeleteRoomJs(str_type name, str_type password, str_type roomname) = 0;
-  virtual   json_obj LoginUserJs(str_type name, str_type password, str_type roomname) = 0;
+  virtual   json_obj LoginUserJs(str_type name, str_type password,
+                               str_type roomname, SocketComplect* complect) = 0;
   virtual   json_obj RegisterUserJs(str_type name, str_type password) = 0;
   virtual   json_obj DeleteUserJs(str_type name, str_type password,
                                   str_type to_delete) = 0;
@@ -122,9 +102,6 @@ public:
 
   virtual json_obj PrivateMessageJs
       (str_type token, str_type message, str_type user_to, str_type room_name) =0;
-
-
-
 
   QHostAddress GetIP() const;
   QString GetIPStr() const;

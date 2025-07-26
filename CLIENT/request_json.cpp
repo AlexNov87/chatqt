@@ -108,5 +108,10 @@ json_obj MakeRequestPrivateMessage
     return obj;
 }
 
+json_obj MakeRequestRoomList(){
+ return  MakeRequestTemplate
+        (CONSTANTS::RF_DIRECTION_SERVER, ACTIONS::GET_ROOMS_LIST);
+};
+
 
 }//namespace

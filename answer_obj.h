@@ -22,6 +22,8 @@ json_obj SuccessLogin(str_type token, str_type messages_serialized);
 json_obj SuccessPrivateMessage();
 json_obj SuccessPublicMessage();
 
+json_obj TestObject();
+
 template<typename Foo>
 json_obj GuardExceptSetter(Foo foo, ACTIONS this_act){
     try{

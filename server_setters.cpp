@@ -87,7 +87,7 @@ QJsonObject GraphicsServer::AddRoomJs(QString name, QString password, QString ro
         }
 
         //!!!!!!!!!!!!!!!!!!!!!!!!!
-        return QJsonObject{};
+        return ans_obj::SuccessCreateUser(std::move(roomname));
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 
@@ -140,13 +140,14 @@ QJsonObject GraphicsServer::DeleteRoomJs(QString name, QString password, QString
 
 
         //!!!!!!!!!!!!!!!!!!!!!!!!!
-        return QJsonObject{};
+          return ans_obj::SuccessDeleteRoom(std::move(roomname));
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 
 }
 
-QJsonObject GraphicsServer::LoginUserJs(QString name, QString password, QString roomname) {
+QJsonObject GraphicsServer::LoginUserJs(QString name, QString password,
+                                        QString roomname, SocketComplect* complect) {
 
     ACTIONS this_act = ACTIONS::LOGIN;
     auto lam = [&]{
@@ -162,10 +163,28 @@ QJsonObject GraphicsServer::LoginUserJs(QString name, QString password, QString 
             return ans_obj::MakeErrorObject
                 ("Wrong password:"+ name, this_act);
         }
-        QString token = QString(this->_token_generator.GenerateHEXToken().data());
 
+        if(!_rooms.contains(roomname)){
+            return ans_obj::MakeErrorObject
+                ("The is no room:"+ roomname, this_act);
+        }
+
+
+       // _rooms.at(roomname).a
+
+
+
+
+       QString token = QString(this->_token_generator.GenerateHEXToken().data());
+
+
+
+
+        /*
+        EARLIER MESSAGES
+        */
         //!!!!!!!!!!!!!!!!!!!!!!!!!
-        return QJsonObject{};
+        return ans_obj::SuccessLogin(token, "MESSSSSSSSSSSSSSSSSSSSSSSSSS");
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
@@ -202,8 +221,7 @@ QJsonObject GraphicsServer::RegisterUserJs(QString name, QString password) {
                 ("Failed to add user(SQL)",
                  ACTIONS::CREATE_USER); }
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!
-        return QJsonObject{};
+        return ans_obj::SuccessCreateUser(std::move(name));
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
@@ -261,7 +279,7 @@ QJsonObject GraphicsServer::DeleteUserJs(QString name, QString password, QString
         }
 
         //!!!!!!!!!!!!!!!!!!!!!!!!!
-        return QJsonObject{};
+        return ans_obj::SuccessDeleteUser(std::move(name));
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 
@@ -269,17 +287,18 @@ QJsonObject GraphicsServer::DeleteUserJs(QString name, QString password, QString
 
 json_obj GraphicsServer::DisconnectJs(str_type token,  str_type room_name) {
 
-    return {};
+    return ans_obj::SuccessDisconnect();
 }
 
 json_obj GraphicsServer::PublicMessageJs
     ( str_type token,  str_type message,  str_type room_name) {
 
-    return {};
+    return ans_obj::SuccessPublicMessage();
 }
 
 json_obj GraphicsServer::PrivateMessageJs
     ( str_type token,  str_type message,
     str_type user_to, str_type room_name) {
-    return {};
+
+    return ans_obj::SuccessPrivateMessage();
 }
