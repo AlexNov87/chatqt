@@ -30,8 +30,6 @@ void ServerSession::Execute(){
         json_obj answer = ExecuteExternal(json_stuff);
         QByteArray arr = json::WritetoQByteAnyJson(answer);
         _sock->GuardSendMessageOtherSide(arr);
-
-       // WriteToSocketWithFlushAddingSplitSym(_sock->socket, arr);
     }
 
 }

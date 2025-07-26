@@ -58,11 +58,18 @@ QJsonObject GraphicsServer::SetMaxUsers(int max) {
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
 
-//////////////////////ROOMS
-QJsonObject GraphicsServer::AddRoomJs(QString name, QString password, QString roomname)  {
+//////////////////////!!!!!!!!!!!!!!!!!!!!!!
+QJsonObject GraphicsServer::AddRoomJs(QString name,
+ QString password, QString roomname)  {
 
     ACTIONS this_act = ACTIONS::CREATE_ROOM;
     auto lam = [&]{
+
+        //Если нет добавляющего в базе
+        if(!IsUserInBase(name, password)){
+            return  ans_obj::MakeErrorObject
+                ("You are not in chat-base", this_act);
+        }
 
         if(!HasPermission(name, password, this_act)){
             return  ans_obj::MakeErrorObject
@@ -134,7 +141,6 @@ QJsonObject GraphicsServer::LoginUserJs(QString name, QString password,
     auto lam = [&]{
 
         LG(this->_mtx_mod_users);
-
         //Если юзера нет в базе
         if(!IsUserInBase(name,password)){return ans_obj::MakeErrorObject
                 ("Can not find user:"+ name , this_act);}
