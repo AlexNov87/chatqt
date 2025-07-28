@@ -79,7 +79,7 @@ void AnotherThreadRunFoo(Foo foo){
 }
 void WriteToSocketWithFlush(QTcpSocket* socket, const QByteArray& arr);
 void WriteToSocketWithFlushAddingSplitSym(QTcpSocket* socket,QByteArray& arr);
-
+void Fatal(const str_type& str);
 
 #endif // HELPFOO_H
 

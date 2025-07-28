@@ -2,6 +2,7 @@
 #define INITIALIZATORS_HELP_H
 
 #include"constants.h"
+#include"constants_load.h"
 #include"helpfoo.h"
 
 #include<optional>
@@ -29,12 +30,10 @@ std::optional<std::unordered_set<QString>>
 FromJSONUsetByName(const QString& name, const QJsonObject& obj);
 
 ///////////////////////////////////////////////////////////////
-template<typename... Args>
-std::optional<str_type> IsContainsFieldAndNotEmpty
-    (const json_obj&obj, Args... args){
 
-    std::unordered_set<str_type> fields;
-    (fields.insert(std::move(args)), ...);
+template<typename Container>
+std::optional<str_type> IsContainsFieldAndStringAndNotEmpty
+    (const json_obj&obj, const Container& fields){
 
     for(auto && field: fields){
         if(!obj.contains(field)){
@@ -51,6 +50,23 @@ std::optional<str_type> IsContainsFieldAndNotEmpty
     }
     return std::nullopt;
 }
+
+
+template<typename Container>
+std::optional<str_type> IsContainsFieldAndInt
+    (const json_obj&obj, const Container& fields){
+    for(auto && field: fields){
+        if(!obj.contains(field)){
+            return "There is no field: " + field;
+        }
+        if(!obj.value(field).isDouble()){
+            "The field: " + field + " is not numeric";
+        }
+    }
+    return std::nullopt;
+}
+
+std::optional<str_type> CheckInitObject(const json_obj&obj);
 
 }//NAMESPACE
 #endif // INITIALIZATORS_HELP_H

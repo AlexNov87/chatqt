@@ -1,7 +1,9 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 #include"helpfoo.h"
+#include"sql.h"
 #include"constants.h"
+#include"constants_load.h"
 #include"initializators_help.h"
 #include<QHostAddress>
 #include<mutex>
@@ -11,29 +13,21 @@
 #include<QListWidget>
 #include<QTcpSocket>
 
-enum class Role {
-    USER , SUPERUSER , ADMIN , MASTER
-};
 
-class File_Json {
-public:
-    File_Json();
-    const QJsonObject& JsonValues() const;
-private:
-    void  SetConfigFile();
-    QString _file_config;
-    QJsonObject _values;
-};
-
-class ConfigInit
+struct ConfigInit
 {
 public:
     ConfigInit();
-protected:
-    QHostAddress _ip;
-    int _port = 80;
-    int _max_conn = 100;
-    std::unordered_set<QString> _roomlist;
+    const json_obj& Object(){return _object;}
+private:
+ json_obj _object;
+ QHostAddress test_adress;
+  void  CheckServerAllRight();
+  void  CheckSQLAllRight();
+  void  CheckRoomField();
+
+  private :
+
 };
 
 struct SocketComplect{
@@ -41,7 +35,6 @@ struct SocketComplect{
     SocketComplect(){
         _mtx = std::make_shared<std::mutex>();
     }
-
 
     QTcpSocket* socket;
     QByteArray buffer;
@@ -75,7 +68,6 @@ struct SocketComplect{
         LG(*_mtx);
         WriteToSocketWithFlushAddingSplitSym(socket, arr);
     }
-
 
 private:
      std::shared_ptr<std::mutex> _mtx;

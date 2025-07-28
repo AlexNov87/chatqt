@@ -42,8 +42,9 @@ std::optional<json_obj> ServerSession::FirstStepCheckErrors
         return js_obj;
     }
 
+    static std::set<str_type> obj_complect{CONSTANTS::LF_ACTION};
     //Есть ли в объекте поле действия.
-    auto reason = json::IsContainsFieldAndNotEmpty(js_obj, CONSTANTS::LF_ACTION);
+    auto reason = json::IsContainsFieldAndStringAndNotEmpty(js_obj, obj_complect);
     if(reason){
         return ans_obj::MakeErrorObject(*reason, ACTIONS::SYSTEM);
     }
@@ -72,8 +73,10 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     switch (act) {
     case ACTIONS::CREATE_ROOM :
     {
-        auto reason = json::IsContainsFieldAndNotEmpty(obj,
-        CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_ROOMNAME);
+        static std::set<str_type> current_complect{
+            CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_ROOMNAME
+        };
+        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
         if(reason){
             return ans_obj::MakeErrorObject(*reason, act);
         }
@@ -87,8 +90,11 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     //////////////////////////////////////
     case ACTIONS::CREATE_USER :
     {
-        auto reason = json::IsContainsFieldAndNotEmpty(obj,
-        CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD );
+        static std::set<str_type> current_complect{
+            CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD
+        };
+        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+
         if(reason){
             return ans_obj::MakeErrorObject(*reason, act);
         }
@@ -100,8 +106,11 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     //////////////////////////////////////
     case ACTIONS::DELETE_ROOM :
     {
-        auto reason = json::IsContainsFieldAndNotEmpty(obj,
-        CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_ROOMNAME);
+        static std::set<str_type> current_complect{
+            CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_ROOMNAME
+        };
+        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+
         if(reason){
             return ans_obj::MakeErrorObject(*reason, act);
         }
@@ -115,8 +124,12 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     //////////////////////////////////////
     case ACTIONS::DELETE_USER :
     {
-        auto reason = json::IsContainsFieldAndNotEmpty(obj,
-        CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_USER_TO_DELETE);
+
+        static std::set<str_type> current_complect{
+            CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_USER_TO_DELETE
+        };
+        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+
         if(reason){
             return ans_obj::MakeErrorObject(*reason, act);
         }
@@ -130,8 +143,12 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     //////////////////////////////////////
     case ACTIONS::DISCONNECT :
     {
-        auto reason = json::IsContainsFieldAndNotEmpty(obj,
-        CONSTANTS::LF_TOKEN, CONSTANTS::LF_ROOMNAME);
+
+        static std::set<str_type> current_complect{
+            CONSTANTS::LF_TOKEN, CONSTANTS::LF_ROOMNAME
+        };
+        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+
         if(reason){
             return ans_obj::MakeErrorObject(*reason, act);
         }
@@ -143,7 +160,11 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     //////////////////////////////////////
     case ACTIONS::GET_ROOM_USERS :
     {
-        auto reason = json::IsContainsFieldAndNotEmpty(obj, CONSTANTS::LF_ROOMNAME);
+        static std::set<str_type> current_complect{
+           CONSTANTS::LF_ROOMNAME
+        };
+        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+
         if(reason){
             return ans_obj::MakeErrorObject(*reason, act);
         }
@@ -154,8 +175,12 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     //////////////////////////////////////
     case ACTIONS::LOGIN :
     {
-        auto reason = json::IsContainsFieldAndNotEmpty(obj,
-                                                       CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_ROOMNAME);
+
+        static std::set<str_type> current_complect{
+            CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_ROOMNAME
+        };
+        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+
         if(reason){
             return ans_obj::MakeErrorObject(*reason, act);
         }
@@ -176,9 +201,12 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     //////////////////////////////////////
     case ACTIONS::PRIVATE_MESSAGE :
     {
-        auto reason = json::IsContainsFieldAndNotEmpty(obj,
-        CONSTANTS::LF_TOKEN, CONSTANTS::LF_ROOMNAME,
-        CONSTANTS::LF_USER_RECIEVER, CONSTANTS::LF_PRIVATE_MESSAGE);
+        static std::set<str_type> current_complect{
+         CONSTANTS::LF_TOKEN, CONSTANTS::LF_ROOMNAME,
+         CONSTANTS::LF_USER_RECIEVER, CONSTANTS::LF_PRIVATE_MESSAGE
+        };
+        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+
         if(reason){
             return ans_obj::MakeErrorObject(*reason, act);
         }
@@ -194,9 +222,12 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     //////////////////////////////////////
     case ACTIONS::PUBLIC_MESSAGE :
     {
-        auto reason = json::IsContainsFieldAndNotEmpty(obj,
-            CONSTANTS::LF_TOKEN, CONSTANTS::LF_ROOMNAME,
-            CONSTANTS::LF_PUBLIC_MESSAGE);
+        static std::set<str_type> current_complect {
+                CONSTANTS::LF_TOKEN, CONSTANTS::LF_ROOMNAME,
+                CONSTANTS::LF_PUBLIC_MESSAGE
+        };
+        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+
         if(reason){
             return ans_obj::MakeErrorObject(*reason, act);
         }

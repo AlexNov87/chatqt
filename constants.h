@@ -3,7 +3,6 @@
 #include "alias.h"
 #include<map>
 #include<set>
-#include<cassert>
 #include<QString>
 
 struct CONSTANTS
@@ -24,6 +23,7 @@ struct CONSTANTS
 
     // Map Parameters
     static chart LF_ACTION;
+    static chart LF_DIRECTION;
     static chart LF_INITIATOR ;
     static chart LF_LAST_MSG ;
     static chart LF_LOGIN ;
@@ -48,29 +48,21 @@ struct CONSTANTS
     static chart RF_ERR_INITIATOR_CHATROOM;
     static chart RF_ERR_PERMISSION_DENIDED;
 
-    static chart LF_DIRECTION;
     static chart RF_DIRECTION_SERVER;
     static chart RF_DIRECTION_CHATROOM;
+    static chart UNKNOWN;
 
-    //конфиги загрузочные
-   static chart CHATROOMS ;
-   static chart DB_PASSORD ;
-   static chart DB_TABLE_NAME ;
-   static chart DB_USER ;
-   static chart IP;
-   static chart MAX_CONNECTIONS ;
-   static chart PORT;
-   static chart UNKNOWN;
-
-    ///@brief Длина токена
-    static const size_t N_TOKEN_LEN;
-    ///@brief
-    static const size_t N_MAX_MESSAGE_LEN;
     static const char SERIAL_SYM;
 
+    static chart ROLE_MASTER;
+    static chart ROLE_ADMINISTRATOR;
+    static chart ROLE_SUPERUSER;
+    static chart ROLE_USER;
+
 private:
-    CONSTANTS() {};
+    CONSTANTS() {}
 };
+
 
 enum class ACTIONS {
 
@@ -82,10 +74,15 @@ enum class ACTIONS {
     EARLIER_MESSAGES, SYSTEM
 };
 
+enum class Role {
+    USER , SUPERUSER , ADMIN , MASTER
+};
+
 extern const std::map<str_type, ACTIONS> _NAME_ACTION;
 extern const std::map<ACTIONS, str_type> _ACTION_NAME;
 extern const std::set<str_type> _ACT_SERVER;
 
-
+extern const std::map<str_type, Role> _NAME_ROLE;
+extern const std::map<Role, str_type> _ROLE_NAME;
 
 #endif // CONSTANTS_H

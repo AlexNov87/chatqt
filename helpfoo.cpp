@@ -21,7 +21,6 @@ bool ChooseBox(const QString& question){
 //JSON
 namespace json {
 
-
 QJsonObject ReadJsonFromFileConfig(const QString &path){
 
     try{
@@ -123,4 +122,9 @@ void WriteToSocketWithFlush(QTcpSocket* socket, const QByteArray& arr){
 void WriteToSocketWithFlushAddingSplitSym(QTcpSocket* socket,QByteArray& arr){
     arr.push_back(CONSTANTS::SERIAL_SYM);
     WriteToSocketWithFlush(socket, arr);
+}
+
+void Fatal(const str_type& str){
+    FatalErrorMessageBox(str, "Config Init");
+    std::abort();
 }

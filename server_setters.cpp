@@ -18,7 +18,6 @@ QJsonObject GraphicsServer::SetIP(QString ip)  {
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
 
-
 QJsonObject GraphicsServer::SetPort(int port)  {
 
     ACTIONS this_act = ACTIONS::SYSTEM;

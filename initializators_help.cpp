@@ -87,5 +87,24 @@ std::optional<QString> FromJSONQStringByName(const QString &name, const QJsonObj
 
 }
 
+std::optional<str_type> CheckInitObject(const json_obj&obj){
+    static std::set<str_type> string_fields {
+        LOAD_CONSTANTS::DB_HOST,LOAD_CONSTANTS::DB_PASSWORD,
+        LOAD_CONSTANTS::DB_TABLE_NAME, LOAD_CONSTANTS::DB_USER,
+        LOAD_CONSTANTS::SERVER_IP
+    };
+    static std::set<str_type> numeric_fields {
+        LOAD_CONSTANTS::DB_PORT, LOAD_CONSTANTS::MAX_CONNECTIONS,
+        LOAD_CONSTANTS::MAX_MESSAGE_LEN, LOAD_CONSTANTS::SERVER_PORT
+    };
+
+    auto reason = IsContainsFieldAndInt(obj, numeric_fields);
+    if(reason){return reason;}
+    reason = IsContainsFieldAndStringAndNotEmpty(obj, string_fields);
+    if(reason){return reason;}
+
+    return std::nullopt;
+}
+
 }
 

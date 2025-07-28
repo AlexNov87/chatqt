@@ -106,12 +106,10 @@ protected:
 
 class ServerBase :
 /*Для свойств QTcpServer*/
-public QTcpServer,
-/*Для установки настроек из файла или по умолчанию*/
-public ConfigInit {
+public QTcpServer {
 public:
 
-    ServerBase() : QTcpServer(), ConfigInit() {}
+    ServerBase() : QTcpServer(){}
 
   virtual json_obj SetIP(str_type ip) = 0;
   virtual json_obj SetPort(int port) = 0;
@@ -139,9 +137,9 @@ public:
   QString GetIPStr() const;
   int GetPort() const;
   int GetMaxUsers() const;
-  const std::unordered_set<QString>& GetRooms() const;
+  const std::unordered_map<QString, std::shared_ptr<ChatRoom>>& GetRooms() const;
 
-protected:
+  protected:
 
     struct UserRole{
         QString password;
@@ -166,6 +164,10 @@ protected:
     mutable std::mutex _mtx_room;
     mutable std::mutex _mtx_net;
     Service::TokenGen _token_generator;
+
+    QHostAddress _ip;
+    int _max_conn = 100;
+    int _port = 80;
 
 };
 

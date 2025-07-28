@@ -19,9 +19,9 @@ int ServerBase::GetMaxUsers() const {
     return _max_conn;
 }
 
-const std::unordered_set<QString>& ServerBase::GetRooms() const {
+const std::unordered_map<QString, std::shared_ptr<ChatRoom>> & ServerBase::GetRooms() const {
     LG(_mtx_room);
-    return _roomlist;
+    return _rooms;
 }
 
 QString ServerBase::GetSerializatedRoomList(){
@@ -34,6 +34,12 @@ QString ServerBase::GetSerializatedRoomList(){
 GraphicsServer::GraphicsServer()  :  ServerBase(), GraphicWidgets() {
     connect(this, &QTcpServer::newConnection,
             this, &GraphicsServer::OnNewConnection);
+
+
+    ConfigInit init;
+    sql::SQLWorker(init.Object());
+
+
 }
 
 void GraphicsServer::InitGraphicForms(){
@@ -44,20 +50,20 @@ void GraphicsServer::InitGraphicForms(){
 
 void GraphicsServer::SetDefaultValues(){
 
-    QSpinBox *sb_maxconn = _maiwin->ui->sb_maxconn;
-    sb_maxconn->setValue(_max_conn);
+    // QSpinBox *sb_maxconn = _maiwin->ui->sb_maxconn;
+    // sb_maxconn->setValue(_max_conn);
 
-    QSpinBox *sb_port = _maiwin->ui->sb_port;
-    sb_port->setValue(_port);
+    // QSpinBox *sb_port = _maiwin->ui->sb_port;
+    // sb_port->setValue(_port);
 
-    QLineEdit *le_ip = _maiwin->ui->le_setip;
-    le_ip->setText(_ip.toString());
+    // QLineEdit *le_ip = _maiwin->ui->le_setip;
+    // le_ip->setText(_ip.toString());
 
-    QListWidget *lw_rooms = this->_rooms_form->ui->lw_rooms;
-    for(auto && rm : _roomlist){
-        lw_rooms->addItem(rm);
-        _rooms[rm] = std::make_shared<ChatRoom>(this, "");
-    }
+    // QListWidget *lw_rooms = this->_rooms_form->ui->lw_rooms;
+    // for(auto && rm : _rooms){
+    //     lw_rooms->addItem(rm);
+    //     _rooms[rm.] = std::make_shared<ChatRoom>(this, "");
+    // }
 }
 
 void GraphicsServer::InitAndRun(){
