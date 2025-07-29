@@ -27,7 +27,8 @@ public:
 
     json_obj RegisterNewUser(str_type name, str_type pass);
     json_obj DeleteUser(str_type name, str_type password, str_type to_delete);
-    bool IsUserLogined(str_type name, str_type password);
+    bool IsAuthorizated(str_type name, str_type password);
+    bool UpdateMaster(str_type name, str_type pass);
 
 private:
     friend class FormMaster;
@@ -60,9 +61,6 @@ private:
 
     std::map<str_type, UserRole> _user_passhash;
     std::recursive_mutex _mtx;
-
-    str_type _admin;
-    str_type _admin_pass;
     bool _has_master = false;
 };
 

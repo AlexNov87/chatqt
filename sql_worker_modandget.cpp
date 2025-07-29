@@ -22,7 +22,7 @@ json_obj SQLWorker::RegisterNewUser(str_type name, str_type pass){
 json_obj SQLWorker::DeleteUser(str_type name, str_type password, str_type to_delete){
     LGR(_mtx);
     ACTIONS this_act = ACTIONS::DELETE_USER;
-    if(!IsUserLogined(name, password)){
+    if(!IsAuthorizated(name, password)){
         return ans_obj::MakeErrorObject("You are not logined"
                                         , this_act );
     }
@@ -47,7 +47,7 @@ json_obj SQLWorker::DeleteUser(str_type name, str_type password, str_type to_del
     return ans_obj::SuccessDeleteUser(to_delete);
 }
 
-bool SQLWorker::IsUserLogined(str_type name, str_type password){
+bool SQLWorker::IsAuthorizated(str_type name, str_type password){
     LGR(_mtx);
     if(!_user_passhash.contains(name)){
         return false;
@@ -58,4 +58,18 @@ bool SQLWorker::IsUserLogined(str_type name, str_type password){
     return true;
 }
 
+bool SQLWorker::UpdateMaster(str_type name, str_type pass){
+    str_type umast = R"(
+        UPDATE users SET name = :name ,
+        password = :pass  WHERE role_id = :rd
+        )";
+    QSqlQuery quer;
+    quer.prepare(umast);
+    quer.bindValue(":pass", pass);
+    quer.bindValue(":name", name);
+    quer.bindValue(":rd", _id_roles.at(CONSTANTS::ROLE_MASTER));
+    return quer.exec();
 }
+
+
+}//namespace sql
