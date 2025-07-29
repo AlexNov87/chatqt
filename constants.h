@@ -78,6 +78,11 @@ enum class Role {
     USER , SUPERUSER , ADMIN , MASTER
 };
 
+struct UserRole{
+    str_type password;
+    Role role;
+};
+
 extern const std::map<str_type, ACTIONS> _NAME_ACTION;
 extern const std::map<ACTIONS, str_type> _ACTION_NAME;
 extern const std::set<str_type> _ACT_SERVER;

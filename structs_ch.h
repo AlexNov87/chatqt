@@ -141,11 +141,6 @@ public:
 
   protected:
 
-    struct UserRole{
-        QString password;
-        Role role;
-    };
-
     std::unordered_map<QString, std::shared_ptr<ChatRoom>> _rooms;
     std::unordered_map<QString, UserRole> _pass_hash;
     std::unordered_map<QTcpSocket*, SocketComplect> _socket_db;

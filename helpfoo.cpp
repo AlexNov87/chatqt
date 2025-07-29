@@ -128,3 +128,7 @@ void Fatal(const str_type& str){
     FatalErrorMessageBox(str, "Config Init");
     std::abort();
 }
+
+unsigned int PassHash(const str_type& str){
+    return qHash(str) ^  qHash(str) * 7 ;
+}

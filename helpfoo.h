@@ -2,7 +2,6 @@
 #define HELPFOO_H
 #include"answer_obj.h"
 
-
 #include<thread>
 #include<mutex>
 #include<QString>
@@ -10,7 +9,9 @@
 #include<QFileDialog>
 #include<unordered_set>
 #include <QFile>
+#include <QHash>
 #include <QTcpSocket>
+#include <ranges>
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -18,7 +19,7 @@
 #include <QJsonValue>
 #include <QJsonParseError>
 
-#define LG(mutex_name) std::lock_guard<std::mutex> lg(mutex_name)
+
 
 //DIALOGS
 QString SelectConfigFile(QString comment);
@@ -83,5 +84,5 @@ void Fatal(const str_type& str);
 
 #endif // HELPFOO_H
 
-
+unsigned int PassHash(const str_type& str);
 

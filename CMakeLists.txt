@@ -54,6 +54,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         constants_load.h
         constants_load.cpp
         sql_worker_create.cpp
+        formmaster.h formmaster.cpp formmaster.ui
+        sql_worker_modandget.cpp
+
+
+
+
 
 
     )

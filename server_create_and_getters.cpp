@@ -36,10 +36,6 @@ GraphicsServer::GraphicsServer()  :  ServerBase(), GraphicWidgets() {
             this, &GraphicsServer::OnNewConnection);
 
 
-    ConfigInit init;
-    sql::SQLWorker(init.Object());
-
-
 }
 
 void GraphicsServer::InitGraphicForms(){
