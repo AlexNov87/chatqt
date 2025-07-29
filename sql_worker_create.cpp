@@ -162,16 +162,10 @@ void SQLWorker::CreateMaster(){
     if(result != QDialog::Accepted){
         FatalErrorMessageBox("Failed to create admin user");
     };
-
-    QSqlQuery quer;
-    str_type admin = R"(
-         INSERT INTO users
-         (name, password, role_id) VALUES ( :name , :pass , :idr );
-        )";
-    quer.prepare(admin);
-    quer.bindValue(":name", mst.AdminName());
-    quer.bindValue(":pass", mst.AdminPassword());
-    quer.bindValue(":idr", _id_roles.at(CONSTANTS::ROLE_MASTER));
+    QSqlQuery quer = QueryPreparedToIsertUser(
+      mst.AdminName() , mst.AdminPassword() ,
+      _id_roles.at(CONSTANTS::ROLE_MASTER)
+    );
     QueryExecute(quer);
 }
 

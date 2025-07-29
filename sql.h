@@ -13,12 +13,21 @@
 #include "formmaster.h"
 
 namespace sql {
+QSqlQuery QueryPreparedToIsertUser( const str_type& name,
+                                   const str_type& pass, int id);
+
+QSqlQuery QueryPreparedToDeleteUser(const str_type& name);
+
+
+
 class SQLWorker : public std::enable_shared_from_this<sql::SQLWorker> {
 public:
+
     SQLWorker(const json_obj& obj);
 
-    void CreateMaster();
-
+    json_obj RegisterNewUser(str_type name, str_type pass);
+    json_obj DeleteUser(str_type name, str_type password, str_type to_delete);
+    bool IsUserLogined(str_type name, str_type password);
 
 private:
     friend class FormMaster;
@@ -34,8 +43,7 @@ private:
     void CreateUsersBase();
     void LoadRoles();
     void LoadUsers();
-
-
+    void CreateMaster();
 
     QSqlDatabase _base;
     std::condition_variable _cv;
@@ -51,7 +59,7 @@ private:
     std::map<str_type,int> _id_roles;
 
     std::map<str_type, UserRole> _user_passhash;
-    std::mutex _mtx;
+    std::recursive_mutex _mtx;
 
     str_type _admin;
     str_type _admin_pass;

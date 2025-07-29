@@ -6,8 +6,8 @@ using chart = const char*;
 #define str_type QString
 
 #define LG(mutex_name) std::lock_guard<std::mutex> lg(mutex_name)
+#define LGR(mutex_name) std::lock_guard<std::recursive_mutex> lg(mutex_name)
 #define shptr(name , type) std::shared_ptr<type> name = std::make_shared<type>
-
 
 #endif // ALIAS_H
 

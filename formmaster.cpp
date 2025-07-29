@@ -36,6 +36,11 @@ void Formmaster::on_pb_create_master_clicked(){
         return;
     }
 
+    if(nm.size() > 49){
+        FatalErrorMessageBox("Name is too long (max 49)");
+        return;
+    }
+
     if(pw1 != pw2){
        FatalErrorMessageBox("Passwords are not equal");
         return;

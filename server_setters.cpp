@@ -167,38 +167,10 @@ QJsonObject GraphicsServer::LoginUserJs(QString name, QString password,
 }
 QJsonObject GraphicsServer::RegisterUserJs(QString name, QString password) {
 
-    ACTIONS this_act = ACTIONS::CREATE_USER ;
+    ACTIONS this_act = ACTIONS::CREATE_USER;
     auto lam = [&]{
 
-        LG(this->_mtx_mod_users);
-
-         //Если юзера нет в базе
-        bool in_base = IsUserInBase(name, password);
-        if(in_base){
-            return ans_obj::MakeErrorObject
-                ("User with this name is already registered",
-                 this_act); }
-
-        //Пытаемся в базу сервера вставить пользователя
-        UserRole role = { std::move(password) , Role::USER };
-        bool added_to_users = _pass_hash.insert({name, std::move(role)}).second;
-        if(added_to_users){ return ans_obj::MakeErrorObject
-                ("Failed to add user(server)",
-                 this_act); }
-
-        bool sql_added = true;
-        //Добавляем в SQL
-        /*
-          Add TO SQL;
-
-        */
-        if(!sql_added){
-            _pass_hash.erase(name);
-            return ans_obj::MakeErrorObject
-                ("Failed to add user(SQL)",
-                 ACTIONS::CREATE_USER); }
-
-        return ans_obj::SuccessCreateUser(std::move(name));
+        return json_obj{};
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
@@ -207,41 +179,8 @@ QJsonObject GraphicsServer::DeleteUserJs(QString name, QString password, QString
 
     ACTIONS this_act = ACTIONS::DELETE_USER;
     auto lam = [&]{
-        LG(this->_mtx_mod_users);
 
-        //Если юзера нет в базе
-        if(!IsUserInBase(name,password)){return ans_obj::MakeErrorObject
-                ("Can not find initiator user", this_act);}
-
-        if(_pass_hash.contains(to_delete)){
-            return ans_obj::MakeErrorObject
-                ("Can not find user, who must be deleted", this_act);
-        }
-
-        //Если удаляющий и удаляемый разные имена
-        if(name!= to_delete){
-            //Если есть разрешения удалить пользователя
-            if(!HasPermission(name, password,this_act)){
-                return ans_obj::MakeErrorObject
-                    ("You have no permission to delete users", this_act);
-            }
-
-            //Если ранг равен или больше удаляемого то не разрешить удаление
-            if(_pass_hash.at(name).role <= _pass_hash.at(to_delete).role){
-                return ans_obj::MakeErrorObject
-                    ("Your rank doesn't allow you to delete this user", this_act);
-            }
-        }
-
-        //Резервируем на случай отката
-        auto pair = *_pass_hash.find(to_delete);
-
-         _pass_hash.erase(to_delete);
-         //Удаляем из SQL в отдельном потоке
-         std::jthread delete_sql([&]{
-             /*  DELETE SQL; */
-         });
-         return ans_obj::SuccessDeleteUser(std::move(name));
+         return json_obj{};
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
