@@ -8,5 +8,5 @@ int main(int argc, char *argv[])
 
    std::shared_ptr<GraphicsServer> server = std::make_shared<GraphicsServer>();
    server->InitAndRun();
-    return a.exec();
+   return a.exec();
 }

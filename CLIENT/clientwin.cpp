@@ -122,11 +122,13 @@ void ClientWin::on_pb_login_clicked()
     FormLogin login("Enter your personal data");
     auto res = login.exec();
 
-    // json_obj js = req_obj::MakeRequestLogin()
-    //     (login.Name(), login.Password());
+    if(res != QDialog::Accepted){return;}
 
-    // QByteArray buf = json::WritetoQByteAnyJson (js);
-    // sock.GuardSendMessageOtherSide(buf);
+    json_obj js = req_obj::MakeRequestLogin
+        (login.Name(), login.Password(), ui->cb_roomlist->currentText());
+
+    QByteArray buf = json::WritetoQByteAnyJson (js);
+    sock.GuardSendMessageOtherSide(buf);
 }
 
 

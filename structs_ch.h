@@ -15,8 +15,9 @@ class ServerBase;
 class ChatUser
 {
 public:
-    ChatUser(QString name, SocketComplect* socket) :
+    ChatUser(str_type name, str_type token,  SocketComplect* socket) :
         _name(std::move(name)),
+        _token(std::move(token)),
         _socket(std::move(socket)) {}
 
     QString GetName() const{

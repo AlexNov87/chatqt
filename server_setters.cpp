@@ -152,7 +152,7 @@ QJsonObject GraphicsServer::LoginUserJs(str_type name, str_type password,
         str_type token = str_type(this->_token_generator.GenerateHEXToken().data());
 
         std::shared_ptr<ChatUser> new_user =
-            std::make_shared<ChatUser>(name, complect);
+            std::make_shared<ChatUser>(std::move(name), std::move(token) ,complect);
 
         return room->AddUser(new_user);
     };

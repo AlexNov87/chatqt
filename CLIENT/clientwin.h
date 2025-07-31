@@ -70,8 +70,6 @@ private:
 
     std::optional<ACTIONS> GetAction();
     void ExecuteRoomList();
-
-
 };
 
 
