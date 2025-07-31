@@ -4,7 +4,7 @@ QHostAddress ServerBase::GetIP() const{
     LG(_mtx_net);
     return _ip;
 }
-QString ServerBase::GetIPStr() const{
+str_type ServerBase::GetIPStr() const{
     LG(_mtx_net);
     return _ip.toString();
 }
@@ -19,12 +19,12 @@ int ServerBase::GetMaxUsers() const {
     return _max_conn;
 }
 
-const std::unordered_map<QString, std::shared_ptr<ChatRoom>> & ServerBase::GetRooms() const {
+const std::unordered_map<str_type, std::shared_ptr<ChatRoom>> & ServerBase::GetRooms() const {
     LG(_mtx_room);
     return _rooms;
 }
 
-QString ServerBase::GetSerializatedRoomList(){
+str_type ServerBase::GetSerializatedRoomList(){
 
     return json::GetMapMembersJsonArrayView(_rooms);
 }
@@ -34,8 +34,6 @@ QString ServerBase::GetSerializatedRoomList(){
 GraphicsServer::GraphicsServer()  :  ServerBase(), GraphicWidgets() {
     connect(this, &QTcpServer::newConnection,
             this, &GraphicsServer::OnNewConnection);
-
-
 }
 
 void GraphicsServer::InitGraphicForms(){
@@ -46,20 +44,19 @@ void GraphicsServer::InitGraphicForms(){
 
 void GraphicsServer::SetDefaultValues(){
 
-    // QSpinBox *sb_maxconn = _maiwin->ui->sb_maxconn;
-    // sb_maxconn->setValue(_max_conn);
+    QSpinBox *sb_maxconn = _maiwin->ui->sb_maxconn;
+    sb_maxconn->setValue(_max_conn);
 
-    // QSpinBox *sb_port = _maiwin->ui->sb_port;
-    // sb_port->setValue(_port);
+    QSpinBox *sb_port = _maiwin->ui->sb_port;
+    sb_port->setValue(_port);
 
-    // QLineEdit *le_ip = _maiwin->ui->le_setip;
-    // le_ip->setText(_ip.toString());
+    QLineEdit *le_ip = _maiwin->ui->le_setip;
+    le_ip->setText(_ip.toString());
 
-    // QListWidget *lw_rooms = this->_rooms_form->ui->lw_rooms;
-    // for(auto && rm : _rooms){
-    //     lw_rooms->addItem(rm);
-    //     _rooms[rm.] = std::make_shared<ChatRoom>(this, "");
-    // }
+    QListWidget *lw_rooms = this->_rooms_form->ui->lw_rooms;
+    for(auto && rm : _rooms){
+        lw_rooms->addItem(rm.first);
+    }
 }
 
 void GraphicsServer::InitAndRun(){
@@ -72,13 +69,13 @@ QJsonObject GraphicsServer::GetRoomsJs() {
 
     ACTIONS this_act = ACTIONS::GET_ROOMS_LIST;
     auto lam = [&]{
-        QString roomlist = GetSerializatedRoomList();
+        str_type roomlist = GetSerializatedRoomList();
         return ans_obj::SuccessServerRooms(roomlist);
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
 
-QJsonObject GraphicsServer::GetRoomUsersJs(QString roomname) {
+QJsonObject GraphicsServer::GetRoomUsersJs(str_type roomname) {
 
     ACTIONS this_act = ACTIONS::GET_ROOM_USERS;
     auto lam = [&]{

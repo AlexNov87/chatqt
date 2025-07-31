@@ -23,6 +23,9 @@ set(PROJECT_SOURCES
         ../constants.cpp
         ../constants_load.cpp
         ../answer_obj.cpp
+        ../socket_complect.cpp
+        ../formmaster.cpp
+        ../formlogin.cpp
 
 )
 
@@ -32,6 +35,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         request_json.h
         request_json.cpp
+        client_designer.h
+        answer_session.cpp
+        answer_checker.h
+        answer_checker.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET CLIENT APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

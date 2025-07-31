@@ -9,7 +9,6 @@
 #include <QStringListModel>
 #include "structs_ch.h"
 #include "answer_obj.h"
-#include "sql.h"
 #include <chrono>
 
 //UI

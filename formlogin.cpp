@@ -1,38 +1,33 @@
-#include "formmaster.h"
-#include "ui_formmaster.h"
+#include "formlogin.h"
+#include "ui_formlogin.h"
 
-Formmaster::Formmaster(const str_type& label)
+FormLogin::FormLogin(const str_type& label)
     : QDialog(nullptr)
-    , ui(new Ui::Formmaster)
+    , ui(new Ui::FormLogin)
 {
     ui->setupUi(this);
     QPushButton* okButton = ui->bb_choose->button(QDialogButtonBox::Ok);
-    connect(okButton, &QPushButton::clicked, this, &Formmaster::CheckToAccept);
+    connect(okButton, &QPushButton::clicked, this, &FormLogin::CheckToAccept);
     ui->lbl_header->setText(label);
 }
 
-Formmaster::~Formmaster()
+FormLogin::~FormLogin()
 {
     delete ui;
 }
 
-void Formmaster::CheckToAccept(){
+
+void FormLogin::CheckToAccept(){
     str_type nm = ui->le_admin_name->text();
     str_type pw1 = ui->le_password ->text();
-    str_type pw2 = ui->le_password_repeat->text();
 
-    if(nm.isEmpty() || pw1.isEmpty() || pw2.isEmpty()){
+    if(nm.isEmpty() || pw1.isEmpty()){
         FatalErrorMessageBox("One ore more fields are empty");
         return;
     }
 
     if(nm.size() > 49){
         FatalErrorMessageBox("Name is too long (max 49)");
-        return;
-    }
-
-    if(pw1 != pw2){
-        FatalErrorMessageBox("Passwords are not equal");
         return;
     }
 
@@ -46,9 +41,3 @@ void Formmaster::CheckToAccept(){
     _pass = QString::number(hsh);
     accept();
 }
-
-void Formmaster::on_bb_choose_accepted()
-{
-    CheckToAccept();
-}
-

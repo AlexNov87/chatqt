@@ -3,7 +3,7 @@
 
 MainWindowDesigner::MainWindowDesigner(std::shared_ptr<MainWindow> mainwin)
     : _mainwin(mainwin) {
-  //  StatusLabelOff();
+    StatusLabelOff();
 }
 
 void MainWindowDesigner::EditStatusLabel(QString text, QColor color){

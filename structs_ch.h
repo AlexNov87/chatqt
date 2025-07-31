@@ -3,7 +3,7 @@
 
 #include <QTcpServer>
 #include<unordered_map>
-
+#include "sql.h"
 #include "structs.h"
 #include "tokenizer.h"
 
@@ -28,9 +28,6 @@ public:
     }
 
     void RecievePublicMessage(const str_type& author, str_type message){
-
-
-
         QByteArray arr;
         _socket->GuardSendMessageOtherSide(arr);
     }
@@ -109,7 +106,20 @@ class ServerBase :
 public QTcpServer {
 public:
 
-    ServerBase() : QTcpServer(){}
+    ServerBase() : QTcpServer(){
+        ConfigInit init;
+
+         _sql_work = std::make_shared<sql::SQLWorker>(init.Object());
+        _ip.setAddress(init.Object().value(LOAD_CONSTANTS::SERVER_IP).toString());
+        _port = init.Object().value(LOAD_CONSTANTS::SERVER_PORT).toInt();
+        _max_conn = init.Object().value(LOAD_CONSTANTS::MAX_CONNECTIONS).toInt();
+        _max_message_len = init.Object().value(LOAD_CONSTANTS::MAX_MESSAGE_LEN).toInt();
+
+        for(auto&& el : init.Object().value(LOAD_CONSTANTS::DEFAULT_CHATROOMS).toArray()){
+            _rooms[el.toString()] = std::make_shared<ChatRoom>(this, "DEFAULT");
+        }
+
+    }
 
   virtual json_obj SetIP(str_type ip) = 0;
   virtual json_obj SetPort(int port) = 0;
@@ -142,20 +152,14 @@ public:
   protected:
 
     std::unordered_map<QString, std::shared_ptr<ChatRoom>> _rooms;
-    std::unordered_map<QString, UserRole> _pass_hash;
     std::unordered_map<QTcpSocket*, SocketComplect> _socket_db;
 
     bool HasPermission(QString name, QString password, ACTIONS act){
         return true;
     }
 
-    bool IsUserInBase(QString name, QString password){
-        return (_pass_hash.contains(name));
-    }
-
     QString GetSerializatedRoomList();
 
-    mutable std::mutex _mtx_mod_users;
     mutable std::mutex _mtx_room;
     mutable std::mutex _mtx_net;
     Service::TokenGen _token_generator;
@@ -163,6 +167,8 @@ public:
     QHostAddress _ip;
     int _max_conn = 100;
     int _port = 80;
+    int _max_message_len = 512;
+    std::shared_ptr<sql::SQLWorker> _sql_work;
 
 };
 

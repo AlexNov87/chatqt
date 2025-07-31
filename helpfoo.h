@@ -19,12 +19,11 @@
 #include <QJsonValue>
 #include <QJsonParseError>
 
-
-
 //DIALOGS
 QString SelectConfigFile(QString comment);
 void FatalErrorMessageBox(const QString& what , QString framename = "Error");
 bool ChooseBox(const QString& question);
+
 
 //JSON
 
@@ -81,8 +80,9 @@ void AnotherThreadRunFoo(Foo foo){
 void WriteToSocketWithFlush(QTcpSocket* socket, const QByteArray& arr);
 void WriteToSocketWithFlushAddingSplitSym(QTcpSocket* socket,QByteArray& arr);
 void Fatal(const str_type& str);
+unsigned int PassHash(const str_type& str);
 
 #endif // HELPFOO_H
 
-unsigned int PassHash(const str_type& str);
+
 

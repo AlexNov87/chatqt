@@ -105,7 +105,7 @@ json_obj ReadJsonObjectFromQbyteArray(QByteArray& data){
 
 bool IsErrorJsonObject(const json_obj& obj){
     if(!obj.contains(CONSTANTS::LF_RESULT)) {return false;}
-    if(obj.value(CONSTANTS::LF_RESULT).toString() == CONSTANTS::RF_ERROR){
+    if(obj.value(CONSTANTS::LF_RESULT).toString() == str_type(CONSTANTS::RF_ERROR)){
         return true;
     }
     return false;

@@ -1,40 +1,28 @@
 #ifndef FORMMASTER_H
 #define FORMMASTER_H
-
+#include "structs.h"
 #include <QDialog>
-#include "helpfoo.h"
+#include <QPushButton>
+
 
 namespace Ui {
 class Formmaster;
 }
 
-class Formmaster : public QDialog
+class Formmaster : public QDialog , public NamePassword
 {
     Q_OBJECT
 
 public:
-    explicit Formmaster();
+    explicit Formmaster(const str_type& label);
     ~Formmaster();
-
-    const str_type& AdminName(){
-        return _admin_name;
-    }
-
-    const str_type& AdminPassword(){
-        return _admin_pass;
-    }
-
 private slots:
-    void on_pb_create_master_clicked();
+    void on_bb_choose_accepted();
+    void CheckToAccept();
 
 private:
     Ui::Formmaster *ui;
-    void SetOkState(bool state);
-    void TurnOffOk();
-    void TurnOnOk();
 
-    str_type _admin_name;
-    str_type _admin_pass;
 };
 
 #endif // FORMMASTER_H

@@ -53,7 +53,6 @@ void MainWindow::on_pb_run_server_clicked()
     this->_srv->listen(this->_srv->GetIP(), this->_srv->GetPort());
 }
 
-
 //МЕНЮ КОМНАТ
 void MainWindow::on_actionRooms_triggered()
 {

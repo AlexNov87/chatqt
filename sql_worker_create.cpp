@@ -156,14 +156,14 @@ void SQLWorker::LoadUsers(){
 void SQLWorker::CreateMaster(){
 
     if(_has_master) {return;}
-    Formmaster mst;
+    Formmaster mst("Creating master user");
     auto result = mst.exec();
 
     if(result != QDialog::Accepted){
         FatalErrorMessageBox("Failed to create admin user");
     };
     QSqlQuery quer = QueryPreparedToIsertUser(
-      mst.AdminName() , mst.AdminPassword() ,
+      mst.Name() , mst.Password() ,
       _id_roles.at(CONSTANTS::ROLE_MASTER)
     );
     QueryExecute(quer);

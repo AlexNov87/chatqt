@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-QJsonObject GraphicsServer::SetIP(QString ip)  {
+QJsonObject GraphicsServer::SetIP(str_type ip)  {
     ACTIONS this_act = ACTIONS::SYSTEM;
     auto lam = [&]{
         if (!IsCorrectIP(ip)){ return ans_obj::MakeErrorObject
@@ -11,7 +11,6 @@ QJsonObject GraphicsServer::SetIP(QString ip)  {
             _ip.setAddress(ip);
             le_ip->setText(ip);
         }
-
         //!!!!!!!!!!!!!!!!!!!!!!!!!
         return QJsonObject{};
     };
@@ -58,16 +57,16 @@ QJsonObject GraphicsServer::SetMaxUsers(int max) {
 }
 
 //////////////////////!!!!!!!!!!!!!!!!!!!!!!
-QJsonObject GraphicsServer::AddRoomJs(QString name,
- QString password, QString roomname)  {
+QJsonObject GraphicsServer::AddRoomJs(str_type name,
+ str_type password, str_type roomname)  {
 
     ACTIONS this_act = ACTIONS::CREATE_ROOM;
     auto lam = [&]{
 
         //Если нет добавляющего в базе
-        if(!IsUserInBase(name, password)){
+        if(_sql_work->IsAuthorizated(name, password)){
             return  ans_obj::MakeErrorObject
-                ("You are not in chat-base", this_act);
+                ("You are not authorizated", this_act);
         }
 
         if(!HasPermission(name, password, this_act)){
@@ -95,15 +94,15 @@ QJsonObject GraphicsServer::AddRoomJs(QString name,
 
 }
 //!!!!!!!!!!!!!!!!as2s1212
-QJsonObject GraphicsServer::DeleteRoomJs(QString name, QString password, QString roomname)  {
+QJsonObject GraphicsServer::DeleteRoomJs(str_type name, str_type password, str_type roomname)  {
 
     ACTIONS this_act = ACTIONS::DELETE_ROOM;
     auto lam = [&]{
 
         //Если нет удаляющего в базе
-        if(!IsUserInBase(name, password)){
+        if(!_sql_work->IsAuthorizated(name, password)){
             return  ans_obj::MakeErrorObject
-                ("You are not in chat-base", this_act);
+                ("You are not authorizated", this_act);
         }
 
         LG(_mtx_room);
@@ -133,54 +132,50 @@ QJsonObject GraphicsServer::DeleteRoomJs(QString name, QString password, QString
 
 }
 
-QJsonObject GraphicsServer::LoginUserJs(QString name, QString password,
-                                        QString roomname, SocketComplect* complect) {
+QJsonObject GraphicsServer::LoginUserJs(str_type name, str_type password,
+                                        str_type roomname, SocketComplect* complect) {
 
     ACTIONS this_act = ACTIONS::LOGIN;
     auto lam = [&]{
 
-        LG(this->_mtx_mod_users);
         //Если юзера нет в базе
-        if(!IsUserInBase(name,password)){return ans_obj::MakeErrorObject
-                ("Can not find user:"+ name , this_act);}
+        if(!_sql_work->IsAuthorizated(name,password)){return ans_obj::MakeErrorObject
+                ("You are not authorizated" , this_act);}
 
-        //Если неверен пароль
-        if(password != this->_pass_hash.at(name).password ){
-            return ans_obj::MakeErrorObject
-                ("Wrong password:"+ name, this_act);
-        }
-
+        LG(_mtx_room);
         if(!_rooms.contains(roomname)){
             return ans_obj::MakeErrorObject
                 ("The is no room:"+ roomname, this_act);
         }
 
         std::shared_ptr<ChatRoom> room = _rooms.at(roomname);
-        QString token = QString(this->_token_generator.GenerateHEXToken().data());
+        str_type token = str_type(this->_token_generator.GenerateHEXToken().data());
 
         std::shared_ptr<ChatUser> new_user =
-            std::make_shared<ChatUser>(name,complect);
+            std::make_shared<ChatUser>(name, complect);
 
         return room->AddUser(new_user);
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
-QJsonObject GraphicsServer::RegisterUserJs(QString name, QString password) {
+
+
+QJsonObject GraphicsServer::RegisterUserJs(str_type name, str_type password) {
 
     ACTIONS this_act = ACTIONS::CREATE_USER;
     auto lam = [&]{
 
-        return json_obj{};
+        return this->_sql_work->RegisterNewUser
+            (std::move(name), std::move(password));
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
 
-QJsonObject GraphicsServer::DeleteUserJs(QString name, QString password, QString to_delete) {
+QJsonObject GraphicsServer::DeleteUserJs(str_type name, str_type password, str_type to_delete) {
 
     ACTIONS this_act = ACTIONS::DELETE_USER;
     auto lam = [&]{
-
-         return json_obj{};
+        return this->_sql_work->DeleteUser(name, password, to_delete);
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }

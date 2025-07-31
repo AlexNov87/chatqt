@@ -18,13 +18,10 @@ QSqlQuery QueryPreparedToIsertUser( const str_type& name,
 
 QSqlQuery QueryPreparedToDeleteUser(const str_type& name);
 
-
-
 class SQLWorker : public std::enable_shared_from_this<sql::SQLWorker> {
 public:
 
     SQLWorker(const json_obj& obj);
-
     json_obj RegisterNewUser(str_type name, str_type pass);
     json_obj DeleteUser(str_type name, str_type password, str_type to_delete);
     bool IsAuthorizated(str_type name, str_type password);
