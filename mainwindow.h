@@ -85,7 +85,6 @@ protected:
     std::shared_ptr<QStringListModel> _room_list_model;
 };
 
-
 class GraphicWidgets{
 protected:
     friend class GraphicsServer;
@@ -111,9 +110,7 @@ private:
     std::shared_ptr<GraphicsServer> _srv;
     SocketComplect* _sock;
     std::shared_ptr<ServerSession> _self;
-
 };
-
 
 class GraphicsServer : public ServerBase, public GraphicWidgets,
                        public std::enable_shared_from_this<GraphicsServer> {
@@ -130,7 +127,9 @@ public:
     json_obj AddRoomJs( str_type name,  str_type password,  str_type roomname) override ;
     json_obj DeleteRoomJs( str_type name,  str_type password,  str_type roomname) override;
 
-    json_obj LoginUserJs( str_type name,  str_type password,
+    json_obj LoginUserJs(str_type name,  str_type password) override;
+
+    json_obj JoinRoomUserJs( str_type name,  str_type password,
                          str_type roomname, SocketComplect* complect) override ;
     json_obj RegisterUserJs( str_type name,  str_type password) override ;
     json_obj DeleteUserJs( str_type name,  str_type password,  str_type to_delete) override ;

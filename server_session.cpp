@@ -173,7 +173,7 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     }
     break;
     //////////////////////////////////////
-    case ACTIONS::LOGIN :
+    case ACTIONS::JOIN_ROOM :
     {
 
         static std::set<str_type> current_complect{
@@ -187,7 +187,7 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
         str_type name = obj.value(CONSTANTS::LF_NAME).toString();
         str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
         str_type roomname = obj.value(CONSTANTS::LF_ROOMNAME).toString();
-        return _srv->LoginUserJs(std::move(name),std::move(password),
+        return _srv->JoinRoomUserJs(std::move(name),std::move(password),
                                   std::move(roomname), _sock);
     }
         break;

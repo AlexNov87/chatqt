@@ -2,7 +2,7 @@
 json_obj GraphicsServer::DisconnectJs(str_type token,  str_type room_name) {
     ACTIONS this_act = ACTIONS::DISCONNECT;
     auto lam = [&]{
-    LG(_mtx_room);
+    LGR(_mtx_room);
     if(!_rooms.contains(room_name)){
         return ans_obj::MakeErrorObject("There is no room: " + room_name,
                                         ACTIONS::DISCONNECT);
@@ -18,7 +18,7 @@ json_obj GraphicsServer::PublicMessageJs
     ACTIONS this_act = ACTIONS::PUBLIC_MESSAGE;
 
     auto lam = [&]{
-    LG(_mtx_room);
+    LGR(_mtx_room);
     if(!_rooms.contains(room_name)){
         return ans_obj::MakeErrorObject("There is no room: " + room_name,
                                         ACTIONS::DISCONNECT);
@@ -34,7 +34,7 @@ json_obj GraphicsServer::PrivateMessageJs
 
     ACTIONS this_act = ACTIONS::PRIVATE_MESSAGE;
     auto lam = [&]{
-    LG(_mtx_room);
+    LGR(_mtx_room);
     if(!_rooms.contains(room_name)){
         return ans_obj::MakeErrorObject("There is no room: " + room_name,
                                         ACTIONS::DISCONNECT);

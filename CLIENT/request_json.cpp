@@ -47,10 +47,10 @@ json_obj MakeRequestDeleteRooms
 }
 
 //USERS
-json_obj MakeRequestLogin
+json_obj MakeRequestJoinRoom
     (str_type name, str_type password, str_type roomname){
     json_obj obj = MakeRequestTemplate
-        (CONSTANTS::RF_DIRECTION_SERVER, ACTIONS::LOGIN);
+        (CONSTANTS::RF_DIRECTION_SERVER, ACTIONS::JOIN_ROOM);
     //Используется этот метод т.к поля схожи с MakeRequestAddRooms
     ModifyRoomReq(obj, name,password,roomname);
     return obj;

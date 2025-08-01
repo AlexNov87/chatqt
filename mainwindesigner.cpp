@@ -1,7 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-MainWindowDesigner::MainWindowDesigner(std::shared_ptr<MainWindow> mainwin)
+MainWindowDesigner::MainWindowDesigner
+    (std::shared_ptr<MainWindow> mainwin)
     : _mainwin(mainwin) {
     StatusLabelOff();
 }

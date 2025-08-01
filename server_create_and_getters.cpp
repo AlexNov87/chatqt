@@ -20,7 +20,7 @@ int ServerBase::GetMaxUsers() const {
 }
 
 const std::unordered_map<str_type, std::shared_ptr<ChatRoom>> & ServerBase::GetRooms() const {
-    LG(_mtx_room);
+    LGR(_mtx_room);
     return _rooms;
 }
 
@@ -79,7 +79,7 @@ QJsonObject GraphicsServer::GetRoomUsersJs(str_type roomname) {
 
     ACTIONS this_act = ACTIONS::GET_ROOM_USERS;
     auto lam = [&]{
-        LG(_mtx_room);
+        LGR(_mtx_room);
         if(!_rooms.contains(roomname)){
             return ans_obj::MakeErrorObject
                 ("Not found room "+ roomname , ACTIONS::GET_ROOM_USERS);
@@ -89,6 +89,24 @@ QJsonObject GraphicsServer::GetRoomUsersJs(str_type roomname) {
         return ans_obj::SuccessRoomUsers(std::move(roomname), std::move(users));
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
+}
+
+json_obj GraphicsServer::LoginUserJs
+    (str_type name,  str_type password) {
+
+    ACTIONS this_act = ACTIONS::LOGIN;
+    auto lam = [&]{
+
+        //Если нет добавляющего в базе
+        if(_sql_work->IsAuthorizated(name, password)){
+            return  ans_obj::MakeErrorObject
+                ("You are not authorizated", this_act);
+        }
+
+        return ans_obj::SuccessLogin();
+    };
+    return ans_obj::GuardExceptSetter(lam, this_act);
+
 }
 
 

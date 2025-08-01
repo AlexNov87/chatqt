@@ -35,46 +35,6 @@ void ClientWin::onReadyRead()
 }
 
 
-void Scene2(SocketComplect& sock){
-    auto js = req_obj::MakeRequestRegisterUser("Vasyaq","123");//1
-       QByteArray bt = json::WritetoQByteAnyJson (js);
-    WriteToSocketWithFlushAddingSplitSym (sock.socket,bt);
-
-    //     js = req_obj::MakeRequestAddRooms("Vasya ","123","RAAAAAA"); //2
-    //     bt = json::WritetoQByteAnyJson (js);
-    // WriteToSocketWithFlushAddingSplitSym (sock.socket,bt);
-
-    //     js = req_obj::MakeRequestRoomList(); //3
-    //     bt = json::WritetoQByteAnyJson (js);
-    //     WriteToSocketWithFlushAddingSplitSym (sock.socket,bt);
-
-    //     js = req_obj::MakeRequestLogin("Vasya","123","RAAAAAA"); //4
-    //     bt = json::WritetoQByteAnyJson (js);
-    //     WriteToSocketWithFlushAddingSplitSym (sock.socket,bt);
-
-    //     js = req_obj::MakeRequestGetRoomUsers("RAAAAAA"); //5
-    //     bt = json::WritetoQByteAnyJson (js);
-    //     WriteToSocketWithFlushAddingSplitSym (sock.socket,bt);
-}
-
-
-
-void Scene1(SocketComplect& sock){
-    auto js = req_obj::MakeRequestLogin("qwe","rty", "uio");
-    auto jsq = req_obj::MakeRequestLogin("www","www", "www");
-    QByteArray bt = json::WritetoQByteAnyJson (js);
-    QByteArray btx = json::WritetoQByteAnyJson(jsq);
-    WriteToSocketWithFlushAddingSplitSym (sock.socket,bt);
-    WriteToSocketWithFlushAddingSplitSym(sock.socket,btx);
-}
-
-
-
-void ClientWin::on_commandLinkButton_clicked()
-{
-      Scene2(sock);
-
-}
 
 void ClientWin::on_pb_connect_clicked()
 {
@@ -102,7 +62,6 @@ void ClientWin::on_pb_connect_clicked()
     }
 }
 
-
 void ClientWin::on_pb_register_clicked()
 {
     Formmaster create_user("Creating new user");
@@ -116,21 +75,28 @@ void ClientWin::on_pb_register_clicked()
     sock.GuardSendMessageOtherSide(buf);
 }
 
-
 void ClientWin::on_pb_login_clicked()
 {
-    FormLogin login("Enter your personal data");
-    auto res = login.exec();
+    QCommandLinkButton* btn= qobject_cast<QCommandLinkButton*>(sender());
+    SendRequestLogin();
 
-    if(res != QDialog::Accepted){return;}
+}
 
-    json_obj js = req_obj::MakeRequestLogin
-        (login.Name(), login.Password(), ui->cb_roomlist->currentText());
+void ClientWin::on_cb_roomlist_currentIndexChanged(int index)
+{
+    SendRequestToGetCurrentRoomUsers();
+}
 
-    QByteArray buf = json::WritetoQByteAnyJson (js);
-    sock.GuardSendMessageOtherSide(buf);
+void ClientWin::on_pb_leave_clicked()
+{
+    if(!_in_room){ return; }
+    SendRequestLeaveRoom();
 }
 
 
-
+void ClientWin::on_pb_logout_clicked()
+{
+    if(_in_room){ SendRequestLeaveRoom();}
+    ResetMyData();
+}
 

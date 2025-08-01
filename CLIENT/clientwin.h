@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTcpSocket>
+#include<QComboBox>
 #include"request_json.h"
 #include"../structs.h"
 #include"../formmaster.h"
@@ -28,21 +29,39 @@ public:
 
 private slots:
     void onReadyRead();
-    void on_commandLinkButton_clicked();
     void on_pb_connect_clicked();
     void on_pb_register_clicked();
     void on_pb_login_clicked();
+    void on_cb_roomlist_currentIndexChanged(int index);
+
+    void on_pb_leave_clicked();
+
+    void on_pb_logout_clicked();
 
 private:
     friend class AnswerSession;
-    void SendRequestToGetRooms(){
-        static json_obj rooms = req_obj::MakeRequestRoomList();
-        auto js =  json::WritetoQByteAnyJson(rooms);
-        sock.GuardSendMessageOtherSide(js);
+
+    void SendRequestToGetRooms();
+    void SendRequestToGetCurrentRoomUsers();
+    void SendRequestLogin();
+    void SendRequestLeaveRoom();
+
+    void ResetMyData() {
+        _my_name.clear();
+        _my_pass.clear();
+        _my_room.clear();
+        _my_token.clear();
+        _in_room = false;
     }
 
     Ui::ClientWin *ui;
     SocketComplect sock;
+
+    bool _in_room = false;
+    str_type _my_name;
+    str_type _my_pass;
+    str_type _my_token;
+    str_type _my_room;
 };
 
 
@@ -70,6 +89,9 @@ private:
 
     std::optional<ACTIONS> GetAction();
     void ExecuteRoomList();
+    void ExecuteRoomMembers();
+    void ExecuteJoinRoom();
+    void ExecuteDisconnect();
 };
 
 

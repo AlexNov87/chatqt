@@ -1,27 +1,26 @@
 #include"structs_ch.h"
 
-ChatRoom::ChatRoom(ServerBase* srv, QString creator) : _srv(srv),
-    _creator(std::move(creator)) {
+ChatRoom::ChatRoom(ServerBase* srv, str_type creator, str_type name) : _srv(srv),
+    _creator(std::move(creator)), _name(std::move(name)) {
     assert(srv != nullptr);
 }
 
 json_obj ChatRoom::AddUser(std::shared_ptr<ChatUser> user){
-    LG(_mtx);
+    LGR(_mtx);
     if(_users.contains(user->GetName())){
         return ans_obj::MakeErrorObject
-            ("User " + user->GetName() + " is already in room", ACTIONS::LOGIN);
+            ("User " + user->GetName() + " is already in room", ACTIONS::JOIN_ROOM);
     };
     _users[user->GetName()] = user;
     _tokens[user->GetName()] = user;
-
     UpdateRoomMembersForAll();
-    return ans_obj::SuccessLogin(user->GetToken(),
+    return ans_obj::SuccessJoinRoom(user->GetToken(),
     _manager.SerializedLastMessages());
 
 }
 
-json_obj ChatRoom::DeleteUserByName(const QString& name){
-    LG(_mtx);
+json_obj ChatRoom::DeleteUserByName(const str_type& name){
+    LGR(_mtx);
     if(!_users.contains(name)){
         return ans_obj::MakeErrorObject
             ("There is no user with name: "+ name, ACTIONS::DISCONNECT);
@@ -34,9 +33,9 @@ json_obj ChatRoom::DeleteUserByName(const QString& name){
     return ans_obj::SuccessDisconnect();
 }
 
-json_obj ChatRoom::DeleteUserByToken(const QString& token){
+json_obj ChatRoom::DeleteUserByToken(const str_type& token){
 
-    LG(_mtx);
+    LGR(_mtx);
     if(!_tokens.contains(token)){
         return ans_obj::MakeErrorObject
             ("This room has not this token", ACTIONS::DISCONNECT);
@@ -50,8 +49,8 @@ json_obj ChatRoom::DeleteUserByToken(const QString& token){
 }
 
 
-json_obj ChatRoom::PublicMessage(const QString&token, QString message){
-    LG(_mtx);
+json_obj ChatRoom::PublicMessage(const str_type&token, str_type message){
+    LGR(_mtx);
     if(auto err = MessageCheckErrorTemplate
         (token, message, ACTIONS::PUBLIC_MESSAGE)){
         return *err;
@@ -67,9 +66,9 @@ json_obj ChatRoom::PublicMessage(const QString&token, QString message){
     return ans_obj::SuccessPublicMessage();
 }
 
-json_obj ChatRoom::PrivateMessage(const QString&token,
-                        const QString& user_to,QString message) {
-    LG(_mtx);
+json_obj ChatRoom::PrivateMessage(const str_type&token,
+                        const str_type& user_to,str_type message) {
+    LGR(_mtx);
     if(auto err = MessageCheckErrorTemplate
         (token, message, ACTIONS::PRIVATE_MESSAGE)){
         return *err;
@@ -88,17 +87,17 @@ json_obj ChatRoom::PrivateMessage(const QString&token,
 }
 
 
-const QString& ChatRoom::GetCreator() const {
+const str_type& ChatRoom::GetCreator() const {
     return _creator;
 }
 
-QString ChatRoom::SerializatedJsonUsers() const {
-    LG(_mtx);
+str_type ChatRoom::SerializatedJsonUsers() const {
+    LGR(_mtx);
     return json::GetMapMembersJsonArrayView(_users);
 }
 
 std::optional<json_obj> ChatRoom::MessageCheckErrorTemplate
-    (const QString&token,const QString& message, ACTIONS action){
+    (const str_type&token,const str_type& message, ACTIONS action){
 
     if(!_tokens.contains(token)){
         return ans_obj::MakeErrorObject

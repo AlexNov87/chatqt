@@ -12,7 +12,7 @@ json_obj MakeRequestDeleteRooms
     (str_type name, str_type password, str_type roomname);
 
 //USERS
-json_obj MakeRequestLogin
+json_obj MakeRequestJoinRoom
     (str_type name, str_type password, str_type roomname);//4
 
 json_obj MakeRequestRegisterUser(str_type name, str_type password);//1

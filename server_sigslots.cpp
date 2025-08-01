@@ -38,7 +38,7 @@ void GraphicsServer::OnDisconnected()
     if (!clientSocket)
         return;
     clientSocket->deleteLater();
-    QMessageBox::critical(nullptr, "", "Client disconnected");
+   // QMessageBox::critical(nullptr, "", "Client disconnected");
 }
 
 

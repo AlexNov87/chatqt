@@ -10,8 +10,14 @@
 
 class ServerAnswerChecker {
 public:
-    static std::variant<json_obj, std::set<str_type>>
+    static std::variant<json_obj, QStringList>
     CheckRoomListAnswer(const json_obj& obj);
+
+    static std::variant<json_obj, QStringList>
+    CheckMembersRoomListAnswer(const json_obj& obj);
+
+    static std::optional<json_obj>
+    CheckJoinRoomAnswer(const json_obj& obj);
 
 };
 

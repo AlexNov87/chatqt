@@ -73,30 +73,37 @@ protected:
 class ChatRoom
 {
 public:
-    ChatRoom(ServerBase* srv, QString creator);
+    ChatRoom(ServerBase* srv, str_type creator, str_type name);
     json_obj AddUser(std::shared_ptr<ChatUser> user);
-    json_obj DeleteUserByName(const QString& name);
-    json_obj DeleteUserByToken(const QString& name);
-    json_obj PublicMessage(const QString&token, QString message);
-    json_obj PrivateMessage(const QString&token,
-                            const QString& user_to,QString message);
-    const QString& GetCreator() const;
-    QString SerializatedJsonUsers() const;
+    json_obj DeleteUserByName(const str_type& name);
+    json_obj DeleteUserByToken(const str_type& name);
+    json_obj PublicMessage(const str_type&token, str_type message);
+    json_obj PrivateMessage(const str_type&token,
+                            const str_type& user_to,str_type message);
+    const str_type& GetCreator() const;
+    str_type SerializatedJsonUsers() const;
     const MessageManager& MessageMan() const {
         return _manager;
     }
 protected:
 
     std::optional<json_obj> MessageCheckErrorTemplate
-        (const QString&token,const QString& message, ACTIONS action);
+        (const str_type&token,const str_type& message, ACTIONS action);
 
     void UpdateRoomMembersForAll(){
-
+        auto roommems = SerializatedJsonUsers();
+        auto js = ans_obj::SuccessRoomUsers(_name, std::move(roommems));
+        QByteArray buf = json::WritetoQByteAnyJson (js);
+        for (auto&& us : _users){
+           ChatUser& ch = *us.second;
+            ch._socket->GuardSendMessageOtherSide(buf);
+        };
     }
 
     ServerBase* _srv;
-    QString _creator;
-    mutable std::mutex _mtx;
+    str_type _creator;
+    str_type _name;
+    mutable std::recursive_mutex _mtx;
     std::map<str_type, std::shared_ptr<ChatUser>> _tokens;
     std::map<str_type, std::shared_ptr<ChatUser>> _users;
     MessageManager _manager;
@@ -117,7 +124,7 @@ public:
         _max_message_len = init.Object().value(LOAD_CONSTANTS::MAX_MESSAGE_LEN).toInt();
 
         for(auto&& el : init.Object().value(LOAD_CONSTANTS::DEFAULT_CHATROOMS).toArray()){
-            _rooms[el.toString()] = std::make_shared<ChatRoom>(this, "DEFAULT");
+            _rooms[el.toString()] = std::make_shared<ChatRoom>(this, "DEFAULT", el.toString());
         }
 
     }
@@ -128,8 +135,9 @@ public:
 
   virtual   json_obj AddRoomJs(str_type name, str_type password, str_type roomname) = 0;
   virtual   json_obj DeleteRoomJs(str_type name, str_type password, str_type roomname) = 0;
-  virtual   json_obj LoginUserJs(str_type name, str_type password,
+  virtual   json_obj JoinRoomUserJs(str_type name, str_type password,
                                str_type roomname, SocketComplect* complect) = 0;
+  virtual json_obj LoginUserJs(str_type name, str_type password) = 0;
   virtual   json_obj RegisterUserJs(str_type name, str_type password) = 0;
   virtual   json_obj DeleteUserJs(str_type name, str_type password,
                                   str_type to_delete) = 0;
@@ -161,7 +169,7 @@ public:
 
     QString GetSerializatedRoomList();
 
-    mutable std::mutex _mtx_room;
+    mutable std::recursive_mutex _mtx_room;
     mutable std::mutex _mtx_net;
     Service::TokenGen _token_generator;
 

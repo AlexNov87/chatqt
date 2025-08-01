@@ -39,6 +39,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         answer_session.cpp
         answer_checker.h
         answer_checker.cpp
+        clientwin_request.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET CLIENT APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

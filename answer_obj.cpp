@@ -55,8 +55,8 @@ json_obj SuccessServerRooms (str_type rooms_serialized){
      obj.insert(CONSTANTS::LF_ROOMLIST, std::move(rooms_serialized));
      return obj;
 }
-json_obj SuccessLogin(str_type token, str_type messages_serialized) {
-    json_obj obj = MakeSuccessTemplate(ACTIONS::LOGIN);
+json_obj SuccessJoinRoom(str_type token, str_type messages_serialized) {
+    json_obj obj = MakeSuccessTemplate(ACTIONS::JOIN_ROOM);
     obj.insert(CONSTANTS::LF_LAST_MSG, std::move(messages_serialized));
     obj.insert(CONSTANTS::LF_TOKEN, std::move(token));
     return obj;
@@ -66,6 +66,10 @@ json_obj SuccessPrivateMessage(){
 }
 json_obj SuccessPublicMessage(){
   return MakeSuccessTemplate(ACTIONS::PUBLIC_MESSAGE);
+}
+
+json_obj SuccessLogin() {
+   return MakeSuccessTemplate(ACTIONS::LOGIN);
 }
 
 json_obj TestObject(){

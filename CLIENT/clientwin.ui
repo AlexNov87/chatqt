@@ -118,13 +118,21 @@
        <height>631</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="8,0,1">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="7,3,1">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>10</number>
+      </property>
       <item>
-       <widget class="QListWidget" name="lw_message">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-       </widget>
+       <widget class="QListWidget" name="lw_message"/>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -136,12 +144,12 @@
          </widget>
         </item>
         <item>
-         <widget class="QListView" name="lw_members"/>
+         <widget class="QListWidget" name="lw_members"/>
         </item>
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,0,0">
+       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,0,0,0,0">
         <property name="spacing">
          <number>1</number>
         </property>
@@ -178,6 +186,26 @@
          <widget class="QCommandLinkButton" name="pb_login">
           <property name="text">
            <string>Login</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCommandLinkButton" name="pb_leave">
+          <property name="text">
+           <string>Leave room</string>
+          </property>
+          <property name="icon">
+           <iconset theme="QIcon::ThemeIcon::DocumentRevert"/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCommandLinkButton" name="pb_logout">
+          <property name="text">
+           <string>Logout</string>
+          </property>
+          <property name="icon">
+           <iconset theme="QIcon::ThemeIcon::ApplicationExit"/>
           </property>
          </widget>
         </item>

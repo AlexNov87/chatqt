@@ -45,6 +45,22 @@ void AnswerSession::StartExecute() {
         ExecuteRoomList();
     }
     break;
+    case ACTIONS::GET_ROOM_USERS :
+    {
+        ExecuteRoomMembers();
+    }
+    break;
+    case ACTIONS::JOIN_ROOM :
+    {
+        ExecuteJoinRoom();
+    }
+    break;
+    case ACTIONS::DISCONNECT :
+    {
+        ExecuteDisconnect();
+    }
+    break;
+
     default:
         break;
     }
@@ -52,22 +68,69 @@ void AnswerSession::StartExecute() {
 }
 
 void AnswerSession::ExecuteRoomList(){
-    std::variant<json_obj, std::set<str_type>>
+    std::variant<json_obj, QStringList>
         result = ServerAnswerChecker::CheckRoomListAnswer(_obj);
 
-    if(std::holds_alternative<std::set<str_type>>(result)){
-
+    if(std::holds_alternative<QStringList>(result)){
         auto roomlist = this->_client->ui->cb_roomlist;
         roomlist ->clear();
-        const std::set<str_type>& rms=
-            std::get<std::set<str_type>>(result);
-
-        for(str_type rm : rms){
-            roomlist->addItem(std::move(rm));
-        }
+        QStringList& rms= std::get<QStringList>(result);
+        roomlist->addItems(rms);
     }
     else {
         NonBlockingErrorBox(std::get<json_obj>(result));
         return;
     }
 }
+
+
+void AnswerSession::ExecuteRoomMembers() {
+    std::variant<json_obj, QStringList>
+        result = ServerAnswerChecker::CheckMembersRoomListAnswer(_obj);
+
+    if(std::holds_alternative<QStringList>(result)){
+
+       const auto& roomname = this->_client->ui->cb_roomlist->currentText();
+
+        if(roomname != _obj.value(CONSTANTS::LF_ROOMNAME).toString()){
+           return;
+        }
+
+        QStringList& members = std::get<QStringList>(result);
+
+       auto members_form = this->_client->ui->lw_members;
+       members_form->clear();
+       members_form->addItems(std::move(members));
+    }
+    else {
+        NonBlockingErrorBox(std::get<json_obj>(result));
+        return;
+    }
+
+
+}
+
+void AnswerSession::ExecuteJoinRoom(){
+
+    std::optional<json_obj> err =
+    ServerAnswerChecker::CheckJoinRoomAnswer(_obj);
+
+    if(err){
+        NonBlockingErrorBox(*err);
+        return;
+    }
+    _client->_my_token = _obj.value(CONSTANTS::LF_TOKEN).toString();
+    _client->_in_room = true;
+}
+
+void  AnswerSession::ExecuteDisconnect(){
+
+    QCommandLinkButton *pb_login = this->_client->ui->pb_login;
+    pb_login ->setText("Login");
+    _client->_my_token.clear();
+    _client->_my_room.clear();
+    _client->_in_room = false;
+
+}
+
+

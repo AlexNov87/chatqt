@@ -17,8 +17,9 @@ json_obj SuccessDeleteUser(str_type name);
 
 json_obj SuccessDisconnect();
 json_obj SuccessRoomUsers (str_type roomname, str_type users_serialized);
+json_obj SuccessLogin();
 json_obj SuccessServerRooms (str_type rooms_serialized);
-json_obj SuccessLogin(str_type token, str_type messages_serialized);
+json_obj SuccessJoinRoom(str_type token, str_type messages_serialized);
 json_obj SuccessPrivateMessage();
 json_obj SuccessPublicMessage();
 

@@ -14,11 +14,12 @@ struct CONSTANTS
     static chart ACT_DELETE_USER;
     static chart ACT_DISCONNECT;
     static chart ACT_EARLIER_MESS;
-    static chart ACT_GET_USERS ;
-    static chart ACT_LOGIN ;
+    static chart ACT_GET_USERS;
+    static chart ACT_JOIN_ROOM;
+    static chart ACT_LOGIN;
     static chart ACT_ROOM_LIST ;
     static chart ACT_SEND_PRIVATE_MESSAGE;
-    static chart ACT_SEND_PUBLIC_MESSAGE ;
+    static chart ACT_SEND_PUBLIC_MESSAGE;
     static chart ACT_SYSTEM;
 
     // Map Parameters
@@ -26,7 +27,7 @@ struct CONSTANTS
     static chart LF_DIRECTION;
     static chart LF_INITIATOR ;
     static chart LF_LAST_MSG ;
-    static chart LF_LOGIN ;
+    static chart LF_LOGIN;
     static chart LF_PRIVATE_MESSAGE;
     static chart LF_PUBLIC_MESSAGE;
     static chart LF_NAME ;
@@ -70,7 +71,7 @@ enum class ACTIONS {
     CREATE_USER, DELETE_USER,
     PRIVATE_MESSAGE, PUBLIC_MESSAGE,
     GET_ROOM_USERS, GET_ROOMS_LIST,
-    CREATE_ROOM, DELETE_ROOM,
+    CREATE_ROOM, DELETE_ROOM, JOIN_ROOM,
     EARLIER_MESSAGES, SYSTEM
 };
 

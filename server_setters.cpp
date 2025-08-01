@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-QJsonObject GraphicsServer::SetIP(str_type ip)  {
+json_obj GraphicsServer::SetIP(str_type ip)  {
     ACTIONS this_act = ACTIONS::SYSTEM;
     auto lam = [&]{
         if (!IsCorrectIP(ip)){ return ans_obj::MakeErrorObject
@@ -17,7 +17,7 @@ QJsonObject GraphicsServer::SetIP(str_type ip)  {
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
 
-QJsonObject GraphicsServer::SetPort(int port)  {
+json_obj GraphicsServer::SetPort(int port)  {
 
     ACTIONS this_act = ACTIONS::SYSTEM;
     auto lam = [&]{
@@ -37,7 +37,7 @@ QJsonObject GraphicsServer::SetPort(int port)  {
 }
 
 
-QJsonObject GraphicsServer::SetMaxUsers(int max) {
+json_obj GraphicsServer::SetMaxUsers(int max) {
 
     ACTIONS this_act = ACTIONS::SYSTEM;
     auto lam = [&]{
@@ -57,7 +57,7 @@ QJsonObject GraphicsServer::SetMaxUsers(int max) {
 }
 
 //////////////////////!!!!!!!!!!!!!!!!!!!!!!
-QJsonObject GraphicsServer::AddRoomJs(str_type name,
+json_obj GraphicsServer::AddRoomJs(str_type name,
  str_type password, str_type roomname)  {
 
     ACTIONS this_act = ACTIONS::CREATE_ROOM;
@@ -74,8 +74,8 @@ QJsonObject GraphicsServer::AddRoomJs(str_type name,
                 ("You have no permission to create room", this_act);
         }
         {
-            LG(_mtx_room);
-            bool res =  _rooms.insert( {roomname , std::make_shared<ChatRoom>(this, name)}).second;
+            LGR(_mtx_room);
+            bool res =  _rooms.insert( {roomname , std::make_shared<ChatRoom>(this, name, roomname)}).second;
             if(!res){
                 return ans_obj::MakeErrorObject
                     ("Can not insert room", this_act);
@@ -94,7 +94,7 @@ QJsonObject GraphicsServer::AddRoomJs(str_type name,
 
 }
 //!!!!!!!!!!!!!!!!as2s1212
-QJsonObject GraphicsServer::DeleteRoomJs(str_type name, str_type password, str_type roomname)  {
+json_obj GraphicsServer::DeleteRoomJs(str_type name, str_type password, str_type roomname)  {
 
     ACTIONS this_act = ACTIONS::DELETE_ROOM;
     auto lam = [&]{
@@ -105,7 +105,7 @@ QJsonObject GraphicsServer::DeleteRoomJs(str_type name, str_type password, str_t
                 ("You are not authorizated", this_act);
         }
 
-        LG(_mtx_room);
+        LGR(_mtx_room);
         //Если нет комнаты
         if(!_rooms.contains(roomname)){
             return  ans_obj::MakeErrorObject
@@ -132,17 +132,17 @@ QJsonObject GraphicsServer::DeleteRoomJs(str_type name, str_type password, str_t
 
 }
 
-QJsonObject GraphicsServer::LoginUserJs(str_type name, str_type password,
+json_obj GraphicsServer::JoinRoomUserJs(str_type name, str_type password,
                                         str_type roomname, SocketComplect* complect) {
 
-    ACTIONS this_act = ACTIONS::LOGIN;
+    ACTIONS this_act = ACTIONS::JOIN_ROOM;
     auto lam = [&]{
 
         //Если юзера нет в базе
         if(!_sql_work->IsAuthorizated(name,password)){return ans_obj::MakeErrorObject
                 ("You are not authorizated" , this_act);}
 
-        LG(_mtx_room);
+        LGR(_mtx_room);
         if(!_rooms.contains(roomname)){
             return ans_obj::MakeErrorObject
                 ("The is no room:"+ roomname, this_act);
@@ -160,7 +160,8 @@ QJsonObject GraphicsServer::LoginUserJs(str_type name, str_type password,
 }
 
 
-QJsonObject GraphicsServer::RegisterUserJs(str_type name, str_type password) {
+
+json_obj GraphicsServer::RegisterUserJs(str_type name, str_type password) {
 
     ACTIONS this_act = ACTIONS::CREATE_USER;
     auto lam = [&]{
@@ -171,7 +172,7 @@ QJsonObject GraphicsServer::RegisterUserJs(str_type name, str_type password) {
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
 
-QJsonObject GraphicsServer::DeleteUserJs(str_type name, str_type password, str_type to_delete) {
+json_obj GraphicsServer::DeleteUserJs(str_type name, str_type password, str_type to_delete) {
 
     ACTIONS this_act = ACTIONS::DELETE_USER;
     auto lam = [&]{
