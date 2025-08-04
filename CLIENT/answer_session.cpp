@@ -60,7 +60,16 @@ void AnswerSession::StartExecute() {
         ExecuteDisconnect();
     }
     break;
-
+    case ACTIONS::PRIVATE_MESSAGE :
+    {
+        FatalErrorMessageBox("Private mess");
+    }
+    break;
+    case ACTIONS::PUBLIC_MESSAGE :
+    {
+         FatalErrorMessageBox("Public mess");
+    }
+    break;
     default:
         break;
     }
@@ -83,7 +92,6 @@ void AnswerSession::ExecuteRoomList(){
     }
 }
 
-
 void AnswerSession::ExecuteRoomMembers() {
     std::variant<json_obj, QStringList>
         result = ServerAnswerChecker::CheckMembersRoomListAnswer(_obj);
@@ -104,10 +112,7 @@ void AnswerSession::ExecuteRoomMembers() {
     }
     else {
         NonBlockingErrorBox(std::get<json_obj>(result));
-        return;
     }
-
-
 }
 
 void AnswerSession::ExecuteJoinRoom(){
@@ -124,13 +129,6 @@ void AnswerSession::ExecuteJoinRoom(){
 }
 
 void  AnswerSession::ExecuteDisconnect(){
-
-    QCommandLinkButton *pb_login = this->_client->ui->pb_login;
-    pb_login ->setText("Login");
     _client->_my_token.clear();
-    _client->_my_room.clear();
     _client->_in_room = false;
-
 }
-
-

@@ -12,7 +12,7 @@ json_obj ChatRoom::AddUser(std::shared_ptr<ChatUser> user){
             ("User " + user->GetName() + " is already in room", ACTIONS::JOIN_ROOM);
     };
     _users[user->GetName()] = user;
-    _tokens[user->GetName()] = user;
+    _tokens[user->GetToken()] = user;
     UpdateRoomMembersForAll();
     return ans_obj::SuccessJoinRoom(user->GetToken(),
     _manager.SerializedLastMessages());

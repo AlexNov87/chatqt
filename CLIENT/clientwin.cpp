@@ -2,23 +2,6 @@
 #include "client_designer.h"
 #include "./ui_clientwin.h"
 
-ClientWin::ClientWin(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::ClientWin)
-{
-    ui->setupUi(this);
-    sock.socket = new QTcpSocket();
-    connect(sock.socket, &QTcpSocket::readyRead , this, &ClientWin::onReadyRead);
-    ClientDesigner::ChangeConnectionButtonOff(ui->pb_connect);
-
-}
-
-ClientWin::~ClientWin()
-{
-    delete ui;
-    delete sock.socket;
-}
-
 void ClientWin::onReadyRead()
 {
     QTcpSocket *clientSocket = qobject_cast<QTcpSocket*>(sender());
@@ -33,8 +16,6 @@ void ClientWin::onReadyRead()
         ans.StartExecute();
     }
 }
-
-
 
 void ClientWin::on_pb_connect_clicked()
 {
@@ -75,15 +56,9 @@ void ClientWin::on_pb_register_clicked()
     sock.GuardSendMessageOtherSide(buf);
 }
 
-void ClientWin::on_pb_login_clicked()
-{
-    QCommandLinkButton* btn= qobject_cast<QCommandLinkButton*>(sender());
-    SendRequestLogin();
-
-}
-
 void ClientWin::on_cb_roomlist_currentIndexChanged(int index)
 {
+    if(ui->cb_roomlist->currentText().isEmpty()){return;}
     SendRequestToGetCurrentRoomUsers();
 }
 
@@ -91,12 +66,45 @@ void ClientWin::on_pb_leave_clicked()
 {
     if(!_in_room){ return; }
     SendRequestLeaveRoom();
+    ui->lw_members->clear();
 }
-
 
 void ClientWin::on_pb_logout_clicked()
 {
-    if(_in_room){ SendRequestLeaveRoom();}
     ResetMyData();
+}
+
+void ClientWin::on_commandLinkButton_clicked()
+{
+    FatalErrorMessageBox("R:"+_my_room + " T:"+_my_token);
+}
+
+void ClientWin::on_pb_join_room_clicked()
+{
+    SendRequestJoinRoom();
+}
+
+void ClientWin::on_pb_set_log_clicked()
+{
+    SetLoginOptions();
+}
+
+
+void ClientWin::on_tb_clear_clicked()
+{
+        ui->le_member_name->clear();
+        ui->te_message->clear();
+}
+
+
+void ClientWin::on_lw_members_itemClicked(QListWidgetItem *item)
+{
+   ui->le_member_name->setText(item->text());
+}
+
+
+void ClientWin::on_pb_send_message_clicked()
+{
+    SendRequestMessage();
 }
 

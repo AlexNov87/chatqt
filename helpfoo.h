@@ -81,6 +81,7 @@ void WriteToSocketWithFlush(QTcpSocket* socket, const QByteArray& arr);
 void WriteToSocketWithFlushAddingSplitSym(QTcpSocket* socket,QByteArray& arr);
 void Fatal(const str_type& str);
 unsigned int PassHash(const str_type& str);
+void NonBlockingErrorBox(const json_obj& obj);
 
 #endif // HELPFOO_H
 

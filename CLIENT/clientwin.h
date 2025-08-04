@@ -31,33 +31,40 @@ private slots:
     void onReadyRead();
     void on_pb_connect_clicked();
     void on_pb_register_clicked();
-    void on_pb_login_clicked();
     void on_cb_roomlist_currentIndexChanged(int index);
 
     void on_pb_leave_clicked();
-
     void on_pb_logout_clicked();
+    void on_commandLinkButton_clicked();
+    void on_pb_join_room_clicked();
+    void on_pb_set_log_clicked();
+
+    void on_tb_clear_clicked();
+    void on_lw_members_itemClicked(QListWidgetItem *item);
+
+    void on_pb_send_message_clicked();
 
 private:
     friend class AnswerSession;
-
     void SendRequestToGetRooms();
     void SendRequestToGetCurrentRoomUsers();
-    void SendRequestLogin();
+    void SendRequestJoinRoom();
     void SendRequestLeaveRoom();
+    void SendRequestMessage();
 
-    void ResetMyData() {
-        _my_name.clear();
-        _my_pass.clear();
-        _my_room.clear();
-        _my_token.clear();
-        _in_room = false;
-    }
+private:
+    void SetLoginOptions();
+    void ResetMyData();
+    void PrepareClearMenu();
 
+private:
     Ui::ClientWin *ui;
     SocketComplect sock;
+    std::shared_ptr<QMenu> _clear_menu;
 
     bool _in_room = false;
+    bool _setted_login_parameters = false;
+
     str_type _my_name;
     str_type _my_pass;
     str_type _my_token;
@@ -65,7 +72,8 @@ private:
 };
 
 
-class AnswerSession {
+class AnswerSession
+{
 
 public:
  AnswerSession(ClientWin* client, const json_obj& obj)
@@ -76,16 +84,6 @@ public:
 private:
     ClientWin* _client;
     const json_obj& _obj;
-
-    void NonBlockingErrorBox(const json_obj& obj){
-        QMessageBox* mbox = new QMessageBox(nullptr);
-        mbox->setAttribute(Qt::WA_DeleteOnClose);
-        mbox->setWindowTitle(obj.value(CONSTANTS::LF_INITIATOR).toString());
-        mbox->setText(obj.value(CONSTANTS::LF_REASON).toString());
-        mbox->setStandardButtons(QMessageBox::Ok);
-        mbox->setModal(false);
-        mbox->show();
-    }
 
     std::optional<ACTIONS> GetAction();
     void ExecuteRoomList();

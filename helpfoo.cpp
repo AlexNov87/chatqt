@@ -132,3 +132,13 @@ void Fatal(const str_type& str){
 unsigned int PassHash(const str_type& str){
     return qHash(str) ^  qHash(str) * 7 ;
 }
+
+void NonBlockingErrorBox(const json_obj& obj){
+    QMessageBox* mbox = new QMessageBox(nullptr);
+    mbox->setAttribute(Qt::WA_DeleteOnClose);
+    mbox->setWindowTitle(obj.value(CONSTANTS::LF_INITIATOR).toString());
+    mbox->setText(obj.value(CONSTANTS::LF_REASON).toString());
+    mbox->setStandardButtons(QMessageBox::Ok);
+    mbox->setModal(false);
+    mbox->show();
+}

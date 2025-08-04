@@ -19,6 +19,9 @@ void ServerSession::Execute(){
 
     while (auto qbyte = _sock->GetExecuteObject()){
 
+        FatalErrorMessageBox(*qbyte);
+
+
         json_obj json_stuff = json::ReadJsonObjectFromQbyteArray(*qbyte);
         //Проверяем текущий объект на валидность. Если объект будет не вален,
         //то вернется объект, содержащий ошибку.
@@ -201,6 +204,7 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     //////////////////////////////////////
     case ACTIONS::PRIVATE_MESSAGE :
     {
+        FatalErrorMessageBox("SSS PRI");
         static std::set<str_type> current_complect{
          CONSTANTS::LF_TOKEN, CONSTANTS::LF_ROOMNAME,
          CONSTANTS::LF_USER_RECIEVER, CONSTANTS::LF_PRIVATE_MESSAGE
@@ -222,6 +226,8 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     //////////////////////////////////////
     case ACTIONS::PUBLIC_MESSAGE :
     {
+        FatalErrorMessageBox("SSS PUB");
+
         static std::set<str_type> current_complect {
                 CONSTANTS::LF_TOKEN, CONSTANTS::LF_ROOMNAME,
                 CONSTANTS::LF_PUBLIC_MESSAGE

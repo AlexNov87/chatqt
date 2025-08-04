@@ -16,31 +16,51 @@ void  ClientWin::SendRequestToGetCurrentRoomUsers(){
     sock.GuardSendMessageOtherSide(js);
 }
 
-void ClientWin::SendRequestLogin(){
+void ClientWin::SendRequestJoinRoom(){
 
-    //Если не в системе то логиним имя
-    if(_my_name.isEmpty() || _my_pass.isEmpty()){
-      FormLogin login("Enter your personal data");
-      auto res = login.exec();
-      if(res != QDialog::Accepted){return;}
-      _my_name = login.Name();
-      _my_pass = login.Password();
-    };
+    if(!this->_setted_login_parameters){
+        json_obj obj = ans_obj::MakeErrorObject
+            ("You are not logged in", ACTIONS::SYSTEM);
+        NonBlockingErrorBox(obj);
+        return;
+    }
 
     if(_in_room){
-        SendRequestLeaveRoom();
+        auto req = req_obj::MakeRequestDisconnect(_my_token, _my_room);
+        QByteArray buf = json::WritetoQByteAnyJson (req);
+        sock.GuardSendMessageOtherSide(buf);
     }
     _my_room = ui->cb_roomlist->currentText();
+
     json_obj js = req_obj::MakeRequestJoinRoom
-        (_my_name, _my_pass, ui->cb_roomlist->currentText());
+        (_my_name, _my_pass, _my_room);
 
     QByteArray buf = json::WritetoQByteAnyJson (js);
     sock.GuardSendMessageOtherSide(buf);
 }
 
 void ClientWin::SendRequestLeaveRoom() {
-
     json_obj js = req_obj::MakeRequestDisconnect(_my_token, _my_room);
     QByteArray buf = json::WritetoQByteAnyJson (js);
     sock.GuardSendMessageOtherSide(buf);
 }
+
+void ClientWin::SendRequestMessage() {
+    json_obj js ;
+    str_type reciever = ui->le_member_name->text().trimmed();
+    bool public_msg = reciever.isEmpty();
+
+    if(public_msg){
+        js = req_obj::MakeRequestPublicMessage
+            (_my_token, ui->te_message->toPlainText(),_my_room);
+    }
+    else
+    {
+        js = req_obj::MakeRequestPrivateMessage
+            (_my_token, ui->te_message->toPlainText(),reciever,_my_room);
+    }
+    QByteArray buf = json::WritetoQByteAnyJson(js);
+    sock.GuardSendMessageOtherSide(buf);
+
+}
+
