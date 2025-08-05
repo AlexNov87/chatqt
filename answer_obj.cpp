@@ -1,12 +1,22 @@
 #include "answer_obj.h"
 
 namespace  ans_obj {
-//ERROR
-json_obj MakeErrorObject(QString reason, ACTIONS act){
+
+    json_obj MakeErrorObjectTemplate(str_type reason){
     json_obj obj;
     obj.insert(CONSTANTS::LF_RESULT, CONSTANTS::RF_ERROR);
-    obj.insert(CONSTANTS::LF_INITIATOR, _ACTION_NAME.at(act));
     obj.insert(CONSTANTS::LF_REASON, std::move(reason));
+    return obj;
+    }
+
+}//namespace
+
+
+namespace  ans_obj {
+//ERROR
+json_obj MakeErrorObject(QString reason, ACTIONS act){
+    json_obj obj = MakeErrorObjectTemplate(std::move(reason));
+    obj.insert(CONSTANTS::LF_INITIATOR, _ACTION_NAME.at(act));
     return obj;
 }
 
@@ -17,25 +27,8 @@ json_obj MakeSuccessTemplate(ACTIONS act){
     return obj;
 }
 
-json_obj SuccessCreateRoom(QString name){
-    json_obj obj = MakeSuccessTemplate(ACTIONS::CREATE_ROOM);
-    obj.insert(CONSTANTS::LF_ROOMNAME, std::move(name));
-    return obj;
-}
-
 json_obj SuccessCreateUser(QString name){
     json_obj obj = MakeSuccessTemplate(ACTIONS::CREATE_USER);
-    obj.insert(CONSTANTS::LF_NAME, std::move(name));
-    return obj;
-}
-
-json_obj SuccessDeleteRoom(QString name){
-    json_obj obj = MakeSuccessTemplate(ACTIONS::DELETE_ROOM);
-    obj.insert(CONSTANTS::LF_ROOMNAME, std::move(name));
-    return obj;
-}
-json_obj SuccessDeleteUser(QString name){
-    json_obj obj = MakeSuccessTemplate(ACTIONS::DELETE_USER);
     obj.insert(CONSTANTS::LF_NAME, std::move(name));
     return obj;
 }
@@ -91,4 +84,38 @@ json_obj IncomePrivateMessage(const str_type author,str_type msg){
     return obj;
 }
 
+}//namespace
+
+
+namespace ans_obj {
+
+json_obj MakeAdminErrorObject(str_type reason, ADMIN_ACTIONS act){
+    json_obj obj = MakeErrorObjectTemplate(std::move(reason));
+    obj.insert(CONSTANTS::LF_INITIATOR, _ACTION_ADMIN_NAME.at(act));
+    return obj;
+}
+
+json_obj MakeSuccessTemplate(ADMIN_ACTIONS act){
+    json_obj obj;
+    obj.insert(CONSTANTS::LF_RESULT, CONSTANTS::RF_SUCCESS);
+    obj.insert(CONSTANTS::LF_INITIATOR, _ACTION_ADMIN_NAME.at(act));
+    return obj;
+}
+
+json_obj AdminSuccessDeleteRoom(str_type name){
+    json_obj obj = MakeSuccessTemplate(ADMIN_ACTIONS::DELETE_ROOM);
+    obj.insert(CONSTANTS::LF_ROOMNAME, std::move(name));
+    return obj;
+}
+json_obj AdminSuccessDeleteUser(str_type name){
+    json_obj obj = MakeSuccessTemplate(ADMIN_ACTIONS::DELETE_USER);
+    obj.insert(CONSTANTS::LF_NAME, std::move(name));
+    return obj;
+}
+
+json_obj AdminSuccessCreateRoom(str_type name){
+    json_obj obj = MakeSuccessTemplate(ADMIN_ACTIONS::CREATE_ROOM);
+    obj.insert(CONSTANTS::LF_ROOMNAME, std::move(name));
+    return obj;
+}
 }//namespace

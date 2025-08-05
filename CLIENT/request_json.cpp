@@ -8,7 +8,6 @@ json_obj MakeRequestTemplate(str_type initiator, ACTIONS act){
         FatalErrorMessageBox("Initiator is incorrect");
         std::abort();
     }
-
     json_obj obj;
     obj.insert(CONSTANTS::LF_DIRECTION, std::move(initiator));
     obj.insert(CONSTANTS::LF_ACTION, _ACTION_NAME.at(act));
@@ -28,24 +27,6 @@ void ModifyRoomReq(json_obj&obj,
     obj.insert(CONSTANTS::LF_ROOMNAME, std::move(roomname));
 }
 
-json_obj MakeRequestAddRooms
-    (str_type name, str_type password, str_type roomname)
-{
-    json_obj obj = MakeRequestTemplate
-        (CONSTANTS::RF_DIRECTION_SERVER, ACTIONS::CREATE_ROOM);
-    ModifyRoomReq(obj, name,password,roomname);
-    return obj;
-}
-
-json_obj MakeRequestDeleteRooms
-    (str_type name, str_type password, str_type roomname)
-{
-    json_obj obj = MakeRequestTemplate
-        (CONSTANTS::RF_DIRECTION_SERVER, ACTIONS::DELETE_ROOM);
-    ModifyRoomReq(obj, name,password,roomname);
-    return obj;
-}
-
 //USERS
 json_obj MakeRequestJoinRoom
     (str_type name, str_type password, str_type roomname){
@@ -60,15 +41,6 @@ json_obj MakeRequestRegisterUser(str_type name, str_type password){
     json_obj obj = MakeRequestTemplate
         (CONSTANTS::RF_DIRECTION_SERVER, ACTIONS::CREATE_USER);
     ModifyUserAndPassword(obj,name,password);
-    return obj;
-}
-
-json_obj MakeRequestDeleteUser
-    (str_type name, str_type password, str_type to_delete){
-    json_obj obj = MakeRequestTemplate
-        (CONSTANTS::RF_DIRECTION_SERVER, ACTIONS::CREATE_USER);
-    ModifyUserAndPassword(obj, name,password);
-    obj.insert(CONSTANTS::LF_USER_TO_DELETE, std::move(to_delete));
     return obj;
 }
 
@@ -113,5 +85,46 @@ json_obj MakeRequestRoomList(){
         (CONSTANTS::RF_DIRECTION_SERVER, ACTIONS::GET_ROOMS_LIST);
 }
 
+
+}//namespace
+
+namespace req_obj {
+
+json_obj MakeRequestTemplate(str_type initiator, ADMIN_ACTIONS act){
+    if(!IsCorrertInitiator(initiator)){
+        FatalErrorMessageBox("Initiator is incorrect");
+        std::abort();
+    }
+    json_obj obj;
+    obj.insert(CONSTANTS::LF_DIRECTION, std::move(initiator));
+    obj.insert(CONSTANTS::LF_ACTION, _ACTION_ADMIN_NAME.at(act));
+    return obj;
+}
+json_obj AdminMakeRequestAddRooms
+    (str_type name, str_type password, str_type roomname)
+{
+    json_obj obj = MakeRequestTemplate
+        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::CREATE_ROOM);
+    ModifyRoomReq(obj, name,password,roomname);
+    return obj;
+}
+
+json_obj AdminMakeRequestDeleteRooms
+    (str_type name, str_type password, str_type roomname)
+{
+    json_obj obj = MakeRequestTemplate
+        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::DELETE_ROOM);
+    ModifyRoomReq(obj, name,password,roomname);
+    return obj;
+}
+
+json_obj AdminMakeRequestDeleteUser
+    (str_type name, str_type password, str_type to_delete){
+    json_obj obj = MakeRequestTemplate
+        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::DELETE_USER);
+    ModifyUserAndPassword(obj, name,password);
+    obj.insert(CONSTANTS::LF_USER_TO_DELETE, std::move(to_delete));
+    return obj;
+}
 
 }//namespace

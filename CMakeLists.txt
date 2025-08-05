@@ -59,6 +59,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         sql_worker_prepared_queries.cpp
         formlogin.h formlogin.cpp formlogin.ui
         socket_complect.cpp
+        formadmin.h formadmin.cpp formadmin.ui
+        constants_admin.cpp
+        server_setters_admin.cpp
 
 
 

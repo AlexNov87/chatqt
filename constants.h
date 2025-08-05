@@ -8,10 +8,7 @@
 struct CONSTANTS
 {
     // Actions
-    static chart ACT_CREATE_ROOM ;
     static chart ACT_CREATE_USER ;
-    static chart ACT_DELETE_ROOM;
-    static chart ACT_DELETE_USER;
     static chart ACT_DISCONNECT;
     static chart ACT_EARLIER_MESS;
     static chart ACT_GET_USERS;
@@ -23,6 +20,15 @@ struct CONSTANTS
     static chart ACT_SEND_PRIVATE_MESSAGE;
     static chart ACT_SEND_PUBLIC_MESSAGE;
     static chart ACT_SYSTEM;
+
+    //admins
+    static chart ADMIN_ACT_BAN_USER;
+    static chart ADMIN_ACT_CREATE_ROOM;
+    static chart ADMIN_ACT_DELETE_USER;
+    static chart ADMIN_ACT_DELETE_ROOM;
+    static chart ADMIN_ACT_SYSTEM;
+    static chart ADMIN_ACT_UPDATE_ROLE;
+
 
     // Map Parameters
     static chart LF_ACTION;
@@ -69,13 +75,17 @@ private:
 
 enum class ACTIONS {
 
-    LOGIN, DISCONNECT,
-    CREATE_USER, DELETE_USER,
+    LOGIN, DISCONNECT, CREATE_USER,
     PRIVATE_MESSAGE, PUBLIC_MESSAGE,
     GET_ROOM_USERS, GET_ROOMS_LIST,
-    CREATE_ROOM, DELETE_ROOM, JOIN_ROOM,
-    EARLIER_MESSAGES, SYSTEM,
+    JOIN_ROOM, SYSTEM,
     INCOME_PUBLIC, INCOME_PRIVATE
+};
+
+enum class ADMIN_ACTIONS {
+    DELETE_USER, SYSTEM ,
+    CREATE_ROOM, DELETE_ROOM,
+    UPDATE_ROLE, BAN_USER
 };
 
 enum class Role {
@@ -92,7 +102,12 @@ extern const std::map<ACTIONS, str_type> _ACTION_NAME;
 extern const std::set<str_type> _ACT_SERVER;
 extern const std::set<str_type> _ACT_USER;
 
+extern const std::map<str_type, ADMIN_ACTIONS> _NAME_ADMIN_ACTION;
+extern const std::map<ADMIN_ACTIONS, str_type> _ACTION_ADMIN_NAME;
+extern const std::set<str_type> _ACT_ADMIN;
+
 extern const std::map<str_type, Role> _NAME_ROLE;
 extern const std::map<Role, str_type> _ROLE_NAME;
+
 
 #endif // CONSTANTS_H

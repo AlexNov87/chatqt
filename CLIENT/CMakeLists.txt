@@ -17,15 +17,18 @@ set(PROJECT_SOURCES
         clientwin.cpp
         clientwin.h
         clientwin.ui
+        ../formadmin.ui
 
         ../initializators_help.cpp
         ../helpfoo.cpp
         ../constants.cpp
         ../constants_load.cpp
+        ../constants_admin.cpp
         ../answer_obj.cpp
         ../socket_complect.cpp
         ../formmaster.cpp
         ../formlogin.cpp
+        ../formadmin.cpp
 
 )
 
@@ -41,6 +44,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         answer_checker.cpp
         clientwin_request.cpp
         clientwin_supply.cpp
+        formadminuser.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET CLIENT APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

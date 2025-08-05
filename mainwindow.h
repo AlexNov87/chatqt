@@ -14,11 +14,14 @@
 //UI
 #include "ui_roomsform.h"
 #include "./ui_mainwindow.h"
+#include "formadmin.h"
+#include "ui_formadmin.h"
 //
 class MainWindow;
 class GraphicsServer;
 class MainWindowDesigner;
 class ServerSession;
+class AdminServerForm;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -156,6 +159,57 @@ private:
     friend class ServerSession;
     void InitGraphicForms();
     void SetDefaultValues();
+};
+
+
+class AdminServerForm : public Formadmin {
+
+    AdminServerForm(): Formadmin() {
+        Init();
+    }
+
+    void Init(){
+
+        connect(ui->pb_rooms_createroom, &QCommandLinkButton::clicked,
+                this, &AdminServerForm::OnCreateRoomClicked);
+        connect(ui->pb_rooms_delete_room, &QCommandLinkButton::clicked,
+                this, &AdminServerForm::OnDeleteRoomClicked
+                );
+
+        connect(ui->pb_users_blockuser , &QCommandLinkButton::clicked,
+                this, &AdminServerForm::OnBlockUserClicked
+                );
+        connect(ui->pb_users_deleteuser , &QCommandLinkButton::clicked,
+                this, &AdminServerForm::OnDeleteUserClicked
+                );
+        connect(ui->pb_users_set_role, &QCommandLinkButton::clicked,
+                this, &AdminServerForm::OnModifyUserRoleClicked
+                );
+        connect(ui->pb_users_updateusers, &QCommandLinkButton::clicked,
+                this, &AdminServerForm::OnUpdateUsersClicked
+                );
+    }
+
+private:
+    void OnDeleteRoomClicked() override {
+        FatalErrorMessageBox("2DeleteRoom CLICKED");
+    }
+    void OnCreateRoomClicked() override {
+        FatalErrorMessageBox("2CreateRoom CLICKED");
+    }
+private:
+    void OnBlockUserClicked() override {
+        FatalErrorMessageBox("2BlockUser CLICKED");
+    }
+    void OnDeleteUserClicked() override {
+        FatalErrorMessageBox("2DeleteUser CLICKED");
+    }
+    void OnModifyUserRoleClicked() override {
+        FatalErrorMessageBox("2ModifyUser CLICKED");
+    }
+    void OnUpdateUsersClicked() override {
+        FatalErrorMessageBox("2UpdateUsers CLICKED");
+    }
 };
 
 #endif // MAINWINDOW_H

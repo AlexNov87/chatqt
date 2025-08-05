@@ -70,22 +70,22 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     QString action_str = obj.value(CONSTANTS::LF_ACTION).toString();
     ACTIONS act =  _NAME_ACTION.at(action_str);
     switch (act) {
-    case ACTIONS::CREATE_ROOM :
-    {
-        static std::set<str_type> current_complect{
-            CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_ROOMNAME
-        };
-        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
-        if(reason){
-            return ans_obj::MakeErrorObject(*reason, act);
-        }
-        str_type name = obj.value(CONSTANTS::LF_NAME).toString();
-        str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
-        str_type roomname = obj.value(CONSTANTS::LF_ROOMNAME).toString();
-        return _srv->AddRoomJs(std::move(name),std::move(password),
-                               std::move(roomname));
-    }
-    break;
+    // case ACTIONS::CREATE_ROOM :
+    // {
+    //     static std::set<str_type> current_complect{
+    //         CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_ROOMNAME
+    //     };
+    //     auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+    //     if(reason){
+    //         return ans_obj::MakeErrorObject(*reason, act);
+    //     }
+    //     str_type name = obj.value(CONSTANTS::LF_NAME).toString();
+    //     str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
+    //     str_type roomname = obj.value(CONSTANTS::LF_ROOMNAME).toString();
+    //     return _srv->AddRoomJs(std::move(name),std::move(password),
+    //                            std::move(roomname));
+    // }
+    // break;
     //////////////////////////////////////
     case ACTIONS::CREATE_USER :
     {
@@ -103,44 +103,44 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
     }
         break;
     //////////////////////////////////////
-    case ACTIONS::DELETE_ROOM :
-    {
-        static std::set<str_type> current_complect{
-            CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_ROOMNAME
-        };
-        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+    // case ACTIONS::DELETE_ROOM :
+    // {
+    //     static std::set<str_type> current_complect{
+    //         CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_ROOMNAME
+    //     };
+    //     auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
 
-        if(reason){
-            return ans_obj::MakeErrorObject(*reason, act);
-        }
-        str_type name = obj.value(CONSTANTS::LF_NAME).toString();
-        str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
-        str_type roomname = obj.value(CONSTANTS::LF_ROOMNAME).toString();
-        return _srv->DeleteRoomJs(std::move(name),std::move(password),
-                                  std::move(roomname));
-    }
+    //     if(reason){
+    //         return ans_obj::MakeErrorObject(*reason, act);
+    //     }
+    //     str_type name = obj.value(CONSTANTS::LF_NAME).toString();
+    //     str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
+    //     str_type roomname = obj.value(CONSTANTS::LF_ROOMNAME).toString();
+    //     return _srv->DeleteRoomJs(std::move(name),std::move(password),
+    //                               std::move(roomname));
+    // }
         break;
     //////////////////////////////////////
-    case ACTIONS::DELETE_USER :
-    {
+    // case ACTIONS::DELETE_USER :
+    // {
 
-        static std::set<str_type> current_complect{
-            CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_USER_TO_DELETE
-        };
-        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+    //     static std::set<str_type> current_complect{
+    //         CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_USER_TO_DELETE
+    //     };
+    //     auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
 
-        if(reason){
-            return ans_obj::MakeErrorObject(*reason, act);
-        }
-        str_type name = obj.value(CONSTANTS::LF_NAME).toString();
-        str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
-        str_type todelete = obj.value(CONSTANTS::LF_USER_TO_DELETE).toString();
-        return _srv->DeleteRoomJs(std::move(name),std::move(password),
-                                  std::move(todelete));
-    }
-        break;
+    //     if(reason){
+    //         return ans_obj::MakeErrorObject(*reason, act);
+    //     }
+    //     str_type name = obj.value(CONSTANTS::LF_NAME).toString();
+    //     str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
+    //     str_type todelete = obj.value(CONSTANTS::LF_USER_TO_DELETE).toString();
+    //     return _srv->DeleteRoomJs(std::move(name),std::move(password),
+    //                               std::move(todelete));
+    // }
+    //     break;
     //////////////////////////////////////
-    case ACTIONS::DISCONNECT :
+    case ACTIONS::DISCONNECT:
     {
 
         static std::set<str_type> current_complect{
@@ -242,7 +242,6 @@ json_obj ServerSession::ExecuteExternal(const json_obj& obj){
 
         break;
     }
-
     return {};
 
 }

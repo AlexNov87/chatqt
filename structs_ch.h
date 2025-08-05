@@ -167,6 +167,9 @@ public:
         return true;
     }
 
+    bool HasPermissionAdmin(QString name, QString password, ADMIN_ACTIONS act){
+        return true;
+    }
     QString GetSerializatedRoomList();
 
     mutable std::recursive_mutex _mtx_room;

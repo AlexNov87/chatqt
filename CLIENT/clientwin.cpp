@@ -74,11 +74,6 @@ void ClientWin::on_pb_logout_clicked()
     ResetMyData();
 }
 
-void ClientWin::on_commandLinkButton_clicked()
-{
-    FatalErrorMessageBox("R:"+_my_room + " T:"+_my_token);
-}
-
 void ClientWin::on_pb_join_room_clicked()
 {
     SendRequestJoinRoom();
@@ -89,7 +84,6 @@ void ClientWin::on_pb_set_log_clicked()
     SetLoginOptions();
 }
 
-
 void ClientWin::on_tb_clear_clicked()
 {
         ui->le_member_name->clear();
@@ -97,15 +91,23 @@ void ClientWin::on_tb_clear_clicked()
         ui->lw_message->clear();
 }
 
-
 void ClientWin::on_lw_members_itemClicked(QListWidgetItem *item)
 {
    ui->le_member_name->setText(item->text());
 }
 
-
 void ClientWin::on_pb_send_message_clicked()
 {
     SendRequestMessage();
+}
+
+
+void ClientWin::on_pb_admin_form_clicked()
+{
+    if(_admin_opened){return;}
+    _admin_opened = true;
+    AdminUserForm* form = new AdminUserForm(this);
+    form->setAttribute(Qt::WA_DeleteOnClose);
+    form->show();
 }
 

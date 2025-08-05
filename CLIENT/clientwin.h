@@ -4,20 +4,22 @@
 #include <QMainWindow>
 #include <QTcpSocket>
 #include<QComboBox>
+#include<QCommandLinkButton>
 #include"request_json.h"
 #include"../structs.h"
 #include"../formmaster.h"
 #include "../formlogin.h"
-
+#include "../formadmin.h"
+#include "../ui_formadmin.h"
 
 QT_BEGIN_NAMESPACE
 
 class AnswerSession;
-
 namespace Ui {
 class ClientWin;
 }
 QT_END_NAMESPACE
+class AdminUserForm;
 
 class ClientWin : public QMainWindow
 {
@@ -35,7 +37,6 @@ private slots:
 
     void on_pb_leave_clicked();
     void on_pb_logout_clicked();
-    void on_commandLinkButton_clicked();
     void on_pb_join_room_clicked();
     void on_pb_set_log_clicked();
 
@@ -43,6 +44,8 @@ private slots:
     void on_lw_members_itemClicked(QListWidgetItem *item);
 
     void on_pb_send_message_clicked();
+
+    void on_pb_admin_form_clicked();
 
 private:
     friend class AnswerSession;
@@ -58,12 +61,14 @@ private:
     void PrepareClearMenu();
 
 private:
+    friend class AdminUserForm;
     Ui::ClientWin *ui;
     SocketComplect sock;
     std::shared_ptr<QMenu> _clear_menu;
 
     bool _in_room = false;
     bool _setted_login_parameters = false;
+    bool _admin_opened = false;
 
     str_type _my_name;
     str_type _my_pass;
@@ -92,6 +97,23 @@ private:
     void ExecuteDisconnect();
     void ExecutePrivateMsg();
     void ExecutePublicMsg();
+};
+
+class AdminUserForm : public Formadmin {
+public:
+    AdminUserForm(ClientWin* client);
+
+private:
+    void Init();
+    void OnDeleteRoomClicked() override ;
+    void OnCreateRoomClicked() override ;
+private:
+    void OnBlockUserClicked() override;
+    void OnDeleteUserClicked() override;
+    void OnModifyUserRoleClicked() override ;
+    void OnUpdateUsersClicked() override ;
+
+    ClientWin* _clientwin;
 };
 
 
