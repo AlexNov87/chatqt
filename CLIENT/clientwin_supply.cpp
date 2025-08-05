@@ -50,12 +50,22 @@ void ClientWin::PrepareClearMenu(){
     _clear_menu = std::make_shared<QMenu>(ui->tb_clear);
     QAction* act_cl_private = _clear_menu->addAction("Clear private field");
     QAction* act_cl_message = _clear_menu->addAction("Clear message field");
+    QAction* act_cl_chat = _clear_menu->addAction("Clear chat");
+
     ui->tb_clear->setMenu(_clear_menu.get());
     ui->tb_clear->setPopupMode(QToolButton::MenuButtonPopup);
+
     connect(act_cl_private, &QAction::triggered, this, [&]{
     ui->le_member_name->clear(); ;});
     connect(act_cl_message, &QAction::triggered, this, [&]{
         ui->te_message->clear();
-     ;});
+    ;});
+    connect(act_cl_chat, &QAction::triggered, this , [&]{
+         ui->lw_message->clear();
+    });
+
+
+
+
 
 }

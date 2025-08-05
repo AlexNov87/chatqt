@@ -23,6 +23,10 @@ json_obj SuccessJoinRoom(str_type token, str_type messages_serialized);
 json_obj SuccessPrivateMessage();
 json_obj SuccessPublicMessage();
 
+json_obj IncomePublicMessage(const str_type author,str_type msg );
+json_obj IncomePrivateMessage(const str_type author,str_type msg);
+
+
 json_obj TestObject();
 
 template<typename Foo>

@@ -29,14 +29,14 @@ public:
     }
 
     void RecievePublicMessage(const str_type& author, str_type message){
-        QByteArray arr;
+        auto js = ans_obj::IncomePublicMessage(author, std::move(message));
+        QByteArray arr = json::WritetoQByteAnyJson(js);
         _socket->GuardSendMessageOtherSide(arr);
     }
 
     void RecievePrivateMessage(const str_type& author, str_type message){
-
-
-        QByteArray arr;
+         auto js = ans_obj::IncomePrivateMessage(author, std::move(message));
+         QByteArray arr = json::WritetoQByteAnyJson(js);
         _socket->GuardSendMessageOtherSide(arr);
     }
 

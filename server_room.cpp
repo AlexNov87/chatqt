@@ -21,9 +21,9 @@ json_obj GraphicsServer::PublicMessageJs
     LGR(_mtx_room);
     if(!_rooms.contains(room_name)){
         return ans_obj::MakeErrorObject("There is no room: " + room_name,
-                                        ACTIONS::DISCONNECT);
+                                        this_act);
     }
-     return _rooms.at(room_name)->PublicMessage(token,message);
+        return _rooms.at(room_name)->PublicMessage(token,message);
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
@@ -37,7 +37,7 @@ json_obj GraphicsServer::PrivateMessageJs
     LGR(_mtx_room);
     if(!_rooms.contains(room_name)){
         return ans_obj::MakeErrorObject("There is no room: " + room_name,
-                                        ACTIONS::DISCONNECT);
+                                        this_act);
     }
     return _rooms.at(room_name)->PrivateMessage(token,user_to,message);
     };

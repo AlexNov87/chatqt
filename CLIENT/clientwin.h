@@ -90,6 +90,8 @@ private:
     void ExecuteRoomMembers();
     void ExecuteJoinRoom();
     void ExecuteDisconnect();
+    void ExecutePrivateMsg();
+    void ExecutePublicMsg();
 };
 
 

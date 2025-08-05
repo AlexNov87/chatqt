@@ -94,6 +94,7 @@ void ClientWin::on_tb_clear_clicked()
 {
         ui->le_member_name->clear();
         ui->te_message->clear();
+        ui->lw_message->clear();
 }
 
 

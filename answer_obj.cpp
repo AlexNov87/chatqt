@@ -78,4 +78,17 @@ json_obj TestObject(){
     return obj;
 }
 
+json_obj IncomePublicMessage(const str_type author,str_type msg ){
+     json_obj obj = MakeSuccessTemplate(ACTIONS::INCOME_PUBLIC );
+     obj.insert(CONSTANTS::LF_NAME, std::move(author));
+     obj.insert(CONSTANTS::LF_PUBLIC_MESSAGE, std::move(msg));
+     return obj;
+}
+json_obj IncomePrivateMessage(const str_type author,str_type msg){
+      json_obj obj = MakeSuccessTemplate(ACTIONS::INCOME_PRIVATE);
+    obj.insert(CONSTANTS::LF_NAME, std::move(author));
+    obj.insert(CONSTANTS::LF_PRIVATE_MESSAGE, std::move(msg));
+    return obj;
+}
+
 }//namespace

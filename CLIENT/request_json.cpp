@@ -92,7 +92,7 @@ json_obj MakeRequestPublicMessage(str_type token, str_type message, str_type roo
     json_obj obj = MakeRequestTemplate
         (CONSTANTS::RF_DIRECTION_CHATROOM, ACTIONS::PUBLIC_MESSAGE);
     obj.insert(CONSTANTS::LF_TOKEN , std::move(token));
-    obj.insert(CONSTANTS::LF_PUBLIC_MESSAGE , std::move(token));
+    obj.insert(CONSTANTS::LF_PUBLIC_MESSAGE , std::move(message));
     obj.insert(CONSTANTS::LF_ROOMNAME, std::move(room_name));
     return obj;
 }

@@ -15,6 +15,8 @@ struct CONSTANTS
     static chart ACT_DISCONNECT;
     static chart ACT_EARLIER_MESS;
     static chart ACT_GET_USERS;
+    static chart ACT_INCOME_PRIVATE;
+    static chart ACT_INCOME_PUBLIC;
     static chart ACT_JOIN_ROOM;
     static chart ACT_LOGIN;
     static chart ACT_ROOM_LIST ;
@@ -72,7 +74,8 @@ enum class ACTIONS {
     PRIVATE_MESSAGE, PUBLIC_MESSAGE,
     GET_ROOM_USERS, GET_ROOMS_LIST,
     CREATE_ROOM, DELETE_ROOM, JOIN_ROOM,
-    EARLIER_MESSAGES, SYSTEM
+    EARLIER_MESSAGES, SYSTEM,
+    INCOME_PUBLIC, INCOME_PRIVATE
 };
 
 enum class Role {
@@ -87,6 +90,7 @@ struct UserRole{
 extern const std::map<str_type, ACTIONS> _NAME_ACTION;
 extern const std::map<ACTIONS, str_type> _ACTION_NAME;
 extern const std::set<str_type> _ACT_SERVER;
+extern const std::set<str_type> _ACT_USER;
 
 extern const std::map<str_type, Role> _NAME_ROLE;
 extern const std::map<Role, str_type> _ROLE_NAME;

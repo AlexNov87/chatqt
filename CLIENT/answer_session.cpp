@@ -62,18 +62,46 @@ void AnswerSession::StartExecute() {
     break;
     case ACTIONS::PRIVATE_MESSAGE :
     {
-        FatalErrorMessageBox("Private mess");
+       /**/
     }
     break;
     case ACTIONS::PUBLIC_MESSAGE :
     {
-         FatalErrorMessageBox("Public mess");
+         /**/
     }
     break;
+    case ACTIONS::INCOME_PUBLIC :
+    {
+        ExecutePublicMsg();
+    }
+    break;
+    case ACTIONS::INCOME_PRIVATE :
+    {
+       ExecutePrivateMsg();
+    }
+    break;
+
     default:
         break;
     }
 
+}
+
+void AnswerSession::ExecutePrivateMsg(){
+    this->_client->ui->lw_message->addItem(
+        "Private from: " +
+        _obj.value(CONSTANTS::LF_NAME).toString() + ": " +
+        _obj.value(CONSTANTS::LF_PRIVATE_MESSAGE).toString()
+        );
+
+}
+
+void AnswerSession::ExecutePublicMsg(){
+
+    this->_client->ui->lw_message->addItem(
+        _obj.value(CONSTANTS::LF_NAME).toString() + ": " +
+        _obj.value(CONSTANTS::LF_PUBLIC_MESSAGE).toString()
+        );
 }
 
 void AnswerSession::ExecuteRoomList(){
