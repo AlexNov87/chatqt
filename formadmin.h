@@ -30,6 +30,7 @@ protected:
     virtual void OnCreateRoomClicked() = 0;
 protected:
     virtual void OnBlockUserClicked() = 0;
+    virtual void OnUnblockUserClicked() = 0;
     virtual void OnDeleteUserClicked() = 0;
     virtual void OnModifyUserRoleClicked() = 0;
     virtual void OnUpdateUsersClicked() = 0;

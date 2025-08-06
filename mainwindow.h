@@ -1,57 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QApplication>
-#include <QLabel>
-#include <QWidget>
-#include <QTcpServer>
-#include <QStringListModel>
-#include "answer_obj.h"
-#include <chrono>
 #include "server_graphics.h"
-
-
-//UI
-#include "ui_roomsform.h"
-#include "./ui_mainwindow.h"
-#include "formadmin.h"
-#include "ui_formadmin.h"
-//
-class MainWindow;
-class GraphicsServer;
-class MainWindowDesigner;
-class ServerSession;
-class AdminServerForm;
-
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
-
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-public:
-    MainWindow(std::shared_ptr<GraphicsServer> srv);
-    ~MainWindow();
-protected:
-    friend class MainWindowDesigner;
-    friend class GraphicsServer;
-    friend class ServerSession;
-    Ui::MainWindow *ui;
-    std::shared_ptr<MainWindowDesigner> _designer;
-    std::shared_ptr<GraphicsServer> _srv;
-private slots:
-    void on_pb_run_server_clicked();
-    void on_pb_stop_server_clicked();
-    void on_pb_setoptions_clicked();
-};
-
+#include "answer_obj.h"
 
 class ServerSession {
-
 public:
     ServerSession(std::shared_ptr<GraphicsServer> srv
                   , SocketComplect* sock);
@@ -75,7 +28,6 @@ private:
     std::shared_ptr<GraphicsServer> _srv;
     SocketComplect* _sock;
 };
-
 
 class GraphicsServer : public ServerBase, public GraphicWidgets,
                        public std::enable_shared_from_this<GraphicsServer> {
@@ -158,6 +110,10 @@ class AdminServerForm : public Formadmin {
         connect(ui->pb_users_updateusers, &QCommandLinkButton::clicked,
                 this, &AdminServerForm::OnUpdateUsersClicked
                 );
+        connect(ui->pb_users_unblockuser,&QCommandLinkButton::clicked, this,
+                &AdminServerForm::OnUnblockUserClicked
+          );
+
     }
 
 private:
@@ -179,6 +135,10 @@ private:
     }
     void OnUpdateUsersClicked() override {
         FatalErrorMessageBox("2UpdateUsers CLICKED");
+    }
+
+    void OnUnblockUserClicked() override {
+        FatalErrorMessageBox("2UnBlockUser CLICKED");
     }
 };
 

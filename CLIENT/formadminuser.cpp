@@ -25,6 +25,9 @@
         connect(ui->pb_users_updateusers, &QCommandLinkButton::clicked,
                 this, &AdminUserForm::OnUpdateUsersClicked
                 );
+        connect(ui->pb_users_unblockuser,&QCommandLinkButton::clicked, this,
+                &AdminUserForm::OnUnblockUserClicked
+                );
         connect(this, &QWidget::destroyed , [&]{ _clientwin->_admin_opened = false; });
     }
 
@@ -47,4 +50,8 @@
     }
     void AdminUserForm::OnUpdateUsersClicked() {
         FatalErrorMessageBox("1UpdateUsers CLICKED");
+    }
+
+    void AdminUserForm::OnUnblockUserClicked(){
+       FatalErrorMessageBox("1UnBlockUser CLICKED");
     }

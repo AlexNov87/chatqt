@@ -38,7 +38,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab_rooms">
      <attribute name="title">
@@ -223,6 +223,16 @@
              </property>
              <property name="icon">
               <iconset theme="QIcon::ThemeIcon::ApplicationExit"/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCommandLinkButton" name="pb_users_unblockuser">
+             <property name="text">
+              <string>Unblock user</string>
+             </property>
+             <property name="icon">
+              <iconset theme="QIcon::ThemeIcon::AddressBookNew"/>
              </property>
             </widget>
            </item>

@@ -109,9 +109,11 @@ private:
     void OnCreateRoomClicked() override ;
 private:
     void OnBlockUserClicked() override;
+    void OnUnblockUserClicked() override;
     void OnDeleteUserClicked() override;
     void OnModifyUserRoleClicked() override ;
     void OnUpdateUsersClicked() override ;
+
 
     ClientWin* _clientwin;
 };

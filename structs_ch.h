@@ -145,19 +145,7 @@ public:
     QString GetSerializatedRoomList();
 
     std::optional<json_obj> AuthorizatedAndHasPermissionAdmin
-        (QString name, QString password, ADMIN_ACTIONS act){
-        if(auto res =_sql_work->AuthorizatedError
-                       (name, password, act)){
-            return  *res;
-        }
-
-        if(!HasPermissionAdmin(name, password, act)){
-            return  ans_obj::MakeAdminErrorObject
-                ("You have no permission to do this", act);
-        }
-        return std::nullopt;
-
-    }
+        (QString name, QString password, ADMIN_ACTIONS act);
 
     mutable std::recursive_mutex _mtx_room;
     mutable std::mutex _mtx_net;
