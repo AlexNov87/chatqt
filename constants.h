@@ -27,6 +27,7 @@ struct CONSTANTS
     static chart ADMIN_ACT_DELETE_USER;
     static chart ADMIN_ACT_DELETE_ROOM;
     static chart ADMIN_ACT_SYSTEM;
+    static chart ADMIN_ACT_UNBAN_USER;
     static chart ADMIN_ACT_UPDATE_ROLE;
 
 
@@ -85,7 +86,8 @@ enum class ACTIONS {
 enum class ADMIN_ACTIONS {
     DELETE_USER, SYSTEM ,
     CREATE_ROOM, DELETE_ROOM,
-    UPDATE_ROLE, BAN_USER
+    UPDATE_ROLE, BAN_USER,
+    UNBAN_USER
 };
 
 enum class Role {
@@ -95,6 +97,7 @@ enum class Role {
 struct UserRole{
     str_type password;
     Role role;
+    bool is_active;
 };
 
 extern const std::map<str_type, ACTIONS> _NAME_ACTION;

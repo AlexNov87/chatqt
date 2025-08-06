@@ -56,17 +56,16 @@ json_obj GraphicsServer::SetMaxUsers(int max) {
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
 
-
-
 json_obj GraphicsServer::JoinRoomUserJs(str_type name, str_type password,
                                         str_type roomname, SocketComplect* complect) {
 
     ACTIONS this_act = ACTIONS::JOIN_ROOM;
     auto lam = [&]{
 
-        //Если юзера нет в базе
-        if(!_sql_work->IsAuthorizated(name,password)){return ans_obj::MakeErrorObject
-                ("You are not authorizated" , this_act);}
+        if(auto res =_sql_work->AuthorizatedError
+                       (name, password, this_act)){
+            return  *res;
+        }
 
         LGR(_mtx_room);
         if(!_rooms.contains(roomname)){
@@ -84,8 +83,6 @@ json_obj GraphicsServer::JoinRoomUserJs(str_type name, str_type password,
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
-
-
 
 json_obj GraphicsServer::RegisterUserJs(str_type name, str_type password) {
 

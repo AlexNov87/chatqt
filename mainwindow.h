@@ -149,6 +149,14 @@ public:
         ( str_type token,  str_type message,
     str_type user_to, str_type room_name) override;
 
+   json_obj UpdateUserRoleJs(str_type name, str_type password,
+             str_type to_update, Role role) override;
+
+   json_obj BanUserJs(str_type name, str_type password,
+                                      str_type to_ban) override;
+   json_obj UnBanUserJs(str_type name, str_type password,
+                                       str_type to_ban) override;
+
 private slots:
     void OnNewConnection();
     void OnReadyRead();

@@ -10,7 +10,7 @@ json_obj SQLWorker::RegisterNewUser(str_type name, str_type pass){
     }
 
     QSqlQuery quer = QueryPreparedToIsertUser
-        (name, pass, _id_roles.at(CONSTANTS::ROLE_USER));
+        (name, pass, _roles_id.at(CONSTANTS::ROLE_USER));
     if(!quer.exec()){
         return ans_obj::MakeErrorObject("Failed Register new user"
                                         , ACTIONS::CREATE_USER);
@@ -22,9 +22,8 @@ json_obj SQLWorker::RegisterNewUser(str_type name, str_type pass){
 json_obj SQLWorker::DeleteUser(str_type name, str_type password, str_type to_delete){
     LGR(_mtx);
     ADMIN_ACTIONS this_act = ADMIN_ACTIONS::DELETE_USER;
-    if(!IsAuthorizated(name, password)){
-        return ans_obj::MakeAdminErrorObject("You are not logined"
-                                        , this_act );
+    if(auto res = AuthorizatedError(name, password, this_act)){
+        return *res;
     }
     if(!_user_passhash.contains(to_delete)){
         return ans_obj::MakeAdminErrorObject("User who must be deleted is not in base"
@@ -47,15 +46,35 @@ json_obj SQLWorker::DeleteUser(str_type name, str_type password, str_type to_del
     return ans_obj::AdminSuccessDeleteUser(to_delete);
 }
 
-bool SQLWorker::IsAuthorizated(str_type name, str_type password){
+std::optional<json_obj> SQLWorker::AuthorizatedError
+    (str_type name, str_type password, ADMIN_ACTIONS act){
     LGR(_mtx);
     if(!_user_passhash.contains(name)){
-        return false;
+        ans_obj::MakeAdminErrorObject("User not found", act);
+    }
+    if(!_user_passhash.at(name).is_active){
+        ans_obj::MakeAdminErrorObject("You are banned on this_server", act);
     }
     if(_user_passhash.at(name).password != password){
-        return false;
+        ans_obj::MakeAdminErrorObject("Wrong password", act);
     }
-    return true;
+
+    return std::nullopt;
+}
+
+std::optional<json_obj> SQLWorker::AuthorizatedError
+    (str_type name, str_type password, ACTIONS act){
+    LGR(_mtx);
+    if(!_user_passhash.contains(name)){
+        ans_obj::MakeErrorObject("User not found", act);
+    }
+    if(!_user_passhash.at(name).is_active){
+        ans_obj::MakeErrorObject("You are banned on this_server", act);
+    }
+    if(_user_passhash.at(name).password != password){
+        ans_obj::MakeErrorObject("Wrong password", act);
+    }
+    return std::nullopt;
 }
 
 bool SQLWorker::UpdateMaster(str_type name, str_type pass){
@@ -67,9 +86,39 @@ bool SQLWorker::UpdateMaster(str_type name, str_type pass){
     quer.prepare(umast);
     quer.bindValue(":pass", pass);
     quer.bindValue(":name", name);
-    quer.bindValue(":rd", _id_roles.at(CONSTANTS::ROLE_MASTER));
+    quer.bindValue(":rd", _roles_id.at(CONSTANTS::ROLE_MASTER));
     return quer.exec();
 }
+
+bool SQLWorker::IsBanned(str_type name){
+    LGR(_mtx);
+    if(!_user_passhash.contains(name)){
+        return false;
+    }
+    if(!_user_passhash.at(name).is_active){
+        return true;
+    }
+    return false;
+}
+json_obj SQLWorker::UpdateUserRole(str_type name, Role role)
+{
+    LGR(_mtx);
+    const auto& rolename = _ROLE_NAME.at(role);
+    auto query = QueryUpdateUserRole(name, _roles_id.at(rolename));
+
+  //  return query.exec();
+}
+json_obj SQLWorker::BanUser(str_type name){
+    LGR(_mtx);
+    auto query = QueryUpdateUserActiveStatus(name,false);
+    //return query.exec();
+}
+json_obj SQLWorker::UnbanUser(str_type name){
+    LGR(_mtx);
+    auto query = QueryUpdateUserActiveStatus(name, true);
+    //return query.exec();
+}
+
 
 
 }//namespace sql

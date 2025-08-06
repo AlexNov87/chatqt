@@ -19,6 +19,29 @@ set(PROJECT_SOURCES
         mainwindow.ui
 )
 
+add_library(LIB_CONSTANTS
+   alias.h
+   constants.h
+   constants_load.h
+   constants.cpp
+   constants_admin.cpp
+   constants_load.cpp
+)
+target_link_libraries(LIB_CONSTANTS PUBLIC Qt${QT_VERSION_MAJOR}::Core)
+
+add_library(LIB_HELPFOO
+helpfoo.h
+initializators_help.h
+initializators_help.h
+initializators_help.cpp
+)
+target_link_libraries(LIB_HELPFOO PUBLIC LIB_CONSTANTS
+    PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Network
+)
+
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(TCPSERV
         MANUAL_FINALIZATION
@@ -29,9 +52,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         structs.h
         helpfoo.h
         helpfoo.cpp
-        constants.h
-
-
         structs_smallimpl.cpp
         structs_ch.h
         initializators_help.h
@@ -40,19 +60,16 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         server_setters.cpp
         server_create_and_getters.cpp
 
-        constants.cpp
         answer_obj.h
         answer_obj.cpp
         tokenizer.h
         tokenizer.cpp
-        alias.h
         server_sigslots.cpp
         server_session.cpp
         chatroom.cpp
         server_room.cpp
         sql.h
-        constants_load.h
-        constants_load.cpp
+
         sql_worker_create.cpp
         formmaster.h formmaster.cpp formmaster.ui
         sql_worker_modandget.cpp
@@ -60,16 +77,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         formlogin.h formlogin.cpp formlogin.ui
         socket_complect.cpp
         formadmin.h formadmin.cpp formadmin.ui
-        constants_admin.cpp
         server_setters_admin.cpp
-
-
-
-
-
-
-
     )
+
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET TCPSERV APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
@@ -89,6 +99,7 @@ else()
 endif()
 
 target_link_libraries(TCPSERV
+    PUBLIC LIB_CONSTANTS LIB_HELPFOO
     PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network

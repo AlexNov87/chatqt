@@ -101,7 +101,9 @@ void SQLWorker::CreateUsersBase(){
      id SERIAL PRIMARY KEY,
      name VARCHAR(50) UNIQUE NOT NULL ,
      password VARCHAR(50) NOT NULL,
+     is_active BOOLEAN NOT NULL,
      role_id INTEGER NOT NULL,
+
     CONSTRAINT fk_role
        FOREIGN KEY (role_id)
        REFERENCES roles(id)
@@ -122,15 +124,18 @@ void SQLWorker::LoadRoles(){
     while (quer.next()) {
         int id = quer.value("id").toInt();
         str_type role = quer.value("role").toString();
-        _id_roles[role] = id;
-        _roles_id[id] = std::move(role);
+        _roles_id[role] = id;
+        _id_roles[id] = std::move(role);
     }
 }
 
 void SQLWorker::LoadUsers(){
     QSqlQuery quer;
     str_type load_users = R"(
-        SELECT users.id, users.name, users.password, roles.role
+        SELECT
+        users.id, users.name,
+        users.password, users.is_active,
+        roles.role
         FROM users
         RIGHT JOIN roles ON users.role_id = roles.id
         WHERE users.name IS NOT NULL
@@ -143,13 +148,15 @@ void SQLWorker::LoadUsers(){
         str_type name =  quer.value("name").toString();
         str_type pass = quer.value("password").toString();
         str_type role_name = quer.value("role").toString();
+        bool is_active = quer.value("is_active").toBool();
         if(role_name == CONSTANTS::ROLE_MASTER){
             _has_master = true;
         }
+
         _user_passhash.insert({
             std::move(name),
-            UserRole{std::move(pass), _NAME_ROLE.at(role_name)}
-        });
+            UserRole{std::move(pass), _NAME_ROLE.at(role_name), is_active}
+        });        
     }
 }
 
@@ -164,7 +171,7 @@ void SQLWorker::CreateMaster(){
     };
     QSqlQuery quer = QueryPreparedToIsertUser(
       mst.Name() , mst.Password() ,
-      _id_roles.at(CONSTANTS::ROLE_MASTER)
+      _roles_id.at(CONSTANTS::ROLE_MASTER)
     );
     QueryExecute(quer);
 }

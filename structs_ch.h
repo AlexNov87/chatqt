@@ -114,20 +114,7 @@ class ServerBase :
 public QTcpServer {
 public:
 
-    ServerBase() : QTcpServer(){
-        ConfigInit init;
-
-         _sql_work = std::make_shared<sql::SQLWorker>(init.Object());
-        _ip.setAddress(init.Object().value(LOAD_CONSTANTS::SERVER_IP).toString());
-        _port = init.Object().value(LOAD_CONSTANTS::SERVER_PORT).toInt();
-        _max_conn = init.Object().value(LOAD_CONSTANTS::MAX_CONNECTIONS).toInt();
-        _max_message_len = init.Object().value(LOAD_CONSTANTS::MAX_MESSAGE_LEN).toInt();
-
-        for(auto&& el : init.Object().value(LOAD_CONSTANTS::DEFAULT_CHATROOMS).toArray()){
-            _rooms[el.toString()] = std::make_shared<ChatRoom>(this, "DEFAULT", el.toString());
-        }
-
-    }
+  ServerBase();
 
   virtual json_obj SetIP(str_type ip) = 0;
   virtual json_obj SetPort(int port) = 0;
@@ -152,6 +139,14 @@ public:
   virtual json_obj PrivateMessageJs
       (str_type token, str_type message, str_type user_to, str_type room_name) =0;
 
+  virtual json_obj UpdateUserRoleJs(str_type name, str_type password,
+   str_type to_update, Role role) = 0;
+
+  virtual json_obj BanUserJs(str_type name, str_type password,str_type to_ban) = 0;
+  virtual json_obj UnBanUserJs(str_type name, str_type password,str_type to_ban) = 0;
+
+
+
   QHostAddress GetIP() const;
   QString GetIPStr() const;
   int GetPort() const;
@@ -171,6 +166,21 @@ public:
         return true;
     }
     QString GetSerializatedRoomList();
+
+    std::optional<json_obj> AuthorizatedAndHasPermissionAdmin
+        (QString name, QString password, ADMIN_ACTIONS act){
+        if(auto res =_sql_work->AuthorizatedError
+                       (name, password, act)){
+            return  *res;
+        }
+
+        if(!HasPermissionAdmin(name, password, act)){
+            return  ans_obj::MakeAdminErrorObject
+                ("You have no permission to do this", act);
+        }
+        return std::nullopt;
+
+    }
 
     mutable std::recursive_mutex _mtx_room;
     mutable std::mutex _mtx_net;

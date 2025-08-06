@@ -21,9 +21,6 @@ set(PROJECT_SOURCES
 
         ../initializators_help.cpp
         ../helpfoo.cpp
-        ../constants.cpp
-        ../constants_load.cpp
-        ../constants_admin.cpp
         ../answer_obj.cpp
         ../socket_complect.cpp
         ../formmaster.cpp
@@ -64,7 +61,11 @@ else()
     endif()
 endif()
 
-target_link_libraries(CLIENT PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
+target_link_libraries(CLIENT
+    PUBLIC
+    LIB_CONSTANTS
+    PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Sql)
 

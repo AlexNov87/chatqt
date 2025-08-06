@@ -1,5 +1,20 @@
 #include "mainwindow.h"
 
+ServerBase::ServerBase() : QTcpServer(){
+    ConfigInit init;
+
+    _sql_work = std::make_shared<sql::SQLWorker>(init.Object());
+    _ip.setAddress(init.Object().value(LOAD_CONSTANTS::SERVER_IP).toString());
+    _port = init.Object().value(LOAD_CONSTANTS::SERVER_PORT).toInt();
+    _max_conn = init.Object().value(LOAD_CONSTANTS::MAX_CONNECTIONS).toInt();
+    _max_message_len = init.Object().value(LOAD_CONSTANTS::MAX_MESSAGE_LEN).toInt();
+
+    for(auto&& el : init.Object().value(LOAD_CONSTANTS::DEFAULT_CHATROOMS).toArray()){
+        _rooms[el.toString()] = std::make_shared<ChatRoom>(this, "DEFAULT", el.toString());
+    }
+
+}
+
 QHostAddress ServerBase::GetIP() const{
     LG(_mtx_net);
     return _ip;
@@ -97,10 +112,9 @@ json_obj GraphicsServer::LoginUserJs
     ACTIONS this_act = ACTIONS::LOGIN;
     auto lam = [&]{
 
-        //Если нет добавляющего в базе
-        if(_sql_work->IsAuthorizated(name, password)){
-            return  ans_obj::MakeErrorObject
-                ("You are not authorizated", this_act);
+        if(auto res =_sql_work->AuthorizatedError
+                       (name, password, this_act)){
+            return  *res;
         }
 
         return ans_obj::SuccessLogin();

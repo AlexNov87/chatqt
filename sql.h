@@ -18,14 +18,24 @@ QSqlQuery QueryPreparedToIsertUser( const str_type& name,
 
 QSqlQuery QueryPreparedToDeleteUser(const str_type& name);
 
+QSqlQuery QueryUpdateUserRole(const str_type& name, int role_id);
+QSqlQuery QueryUpdateUserActiveStatus(const str_type& name, bool is_active);
+
 class SQLWorker : public std::enable_shared_from_this<sql::SQLWorker> {
 public:
 
     SQLWorker(const json_obj& obj);
     json_obj RegisterNewUser(str_type name, str_type pass);
     json_obj DeleteUser(str_type name, str_type password, str_type to_delete);
-    bool IsAuthorizated(str_type name, str_type password);
+    std::optional<json_obj> AuthorizatedError
+        (str_type name, str_type password, ACTIONS act);
+    std::optional<json_obj> AuthorizatedError
+        (str_type name, str_type password, ADMIN_ACTIONS act);
     bool UpdateMaster(str_type name, str_type pass);
+    json_obj UpdateUserRole(str_type name, Role role);
+    json_obj BanUser(str_type name);
+    json_obj UnbanUser(str_type name);
+    bool IsBanned(str_type name);
 
 private:
     friend class FormMaster;
@@ -53,10 +63,11 @@ private:
         _table_name;
     int _port;
 
-    std::map<int, str_type> _roles_id;
-    std::map<str_type,int> _id_roles;
+    std::map<int, str_type> _id_roles;
+    std::map<str_type,int> _roles_id;
 
     std::map<str_type, UserRole> _user_passhash;
+    std::set<str_type> _banned;
     std::recursive_mutex _mtx;
     bool _has_master = false;
 };
