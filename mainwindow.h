@@ -7,9 +7,10 @@
 #include <QWidget>
 #include <QTcpServer>
 #include <QStringListModel>
-#include "structs_ch.h"
 #include "answer_obj.h"
 #include <chrono>
+#include "server_graphics.h"
+
 
 //UI
 #include "ui_roomsform.h"

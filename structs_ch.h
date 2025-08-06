@@ -11,7 +11,6 @@ class ChatRoom;
 class ChatUser;
 class ServerBase;
 
-
 class ChatUser
 {
 public:
@@ -46,28 +45,6 @@ protected:
     str_type _name;
     str_type _token;
     SocketComplect* _socket;
-};
-
-
-class MessageManager{
-public:
-  void  IncomePublicMessage(const str_type& author,const str_type& message){
-        LG(mtx);
-        json_obj obj;
-        obj.insert(author, message);
-        _archive_public.push_back(std::move(obj));
-        while(_archive_public.size() > 30){
-            _archive_public.pop_front();
-        }
-    }
-
-   QByteArray SerializedLastMessages(){
-         LG(mtx);
-         return json::WritetoQByteAnyJson(_archive_public);
-     }
-protected:
-    std::mutex mtx;
-    json_arr _archive_public;
 };
 
 class ChatRoom
