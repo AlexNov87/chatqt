@@ -32,13 +32,32 @@ target_link_libraries(LIB_CONSTANTS PUBLIC Qt${QT_VERSION_MAJOR}::Core)
 add_library(LIB_HELPFOO
 helpfoo.h
 initializators_help.h
-initializators_help.h
+helpfoo.cpp
 initializators_help.cpp
+answer_obj.h
+answer_obj.cpp
+answer_checker.h
+answer_checker.cpp
+request_json.h
+request_json.cpp
 )
-target_link_libraries(LIB_HELPFOO PUBLIC LIB_CONSTANTS
-    PRIVATE
+target_link_libraries(LIB_HELPFOO PUBLIC
+    LIB_CONSTANTS
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
+)
+
+add_library(LIB_SQL_WORK_AND_INIT
+formmaster.h
+formmaster.cpp
+formmaster.ui
+sql.h
+sql_worker_create.cpp
+sql_worker_modandget.cpp
+sql_worker_prepared_queries.cpp
+)
+target_link_libraries(LIB_SQL_WORK_AND_INIT PUBLIC
+LIB_HELPFOO Qt${QT_VERSION_MAJOR}::Sql
 )
 
 
@@ -48,32 +67,22 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
 
         mainwindesigner.cpp
-
         structs.h
-        helpfoo.h
-        helpfoo.cpp
         structs_smallimpl.cpp
         structs_ch.h
-        initializators_help.h
-        initializators_help.cpp
+
         roomsform.cpp roomsform.ui
         server_setters.cpp
         server_create_and_getters.cpp
 
-        answer_obj.h
-        answer_obj.cpp
+
         tokenizer.h
         tokenizer.cpp
         server_sigslots.cpp
         server_session.cpp
         chatroom.cpp
         server_room.cpp
-        sql.h
 
-        sql_worker_create.cpp
-        formmaster.h formmaster.cpp formmaster.ui
-        sql_worker_modandget.cpp
-        sql_worker_prepared_queries.cpp
         formlogin.h formlogin.cpp formlogin.ui
         socket_complect.cpp
         formadmin.h formadmin.cpp formadmin.ui
@@ -99,7 +108,10 @@ else()
 endif()
 
 target_link_libraries(TCPSERV
-    PUBLIC LIB_CONSTANTS LIB_HELPFOO
+    PUBLIC
+    LIB_CONSTANTS
+    LIB_HELPFOO
+    LIB_SQL_WORK_AND_INIT
     PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network

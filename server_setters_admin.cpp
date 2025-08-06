@@ -86,7 +86,6 @@ json_obj GraphicsServer::BanUserJs(str_type name, str_type password,
         return this->_sql_work->BanUser(to_ban);
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
-
 }
 
 json_obj GraphicsServer::UnBanUserJs(str_type name, str_type password,
@@ -99,7 +98,6 @@ json_obj GraphicsServer::UnBanUserJs(str_type name, str_type password,
         return this->_sql_work->UnbanUser(to_ban);
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
-
 }
 
 

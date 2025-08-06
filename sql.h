@@ -2,7 +2,6 @@
 #define SQL_H
 
 #include"initializators_help.h"
-
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>

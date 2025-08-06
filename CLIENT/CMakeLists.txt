@@ -18,10 +18,6 @@ set(PROJECT_SOURCES
         clientwin.h
         clientwin.ui
         ../formadmin.ui
-
-        ../initializators_help.cpp
-        ../helpfoo.cpp
-        ../answer_obj.cpp
         ../socket_complect.cpp
         ../formmaster.cpp
         ../formlogin.cpp
@@ -33,12 +29,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(CLIENT
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        request_json.h
-        request_json.cpp
         client_designer.h
         answer_session.cpp
-        answer_checker.h
-        answer_checker.cpp
         clientwin_request.cpp
         clientwin_supply.cpp
         formadminuser.cpp
@@ -64,6 +56,7 @@ endif()
 target_link_libraries(CLIENT
     PUBLIC
     LIB_CONSTANTS
+    LIB_HELPFOO
     PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
