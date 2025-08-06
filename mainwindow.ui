@@ -138,6 +138,19 @@
      </rect>
     </property>
    </widget>
+   <widget class="QCommandLinkButton" name="commandLinkButton">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>260</y>
+      <width>251</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Administration</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -152,7 +165,6 @@
     <property name="title">
      <string>Settings</string>
     </property>
-    <addaction name="actionRooms"/>
    </widget>
    <addaction name="menuSettings"/>
   </widget>

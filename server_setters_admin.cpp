@@ -16,8 +16,6 @@ json_obj GraphicsServer::AddRoomJs(str_type name,
                 return ans_obj::MakeAdminErrorObject
                     ("Can not insert room", this_act);
             }
-            //добавляем в ф орму комнату
-            res = this->_rooms_form->AddRoomTolist(roomname);
             if(!res){
                 _rooms.erase(roomname);
                 return ans_obj::MakeAdminErrorObject
@@ -44,7 +42,6 @@ json_obj GraphicsServer::DeleteRoomJs(str_type name, str_type password, str_type
                 ("No room named " + roomname , this_act);
         }
         //удаляем формы комнату
-        this->_rooms_form->RemoveRoomFromList(roomname);
         _rooms.erase(roomname);
         return ans_obj::AdminSuccessDeleteRoom(std::move(roomname));
     };

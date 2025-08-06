@@ -54,7 +54,6 @@ GraphicsServer::GraphicsServer()  :  ServerBase(), GraphicWidgets() {
 void GraphicsServer::InitGraphicForms(){
     _maiwin = std::make_shared<MainWindow>(shared_from_this());
     _maiwindes = std::make_shared<MainWindowDesigner>(_maiwin);
-    _rooms_form = std::make_shared<RoomsForm>(shared_from_this());
 }
 
 void GraphicsServer::SetDefaultValues(){
@@ -67,11 +66,6 @@ void GraphicsServer::SetDefaultValues(){
 
     QLineEdit *le_ip = _maiwin->ui->le_setip;
     le_ip->setText(_ip.toString());
-
-    QListWidget *lw_rooms = this->_rooms_form->ui->lw_rooms;
-    for(auto && rm : _rooms){
-        lw_rooms->addItem(rm.first);
-    }
 }
 
 void GraphicsServer::InitAndRun(){

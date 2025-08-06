@@ -9,7 +9,7 @@ void ServerSession::MakeErrorAnsweToSocket(const QJsonObject &answer_obj){
 }
 
 ServerSession::ServerSession
-(const std::shared_ptr<GraphicsServer> srv, SocketComplect* sock)
+(std::shared_ptr<GraphicsServer> srv, SocketComplect* sock)
     : _srv(srv), _sock(sock){}
 
 void ServerSession::Execute(){

@@ -12,7 +12,9 @@
 #include <variant>
 #include<QListWidget>
 #include<QTcpSocket>
-
+#include<QStringListModel>
+class RoomsForm;
+class MainWindow;
 
 struct ConfigInit
 {
@@ -43,17 +45,32 @@ private:
 
 class NamePassword {
 public:
-    const str_type& Name(){
-        return _name;
-    }
-
-    const str_type& Password(){
-        return _pass;
-    }
-
+    const str_type& Name(){return _name;}
+    const str_type& Password(){return _pass;}
 protected:
     str_type _name;
     str_type _pass;
+};
+
+class MainWindowDesigner
+{
+public:
+    MainWindowDesigner(std::shared_ptr<MainWindow> mainwin);
+    void EditStatusLabel( str_type text, QColor color);
+    void StatusLabelOn();
+    void StatusLabelOff();
+protected:
+    std::shared_ptr<MainWindow> _mainwin;
+    QPalette _palette_status;
+    std::shared_ptr<QStringListModel> _room_list_model;
+};
+
+class GraphicWidgets{
+protected:
+    friend class GraphicsServer;
+    friend class ServerSession;
+    std::shared_ptr<MainWindow> _maiwin;
+    std::shared_ptr<MainWindowDesigner> _maiwindes;
 };
 
 #endif // STRUCTS_H

@@ -1,0 +1,4 @@
+#ifndef SERVER_GRAPHICS_H
+#define SERVER_GRAPHICS_H
+
+#endif // SERVER_GRAPHICS_H

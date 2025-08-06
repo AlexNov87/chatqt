@@ -29,31 +29,6 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
-namespace Ui {
-class RoomsForm;
-}
-
-class RoomsForm : public QWidget
-{
-    Q_OBJECT
-
-public:
-    explicit RoomsForm(std::shared_ptr<GraphicsServer> srv);
-    ~RoomsForm();
-protected:
-
-    bool AddRoomTolist(const  str_type& room);
-    bool HasRoom(const  str_type& room);
-    bool RemoveRoomFromList(const  str_type& room);
-
-    std::shared_ptr<GraphicsServer> _srv;
-    friend class GraphicsServer;
-    friend class MainWindow;
-    Ui::RoomsForm *ui;
-private slots:
-    void on_lw_rooms_itemClicked(QListWidgetItem *item);
-};
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -68,40 +43,16 @@ protected:
     std::shared_ptr<MainWindowDesigner> _designer;
     std::shared_ptr<GraphicsServer> _srv;
 private slots:
-    void on_actionRooms_triggered();
     void on_pb_run_server_clicked();
     void on_pb_stop_server_clicked();
     void on_pb_setoptions_clicked();
-    void on_pb_stop_server_clicked(bool checked);
 };
 
-class MainWindowDesigner
-{
-public:
-    MainWindowDesigner(std::shared_ptr<MainWindow> mainwin);
-    void EditStatusLabel( str_type text, QColor color);
-    void StatusLabelOn();
-    void StatusLabelOff();
-protected:
-    std::shared_ptr<MainWindow> _mainwin;
-    QPalette _palette_status;
-    std::shared_ptr<QStringListModel> _room_list_model;
-};
-
-class GraphicWidgets{
-protected:
-    friend class GraphicsServer;
-    friend class ServerSession;
-    std::shared_ptr<MainWindow> _maiwin;
-    std::shared_ptr<MainWindowDesigner> _maiwindes;
-    std::shared_ptr<RoomsForm>_rooms_form;
-    // std::shared_ptr<>();
-};
 
 class ServerSession {
 
 public:
-    ServerSession(const std::shared_ptr<GraphicsServer> srv
+    ServerSession(std::shared_ptr<GraphicsServer> srv
                   , SocketComplect* sock);
     void Execute();
 private:
@@ -112,8 +63,18 @@ private:
 
     std::shared_ptr<GraphicsServer> _srv;
     SocketComplect* _sock;
-    std::shared_ptr<ServerSession> _self;
 };
+
+class ServerAdminSession {
+public:
+    ServerAdminSession(std::shared_ptr<GraphicsServer> srv
+     , SocketComplect* sock) : _srv(srv), _sock(sock){}
+
+private:
+    std::shared_ptr<GraphicsServer> _srv;
+    SocketComplect* _sock;
+};
+
 
 class GraphicsServer : public ServerBase, public GraphicWidgets,
                        public std::enable_shared_from_this<GraphicsServer> {

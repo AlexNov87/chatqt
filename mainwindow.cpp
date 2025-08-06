@@ -1,33 +1,5 @@
 #include "mainwindow.h"
 
-bool RoomsForm::AddRoomTolist(const QString& room){
-    if(HasRoom(room)) {return false;}
-    ui->lw_rooms->addItem(room);
-    return true;
-}
-
-bool RoomsForm::HasRoom(const QString& room){
-    auto rooms = ui->lw_rooms->findItems(room, Qt::MatchExactly);
-    return (!rooms.isEmpty());
-}
-
-bool RoomsForm::RemoveRoomFromList(const QString& room){
-    if(!HasRoom(room)) {return false;}
-    auto rooms = ui->lw_rooms->findItems(room, Qt::MatchExactly);
-    for (auto&& room : rooms){
-        delete ui->lw_rooms->takeItem(ui->lw_rooms->row(room));
-    }
-    return true;
-}
-
-void RoomsForm::on_lw_rooms_itemClicked(QListWidgetItem *item)
-{
-
-}
-
-///////////////////////////////////////////////////////////////
-
-
 MainWindow::MainWindow(std::shared_ptr<GraphicsServer> srv)
     : QMainWindow(nullptr)
     , ui(new Ui::MainWindow)
@@ -51,12 +23,6 @@ void MainWindow::on_pb_run_server_clicked()
     }
     _srv->_maiwindes->StatusLabelOn();
     this->_srv->listen(this->_srv->GetIP(), this->_srv->GetPort());
-}
-
-//МЕНЮ КОМНАТ
-void MainWindow::on_actionRooms_triggered()
-{
-    _srv->_rooms_form->show();
 }
 
 void MainWindow::on_pb_stop_server_clicked()
@@ -83,8 +49,4 @@ void MainWindow::on_pb_setoptions_clicked()
     _srv->SetMaxUsers(ui->sb_maxconn->value());
 }
 
-void MainWindow::on_pb_stop_server_clicked(bool checked)
-{
-
-}
 

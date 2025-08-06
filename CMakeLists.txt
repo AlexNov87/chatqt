@@ -26,6 +26,8 @@ add_library(LIB_CONSTANTS
    constants.cpp
    constants_admin.cpp
    constants_load.cpp
+
+
 )
 target_link_libraries(LIB_CONSTANTS PUBLIC Qt${QT_VERSION_MAJOR}::Core)
 
@@ -60,6 +62,11 @@ target_link_libraries(LIB_SQL_WORK_AND_INIT PUBLIC
 LIB_HELPFOO Qt${QT_VERSION_MAJOR}::Sql
 )
 
+add_library(LIB_RANDOMIZER
+tokenizer.h
+tokenizer.cpp
+)
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(TCPSERV
@@ -71,13 +78,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         structs_smallimpl.cpp
         structs_ch.h
 
-        roomsform.cpp roomsform.ui
+
         server_setters.cpp
         server_create_and_getters.cpp
 
-
-        tokenizer.h
-        tokenizer.cpp
         server_sigslots.cpp
         server_session.cpp
         chatroom.cpp
@@ -87,6 +91,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         socket_complect.cpp
         formadmin.h formadmin.cpp formadmin.ui
         server_setters_admin.cpp
+        server_session_admin.cpp
+        server_graphics.h
     )
 
 # Define target properties for Android with Qt 6 as:
@@ -112,6 +118,7 @@ target_link_libraries(TCPSERV
     LIB_CONSTANTS
     LIB_HELPFOO
     LIB_SQL_WORK_AND_INIT
+    LIB_RANDOMIZER
     PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
