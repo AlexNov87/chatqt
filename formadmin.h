@@ -37,6 +37,7 @@ protected:
     virtual void OnDeleteUserClicked() = 0;
     virtual void OnModifyUserRoleClicked() = 0;
     virtual void OnUpdateUsersClicked() = 0;
+    virtual void OnFindUsersClicked() = 0;
 };
 
 class AdminUserForm : public Formadmin {
@@ -53,6 +54,7 @@ private:
     void OnDeleteUserClicked() override;
     void OnModifyUserRoleClicked() override ;
     void OnUpdateUsersClicked() override ;
+    void OnFindUsersClicked() override;
     ClientWin* _clientwin;
 };
 
@@ -70,6 +72,7 @@ private:
     void OnModifyUserRoleClicked() override;
     void OnUpdateUsersClicked() override ;
     void OnUnblockUserClicked() override ;
+    void OnFindUsersClicked() override;
 
     GraphicsServer* _srv;
 };

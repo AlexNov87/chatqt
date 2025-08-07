@@ -63,9 +63,4 @@ void ClientWin::PrepareClearMenu(){
     connect(act_cl_chat, &QAction::triggered, this , [&]{
          ui->lw_message->clear();
     });
-
-
-
-
-
 }

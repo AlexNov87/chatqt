@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>636</width>
-    <height>596</height>
+    <width>884</width>
+    <height>721</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -156,14 +156,30 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QLabel" name="ig">
-           <property name="text">
-            <string>Find user....</string>
-           </property>
-          </widget>
+          <widget class="QLineEdit" name="le_users_startname"/>
          </item>
          <item>
-          <widget class="QLineEdit" name="le_users_startname"/>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QCommandLinkButton" name="pb_users_finduser">
+             <property name="focusPolicy">
+              <enum>Qt::FocusPolicy::StrongFocus</enum>
+             </property>
+             <property name="contextMenuPolicy">
+              <enum>Qt::ContextMenuPolicy::DefaultContextMenu</enum>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LayoutDirection::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string>Find User</string>
+             </property>
+             <property name="icon">
+              <iconset theme="edit-find"/>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="QListView" name="lv_users_usertable"/>

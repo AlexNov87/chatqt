@@ -55,3 +55,7 @@
     void AdminUserForm::OnUnblockUserClicked(){
        FatalErrorMessageBox("1UnBlockUser CLICKED");
     }
+
+    void AdminUserForm::OnFindUsersClicked() {
+        FatalErrorMessageBox("1FINDUser CLICKED");
+    }

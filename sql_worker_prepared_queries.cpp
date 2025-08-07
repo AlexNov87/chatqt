@@ -30,6 +30,7 @@ QSqlQuery QueryUpdateUserRole(const str_type& name, int role_id){
     str_type upd = R"(
      UPDATE users SET role_id = :role WHERE name = :name
      )";
+    quer.prepare(upd);
     quer.bindValue(":name", name);
     quer.bindValue(":role", role_id);
     return quer;
@@ -39,6 +40,7 @@ QSqlQuery QueryUpdateUserActiveStatus(const str_type& name, bool is_active){
     str_type upd = R"(
      UPDATE users SET is_active = :act WHERE name = :name
      )";
+    quer.prepare(upd);
     quer.bindValue(":name", name);
     quer.bindValue(":act", is_active);
     return quer;

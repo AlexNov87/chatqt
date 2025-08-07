@@ -26,9 +26,9 @@ void AdminServerForm::Init(){
     connect(ui->pb_users_unblockuser,&QCommandLinkButton::clicked, this,
             &AdminServerForm::OnUnblockUserClicked
             );
+    connect(this, &QWidget::destroyed, [&]{ _srv->_is_admin_showed = false;});
 
 }
-
 
 void AdminServerForm::OnDeleteRoomClicked() {
     FatalErrorMessageBox("2DeleteRoom CLICKED");
@@ -52,4 +52,8 @@ void AdminServerForm::OnUpdateUsersClicked(){
 
 void AdminServerForm::OnUnblockUserClicked() {
     FatalErrorMessageBox("2UnBlockUser CLICKED");
+}
+
+void AdminServerForm::OnFindUsersClicked() {
+    FatalErrorMessageBox("2FindUser CLICKED");
 }

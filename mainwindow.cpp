@@ -50,9 +50,10 @@ void MainWindow::on_pb_setoptions_clicked()
 }
 
 
-
 void MainWindow::on_commandLinkButton_clicked()
 {
+    if(_srv->_is_admin_showed){return;}
+     _srv->_is_admin_showed = true;
     AdminServerForm* administrator = new AdminServerForm(_srv.get());
     administrator->setAttribute(Qt::WA_DeleteOnClose);
     administrator->show();

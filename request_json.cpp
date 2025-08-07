@@ -123,8 +123,49 @@ json_obj AdminMakeRequestDeleteUser
     json_obj obj = MakeRequestTemplate
         (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::DELETE_USER);
     ModifyUserAndPassword(obj, name,password);
-    obj.insert(CONSTANTS::LF_USER_TO_DELETE, std::move(to_delete));
+    obj.insert(CONSTANTS::LF_USER_RECIEVER, std::move(to_delete));
     return obj;
 }
+
+json_obj AdminMakeRequestBanUser
+    (str_type name, str_type password, str_type to_ban){
+    json_obj obj = MakeRequestTemplate
+        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::BAN_USER);
+    ModifyUserAndPassword(obj, name,password);
+    obj.insert(CONSTANTS::LF_USER_RECIEVER, std::move(to_ban));
+    return obj;
+}
+
+
+json_obj AdminMakeRequestUnbanUser
+    (str_type name, str_type password, str_type to_unban){
+    json_obj obj = MakeRequestTemplate
+        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::UNBAN_USER);
+    ModifyUserAndPassword(obj, name,password);
+    obj.insert(CONSTANTS::LF_USER_RECIEVER, std::move(to_unban));
+    return obj;
+}
+
+json_obj AdminMakeRequestFindUsers(str_type find_pattern){
+    json_obj obj = MakeRequestTemplate
+        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::FIND_USERS);
+    obj.insert(CONSTANTS::LF_VALUE,
+               find_pattern.isEmpty() ? CONSTANTS::RF_THREEDOTS
+                                      : std::move(find_pattern));
+return obj;
+}
+
+json_obj AdminMakeRequestUpdareRole
+    (str_type name, str_type password, str_type to_set_role, Role role){
+    json_obj obj = MakeRequestTemplate
+        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::UPDATE_ROLE);
+    ModifyUserAndPassword(obj, name,password);
+    obj.insert(CONSTANTS::LF_USER_RECIEVER, std::move(to_set_role));
+    obj.insert(CONSTANTS::LF_ROLE, _ROLE_NAME.at(role));
+    return obj;
+
+}
+
+
 
 }//namespace

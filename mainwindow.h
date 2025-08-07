@@ -1,6 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include<QtWidgets>
 #include "server_graphics.h"
 #include "answer_obj.h"
 
@@ -51,6 +51,7 @@ protected:
     friend class MainWindowDesigner;
     friend class GraphicsServer;
     friend class ServerSession;
+
     Ui::MainWindow *ui;
     std::shared_ptr<MainWindowDesigner> _designer;
     std::shared_ptr<GraphicsServer> _srv;
@@ -111,7 +112,10 @@ private slots:
 private:
     friend class MainWindow;
     friend class ServerSession;
+    friend class ServerAdminSession;
+    friend class AdminServerForm;
     void InitGraphicForms();
     void SetDefaultValues();
+    bool _is_admin_showed = false;
 };
 #endif // MAINWINDOW_H

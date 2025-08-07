@@ -29,12 +29,21 @@ json_obj MakeRequestRoomList();//3
 namespace req_obj {
 json_obj AdminMakeRequestDeleteUser
     (str_type name, str_type password, str_type to_delete);
-}
 
 json_obj AdminMakeRequestDeleteRooms
     (str_type name, str_type password, str_type roomname);
 
 json_obj AdminMakeRequestAddRooms
     (str_type name, str_type password, str_type roomname);
+
+json_obj AdminMakeRequestBanUser
+    (str_type name, str_type password, str_type to_ban);
+json_obj AdminMakeRequestUnbanUser
+    (str_type name, str_type password, str_type to_unban);
+json_obj AdminMakeRequestFindUsers(str_type find_pattern);
+json_obj AdminMakeRequestUpdareRole
+    (str_type name, str_type password, str_type to_set_role, Role role);
+
+}//namespace
 
 #endif // REQUEST_JSON_H

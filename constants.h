@@ -26,6 +26,7 @@ struct CONSTANTS
     static chart ADMIN_ACT_CREATE_ROOM;
     static chart ADMIN_ACT_DELETE_USER;
     static chart ADMIN_ACT_DELETE_ROOM;
+    static chart ADMIN_ACT_FIND_USERS;
     static chart ADMIN_ACT_SYSTEM;
     static chart ADMIN_ACT_UNBAN_USER;
     static chart ADMIN_ACT_UPDATE_ROLE;
@@ -43,19 +44,19 @@ struct CONSTANTS
     static chart LF_PASSWORD;
     static chart LF_REASON ;
     static chart LF_RESULT;
+    static chart LF_ROLE;
     static chart LF_ROOMLIST;
     static chart LF_ROOMNAME;
     static chart LF_TOKEN;
     static chart LF_USERS;
     static chart LF_USER_RECIEVER;
-    static chart LF_USER_TO_DELETE;
+    static chart LF_VALUE;
+
 
     static chart RF_ERROR ;
     static chart RF_SUCCESS;
+    static chart RF_THREEDOTS;
 
-    //
-    static chart RF_ERR_INITIATOR_SERVER;
-    static chart RF_ERR_INITIATOR_CHATROOM;
     static chart RF_ERR_PERMISSION_DENIDED;
 
     static chart RF_DIRECTION_SERVER;
@@ -73,7 +74,6 @@ private:
     CONSTANTS() {}
 };
 
-
 enum class ACTIONS {
 
     LOGIN, DISCONNECT, CREATE_USER,
@@ -84,10 +84,10 @@ enum class ACTIONS {
 };
 
 enum class ADMIN_ACTIONS {
-    DELETE_USER, SYSTEM ,
-    CREATE_ROOM, DELETE_ROOM,
-    UPDATE_ROLE, BAN_USER,
-    UNBAN_USER
+    BAN_USER,CREATE_ROOM,
+    DELETE_ROOM, DELETE_USER,
+    FIND_USERS, SYSTEM ,
+    UPDATE_ROLE, UNBAN_USER
 };
 
 enum class Role {
@@ -111,6 +111,5 @@ extern const std::set<str_type> _ACT_ADMIN;
 
 extern const std::map<str_type, Role> _NAME_ROLE;
 extern const std::map<Role, str_type> _ROLE_NAME;
-
 
 #endif // CONSTANTS_H
