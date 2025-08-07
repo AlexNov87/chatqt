@@ -21,8 +21,10 @@ void Formadmin::on_lw_rooms_roomlist_itemDoubleClicked(QListWidgetItem *item)
 
 void Formadmin::on_table_users_cellClicked(int row, int column)
 {
-    FatalErrorMessageBox("Row:"+QString::number(row)+
-                         " COL:"+ QString::number(column));
+    QTableWidgetItem* name = ui->table_users->item(row, 0);
+    QTableWidgetItem* role = ui->table_users->item(row, 1);
+    ui->lbl_users_usertinfoname->setText(name->text());
+    ui->lbl_users_usertinforole->setText(role->text());
 }
 
 
@@ -37,7 +39,6 @@ void Formadmin::on_tw_adminpanel_tabBarClicked(int index)
            break;
         };
 }
-
 
 void Formadmin::on_table_rooms_cellClicked(int row, int column)
 {

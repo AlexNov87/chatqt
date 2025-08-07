@@ -28,6 +28,9 @@ void AdminServerForm::Init(){
             );
     connect(this, &QWidget::destroyed, [&]{ _srv->_is_admin_showed = false;});
 
+    connect(ui->pb_users_finduser, &QCommandLinkButton::clicked,
+            this, &AdminServerForm::OnFindUsersClicked);
+
     connect(ui->pb_users_updateusers, &QCommandLinkButton::clicked,
             this, &AdminServerForm::OnUpdateUsersClicked);
 
@@ -88,7 +91,26 @@ void AdminServerForm::OnUnblockUserClicked() {
 }
 
 void AdminServerForm::OnFindUsersClicked() {
-    FatalErrorMessageBox("2FindUser CLICKED");
+
+    if(ui->le_users_startname->text().isEmpty()){
+        OnGetAllUsersClicked();
+        return;
+    }
+
+    str_type pattern = ui->le_users_startname->text();
+    const auto& base_users = _srv->_sql_work->AllUsersBase();
+    int row = 0;
+    for (auto&& [name, us_role] : base_users){
+        if(!name.contains(pattern)){continue;}
+        if (row == ui->table_users->rowCount()){
+            ui->table_users->insertRow(row);
+        }
+        ui->table_users->setItem(row, 0,
+                                 new QTableWidgetItem(name));
+        ui->table_users->setItem(row++, 1,
+                                 new QTableWidgetItem(_ROLE_NAME.at(us_role.role)));
+    }
+    ui->table_users->setRowCount(row);
 }
 
 void AdminServerForm::OnGetAllUsersClicked(){
