@@ -18,8 +18,8 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>611</width>
-     <height>571</height>
+     <width>851</width>
+     <height>631</height>
     </rect>
    </property>
    <property name="title">
@@ -31,14 +31,14 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>10</y>
-      <width>581</width>
+      <x>40</x>
+      <y>20</y>
+      <width>741</width>
       <height>551</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_rooms">
      <attribute name="title">
@@ -49,8 +49,8 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>561</width>
-        <height>491</height>
+        <width>721</width>
+        <height>501</height>
        </rect>
       </property>
       <property name="title">
@@ -61,11 +61,11 @@
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>551</width>
-         <height>471</height>
+         <width>711</width>
+         <height>481</height>
         </rect>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1">
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
@@ -131,7 +131,31 @@
            </widget>
           </item>
           <item>
-           <widget class="QListWidget" name="lw_rooms_roomlist"/>
+           <widget class="QTableWidget" name="table_rooms">
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>220</number>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>ROOM</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>CREATOR</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCommandLinkButton" name="pb_rooms_updaterooms">
+            <property name="text">
+             <string> Update</string>
+            </property>
+            <property name="icon">
+             <iconset theme="emblem-synchronized"/>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -148,7 +172,7 @@
        <rect>
         <x>10</x>
         <y>0</y>
-        <width>561</width>
+        <width>726</width>
         <height>511</height>
        </rect>
       </property>
@@ -179,10 +203,47 @@
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QCommandLinkButton" name="pb_get_all_users">
+             <property name="text">
+              <string>Get all users</string>
+             </property>
+             <property name="icon">
+              <iconset theme="address-book-new"/>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>
-          <widget class="QListView" name="lv_users_usertable"/>
+          <widget class="QTableWidget" name="table_users">
+           <property name="columnCount">
+            <number>2</number>
+           </property>
+           <attribute name="horizontalHeaderDefaultSectionSize">
+            <number>270</number>
+           </attribute>
+           <column>
+            <property name="text">
+             <string>USER</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>ROLE</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCommandLinkButton" name="pb_users_updateusers">
+           <property name="text">
+            <string>Update Users</string>
+           </property>
+           <property name="icon">
+            <iconset theme="emblem-synchronized"/>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -303,16 +364,6 @@
                  </size>
                 </property>
                </spacer>
-              </item>
-              <item>
-               <widget class="QCommandLinkButton" name="pb_users_updateusers">
-                <property name="text">
-                 <string>Update Users</string>
-                </property>
-                <property name="icon">
-                 <iconset theme="emblem-synchronized"/>
-                </property>
-               </widget>
               </item>
              </layout>
             </widget>

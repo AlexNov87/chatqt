@@ -7,7 +7,7 @@
 #include "constants_load.h"
 class ClientWin;
 class GraphicsServer;
-
+#include"helpfoo.h"
 
 namespace Ui {
 class Formadmin;
@@ -23,6 +23,11 @@ public:
 
 private slots:
     void on_lw_rooms_roomlist_itemDoubleClicked(QListWidgetItem *item);
+    void on_table_users_cellClicked(int row, int column);
+
+    void on_tw_adminpanel_tabBarClicked(int index);
+
+    void on_table_rooms_cellClicked(int row, int column);
 
 protected:
     Ui::Formadmin *ui;
@@ -31,6 +36,7 @@ protected:
 
     virtual void OnDeleteRoomClicked() = 0;
     virtual void OnCreateRoomClicked() = 0;
+    virtual void OnUpdateRoomClicked() = 0;
 protected:
     virtual void OnBlockUserClicked() = 0;
     virtual void OnUnblockUserClicked() = 0;
@@ -38,6 +44,11 @@ protected:
     virtual void OnModifyUserRoleClicked() = 0;
     virtual void OnUpdateUsersClicked() = 0;
     virtual void OnFindUsersClicked() = 0;
+    virtual void OnGetAllUsersClicked() = 0;
+protected:
+    virtual void TabUsersSelected() = 0;
+    virtual void TabRoomsSelected() = 0;
+
 };
 
 class AdminUserForm : public Formadmin {
@@ -48,6 +59,7 @@ private:
     void Init();
     void OnDeleteRoomClicked() override ;
     void OnCreateRoomClicked() override ;
+    void OnUpdateRoomClicked() override ;
 private:
     void OnBlockUserClicked() override;
     void OnUnblockUserClicked() override;
@@ -55,6 +67,10 @@ private:
     void OnModifyUserRoleClicked() override ;
     void OnUpdateUsersClicked() override ;
     void OnFindUsersClicked() override;
+    void OnGetAllUsersClicked() override{}
+private:
+    void TabUsersSelected() override{}
+    void TabRoomsSelected() override{}
     ClientWin* _clientwin;
 };
 
@@ -66,6 +82,7 @@ public:
 private:
     void OnDeleteRoomClicked() override ;
     void OnCreateRoomClicked() override ;
+    void OnUpdateRoomClicked() override ;
 private:
     void OnBlockUserClicked() override ;
     void OnDeleteUserClicked() override;
@@ -73,7 +90,11 @@ private:
     void OnUpdateUsersClicked() override ;
     void OnUnblockUserClicked() override ;
     void OnFindUsersClicked() override;
-
+    void OnGetAllUsersClicked() override;
+private:
+    void TabUsersSelected() override{}
+    void TabRoomsSelected() override;
+    void UpdateRoomsInternal();
     GraphicsServer* _srv;
 };
 

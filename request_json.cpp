@@ -84,8 +84,6 @@ json_obj MakeRequestRoomList(){
  return  MakeRequestTemplate
         (CONSTANTS::RF_DIRECTION_SERVER, ACTIONS::GET_ROOMS_LIST);
 }
-
-
 }//namespace
 
 namespace req_obj {
@@ -136,7 +134,6 @@ json_obj AdminMakeRequestBanUser
     return obj;
 }
 
-
 json_obj AdminMakeRequestUnbanUser
     (str_type name, str_type password, str_type to_unban){
     json_obj obj = MakeRequestTemplate
@@ -165,7 +162,4 @@ json_obj AdminMakeRequestUpdareRole
     return obj;
 
 }
-
-
-
 }//namespace

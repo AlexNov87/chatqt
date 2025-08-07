@@ -48,15 +48,16 @@ json_obj SQLWorker::DeleteUser(str_type name, str_type password, str_type to_del
 
 std::optional<json_obj> SQLWorker::AuthorizatedError
     (str_type name, str_type password, ADMIN_ACTIONS act){
-    LGR(_mtx);
+
     if(!_user_passhash.contains(name)){
-        ans_obj::MakeAdminErrorObject("User not found", act);
+      return  ans_obj::MakeAdminErrorObject("User not found", act);
     }
+
     if(!_user_passhash.at(name).is_active){
-        ans_obj::MakeAdminErrorObject("You are banned on this_server", act);
+      return  ans_obj::MakeAdminErrorObject("You are banned on this_server", act);
     }
     if(_user_passhash.at(name).password != password){
-        ans_obj::MakeAdminErrorObject("Wrong password", act);
+      return ans_obj::MakeAdminErrorObject("Wrong password", act);
     }
 
     return std::nullopt;

@@ -35,6 +35,13 @@ public:
     json_obj BanUser(str_type name);
     json_obj UnbanUser(str_type name);
     bool IsBanned(str_type name);
+    const std::pair<str_type, str_type>& GetMaster(){
+        return _master;
+    }
+    const std::map<str_type, UserRole>& AllUsersBase(){
+        LGR(_mtx);
+        return _user_passhash;
+    }
 
 private:
     friend class FormMaster;
@@ -53,7 +60,7 @@ private:
     void CreateMaster();
 
     QSqlDatabase _base;
-    std::condition_variable _cv;
+
 
     str_type
         _host,
@@ -68,7 +75,9 @@ private:
     std::map<str_type, UserRole> _user_passhash;
     std::set<str_type> _banned;
     std::recursive_mutex _mtx;
+
     bool _has_master = false;
+    std::pair<str_type, str_type> _master;
 };
 
 }//NAMESPACE

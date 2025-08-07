@@ -19,5 +19,32 @@ void Formadmin::on_lw_rooms_roomlist_itemDoubleClicked(QListWidgetItem *item)
     ui->lbl_rooms_roomname->setText(item->text());
 }
 
+void Formadmin::on_table_users_cellClicked(int row, int column)
+{
+    FatalErrorMessageBox("Row:"+QString::number(row)+
+                         " COL:"+ QString::number(column));
+}
 
+
+void Formadmin::on_tw_adminpanel_tabBarClicked(int index)
+{
+        switch (index){
+          case 0:
+           TabRoomsSelected();
+           break;
+          case 1:
+              TabUsersSelected();
+           break;
+        };
+}
+
+
+void Formadmin::on_table_rooms_cellClicked(int row, int column)
+{
+    if(column != 0){
+        return;
+    }
+    QTableWidgetItem* item = ui->table_rooms->item(row,0);
+    ui->lbl_rooms_roomname->setText(item->text());
+}
 

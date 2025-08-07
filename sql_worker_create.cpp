@@ -151,6 +151,8 @@ void SQLWorker::LoadUsers(){
         bool is_active = quer.value("is_active").toBool();
         if(role_name == CONSTANTS::ROLE_MASTER){
             _has_master = true;
+            _master.first = name;
+            _master.second = pass;
         }
 
         _user_passhash.insert({

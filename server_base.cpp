@@ -49,6 +49,7 @@ std::optional<json_obj> ServerBase::AuthorizatedAndHasPermissionAdmin
         return  *res;
     }
 
+
     if(!HasPermissionAdmin(name, password, act)){
         return  ans_obj::MakeAdminErrorObject
             ("You have no permission to do this", act);

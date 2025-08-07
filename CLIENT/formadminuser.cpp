@@ -36,7 +36,6 @@
         FatalErrorMessageBox("1DeleteRoom CLICKED");
     }
     void AdminUserForm::OnCreateRoomClicked()  {
-        FatalErrorMessageBox("1CreateRoom CLICKED");
     }
 
     void AdminUserForm::OnBlockUserClicked() {
@@ -58,4 +57,8 @@
 
     void AdminUserForm::OnFindUsersClicked() {
         FatalErrorMessageBox("1FINDUser CLICKED");
+    }
+
+    void AdminUserForm::OnUpdateRoomClicked(){
+         FatalErrorMessageBox("1UPDROOM CLICKED");
     }

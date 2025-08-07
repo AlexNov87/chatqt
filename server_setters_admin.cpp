@@ -3,11 +3,14 @@
 json_obj GraphicsServer::AddRoomJs(str_type name,
                                    str_type password, str_type roomname)  {
 
+
     ADMIN_ACTIONS this_act = ADMIN_ACTIONS::CREATE_ROOM;
     if(auto res = AuthorizatedAndHasPermissionAdmin
         (name, password,this_act)){
         return *res;
     }
+
+
 
     auto lam = [&]{
             LGR(_mtx_room);
