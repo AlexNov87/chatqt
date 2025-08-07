@@ -101,23 +101,39 @@ bool SQLWorker::IsBanned(str_type name){
     }
     return false;
 }
-json_obj SQLWorker::UpdateUserRole(str_type name, Role role)
+json_obj SQLWorker::UpdateUserRole(str_type name, Role role, str_type initiator)
 {
     LGR(_mtx);
+    if(_user_passhash.at(initiator).role <= _user_passhash.at(name).role){
+        return ans_obj::MakeAdminErrorObject
+            ("You have no permission to modify role of this user", ADMIN_ACTIONS::UPDATE_ROLE);
+    }
     const auto& rolename = _ROLE_NAME.at(role);
     auto query = QueryUpdateUserRole(name, _roles_id.at(rolename));
+    QueryExecute(query);
+    return {};
 
   //  return query.exec();
 }
-json_obj SQLWorker::BanUser(str_type name){
+json_obj SQLWorker::BanUser(str_type name, str_type initiator){
     LGR(_mtx);
+    if(_user_passhash.at(initiator).role <= _user_passhash.at(name).role){
+        return ans_obj::MakeAdminErrorObject
+            ("You have no permission to ban this user", ADMIN_ACTIONS::BAN_USER);
+    }
     auto query = QueryUpdateUserActiveStatus(name,false);
-    //return query.exec();
+    QueryExecute(query);
+    return {};
 }
-json_obj SQLWorker::UnbanUser(str_type name){
+json_obj SQLWorker::UnbanUser(str_type name, str_type initiator){
     LGR(_mtx);
+    if(_user_passhash.at(initiator).role <= _user_passhash.at(name).role){
+        return ans_obj::MakeAdminErrorObject
+            ("You have no permission to unban this user", ADMIN_ACTIONS::UNBAN_USER);
+    }
     auto query = QueryUpdateUserActiveStatus(name, true);
-    //return query.exec();
+    QueryExecute(query);
+    return {};
 }
 
 

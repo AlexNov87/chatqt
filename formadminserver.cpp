@@ -74,21 +74,49 @@ void AdminServerForm::OnCreateRoomClicked() {
 }
 
 void AdminServerForm::OnBlockUserClicked() {
-    FatalErrorMessageBox("2BlockUser CLICKED");
-}
-void AdminServerForm::OnDeleteUserClicked() {
-    FatalErrorMessageBox("2DeleteUser CLICKED");
-}
-void AdminServerForm::OnModifyUserRoleClicked()  {
-    FatalErrorMessageBox("2ModifyUser CLICKED");
-}
-void AdminServerForm::OnUpdateUsersClicked(){
-    FatalErrorMessageBox("2UpdateUsers CLICKED");
+    if(ui->lbl_users_usertinfoname->text().isEmpty()){
+        return;
+    }
+    const auto& master = _srv->_sql_work->GetMaster();
+    auto obj = _srv->BanUserJs(
+        master.first, master.second,
+        ui->lbl_users_usertinfoname->text()
+        );
+    if(json::IsErrorJsonObject(obj)){
+        NonBlockingErrorBox(obj);
+        return;
+    }
+    QMessageBox::information(this, "BLOCK_USER","BLOCK_USER_SUCCESS");
 }
 
 void AdminServerForm::OnUnblockUserClicked() {
-    FatalErrorMessageBox("2UnBlockUser CLICKED");
+    if(ui->lbl_users_usertinfoname->text().isEmpty()){
+        return;
+    }
+    const auto& master = _srv->_sql_work->GetMaster();
+    auto obj = _srv->UnBanUserJs(
+        master.first, master.second,
+        ui->lbl_users_usertinfoname->text()
+        );
+    if(json::IsErrorJsonObject(obj)){
+        NonBlockingErrorBox(obj);
+        return;
+    }
+    QMessageBox::information(this, "BLOCK_USER","BLOCK_USER_SUCCESS");
 }
+
+
+void AdminServerForm::OnDeleteUserClicked() {
+    const auto& master = _srv->_sql_work->GetMaster();
+}
+void AdminServerForm::OnModifyUserRoleClicked()  {
+    const auto& master = _srv->_sql_work->GetMaster();
+}
+void AdminServerForm::OnUpdateUsersClicked(){
+    const auto& master = _srv->_sql_work->GetMaster();
+}
+
+
 
 void AdminServerForm::OnFindUsersClicked() {
 
@@ -96,7 +124,6 @@ void AdminServerForm::OnFindUsersClicked() {
         OnGetAllUsersClicked();
         return;
     }
-
     str_type pattern = ui->le_users_startname->text();
     const auto& base_users = _srv->_sql_work->AllUsersBase();
     int row = 0;

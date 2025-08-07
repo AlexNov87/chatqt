@@ -70,7 +70,7 @@ json_obj GraphicsServer::UpdateUserRoleJs(str_type name, str_type password,
         return *res;
     }
     auto lam = [&]{
-        return this->_sql_work->UpdateUserRole(to_update, role);
+        return this->_sql_work->UpdateUserRole(to_update, role, name);
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
@@ -83,7 +83,7 @@ json_obj GraphicsServer::BanUserJs(str_type name, str_type password,
         return *res;
     }
     auto lam = [&]{
-        return this->_sql_work->BanUser(to_ban);
+        return this->_sql_work->BanUser(to_ban, name);
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
@@ -95,7 +95,7 @@ json_obj GraphicsServer::UnBanUserJs(str_type name, str_type password,
         return *res;
     }
     auto lam = [&]{
-        return this->_sql_work->UnbanUser(to_ban);
+        return this->_sql_work->UnbanUser(to_ban, name);
     };
     return ans_obj::GuardExceptSetter(lam, this_act);
 }

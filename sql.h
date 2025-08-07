@@ -31,9 +31,9 @@ public:
     std::optional<json_obj> AuthorizatedError
         (str_type name, str_type password, ADMIN_ACTIONS act);
     bool UpdateMaster(str_type name, str_type pass);
-    json_obj UpdateUserRole(str_type name, Role role);
-    json_obj BanUser(str_type name);
-    json_obj UnbanUser(str_type name);
+    json_obj UpdateUserRole(str_type name, Role role, str_type initiator);
+    json_obj BanUser(str_type name , str_type initiator);
+    json_obj UnbanUser(str_type name , str_type initiator);
     bool IsBanned(str_type name);
     const std::pair<str_type, str_type>& GetMaster(){
         return _master;
@@ -42,6 +42,8 @@ public:
         LGR(_mtx);
         return _user_passhash;
     }
+
+
 
 private:
     friend class FormMaster;
