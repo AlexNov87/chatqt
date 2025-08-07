@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>801</width>
-    <height>601</height>
+    <width>880</width>
+    <height>658</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,66 +34,66 @@
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>310</y>
-      <width>256</width>
-      <height>237</height>
+      <y>260</y>
+      <width>298</width>
+      <height>284</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <layout class="QFormLayout" name="formLayout">
-       <item row="0" column="0">
-        <widget class="QLabel" name="ig">
-         <property name="text">
-          <string>IP:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="le_setip">
-         <property name="text">
-          <string>127.0.0.1</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="ig_2">
-         <property name="text">
-          <string>Port:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QSpinBox" name="sb_port">
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="value">
-          <number>80</number>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="ig_3">
-         <property name="text">
-          <string>Max Connections:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QSpinBox" name="sb_maxconn">
-         <property name="maximum">
-          <number>999999</number>
-         </property>
-         <property name="value">
-          <number>1000</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QFormLayout" name="formLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="ig">
+           <property name="text">
+            <string>IP:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="le_setip">
+           <property name="text">
+            <string>127.0.0.1</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="ig_2">
+           <property name="text">
+            <string>Port:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QSpinBox" name="sb_port">
+           <property name="maximum">
+            <number>65535</number>
+           </property>
+           <property name="value">
+            <number>80</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="ig_3">
+           <property name="text">
+            <string>Max Connections:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QSpinBox" name="sb_maxconn">
+           <property name="maximum">
+            <number>999999</number>
+           </property>
+           <property name="value">
+            <number>1000</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item>
         <widget class="QCommandLinkButton" name="pb_setoptions">
          <property name="text">
@@ -124,6 +124,13 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QCommandLinkButton" name="commandLinkButton">
+         <property name="text">
+          <string>Administration</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
     </layout>
@@ -138,26 +145,13 @@
      </rect>
     </property>
    </widget>
-   <widget class="QCommandLinkButton" name="commandLinkButton">
-    <property name="geometry">
-     <rect>
-      <x>530</x>
-      <y>260</y>
-      <width>251</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Administration</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>801</width>
+     <width>880</width>
      <height>26</height>
     </rect>
    </property>

@@ -5,6 +5,9 @@
 #include<QListWidgetItem>
 #include "constants.h"
 #include "constants_load.h"
+class ClientWin;
+class GraphicsServer;
+
 
 namespace Ui {
 class Formadmin;
@@ -35,4 +38,40 @@ protected:
     virtual void OnModifyUserRoleClicked() = 0;
     virtual void OnUpdateUsersClicked() = 0;
 };
+
+class AdminUserForm : public Formadmin {
+public:
+    AdminUserForm(ClientWin* client);
+
+private:
+    void Init();
+    void OnDeleteRoomClicked() override ;
+    void OnCreateRoomClicked() override ;
+private:
+    void OnBlockUserClicked() override;
+    void OnUnblockUserClicked() override;
+    void OnDeleteUserClicked() override;
+    void OnModifyUserRoleClicked() override ;
+    void OnUpdateUsersClicked() override ;
+    ClientWin* _clientwin;
+};
+
+class AdminServerForm : public Formadmin {
+public:
+    AdminServerForm(GraphicsServer* srv);
+    void Init();
+
+private:
+    void OnDeleteRoomClicked() override ;
+    void OnCreateRoomClicked() override ;
+private:
+    void OnBlockUserClicked() override ;
+    void OnDeleteUserClicked() override;
+    void OnModifyUserRoleClicked() override;
+    void OnUpdateUsersClicked() override ;
+    void OnUnblockUserClicked() override ;
+
+    GraphicsServer* _srv;
+};
+
 #endif // FORMADMIN_H

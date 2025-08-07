@@ -50,3 +50,11 @@ void MainWindow::on_pb_setoptions_clicked()
 }
 
 
+
+void MainWindow::on_commandLinkButton_clicked()
+{
+    AdminServerForm* administrator = new AdminServerForm(_srv.get());
+    administrator->setAttribute(Qt::WA_DeleteOnClose);
+    administrator->show();
+}
+

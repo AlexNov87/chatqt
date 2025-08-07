@@ -4,6 +4,18 @@
 #include "server_graphics.h"
 #include "answer_obj.h"
 
+//UI
+#include "./ui_mainwindow.h"
+#include "formadmin.h"
+#include "ui_formadmin.h"
+//
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class MainWindow;
+}
+QT_END_NAMESPACE
+
 class ServerSession {
 public:
     ServerSession(std::shared_ptr<GraphicsServer> srv
@@ -29,6 +41,26 @@ private:
     SocketComplect* _sock;
 };
 
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+public:
+    MainWindow(std::shared_ptr<GraphicsServer> srv);
+    ~MainWindow();
+protected:
+    friend class MainWindowDesigner;
+    friend class GraphicsServer;
+    friend class ServerSession;
+    Ui::MainWindow *ui;
+    std::shared_ptr<MainWindowDesigner> _designer;
+    std::shared_ptr<GraphicsServer> _srv;
+private slots:
+    void on_pb_run_server_clicked();
+    void on_pb_stop_server_clicked();
+    void on_pb_setoptions_clicked();
+    void on_commandLinkButton_clicked();
+};
+
 class GraphicsServer : public ServerBase, public GraphicWidgets,
                        public std::enable_shared_from_this<GraphicsServer> {
     Q_OBJECT
@@ -37,7 +69,7 @@ public:
     GraphicsServer();
     void InitAndRun();
 
-    json_obj SetIP( str_type ip) override ;
+    json_obj SetIP( str_type ip) override;
     json_obj SetPort(int port) override ;
     json_obj SetMaxUsers(int max) override;
 
@@ -82,64 +114,4 @@ private:
     void InitGraphicForms();
     void SetDefaultValues();
 };
-
-
-class AdminServerForm : public Formadmin {
-
-    AdminServerForm(): Formadmin() {
-        Init();
-    }
-
-    void Init(){
-
-        connect(ui->pb_rooms_createroom, &QCommandLinkButton::clicked,
-                this, &AdminServerForm::OnCreateRoomClicked);
-        connect(ui->pb_rooms_delete_room, &QCommandLinkButton::clicked,
-                this, &AdminServerForm::OnDeleteRoomClicked
-                );
-
-        connect(ui->pb_users_blockuser , &QCommandLinkButton::clicked,
-                this, &AdminServerForm::OnBlockUserClicked
-                );
-        connect(ui->pb_users_deleteuser , &QCommandLinkButton::clicked,
-                this, &AdminServerForm::OnDeleteUserClicked
-                );
-        connect(ui->pb_users_set_role, &QCommandLinkButton::clicked,
-                this, &AdminServerForm::OnModifyUserRoleClicked
-                );
-        connect(ui->pb_users_updateusers, &QCommandLinkButton::clicked,
-                this, &AdminServerForm::OnUpdateUsersClicked
-                );
-        connect(ui->pb_users_unblockuser,&QCommandLinkButton::clicked, this,
-                &AdminServerForm::OnUnblockUserClicked
-          );
-
-    }
-
-private:
-    void OnDeleteRoomClicked() override {
-        FatalErrorMessageBox("2DeleteRoom CLICKED");
-    }
-    void OnCreateRoomClicked() override {
-        FatalErrorMessageBox("2CreateRoom CLICKED");
-    }
-private:
-    void OnBlockUserClicked() override {
-        FatalErrorMessageBox("2BlockUser CLICKED");
-    }
-    void OnDeleteUserClicked() override {
-        FatalErrorMessageBox("2DeleteUser CLICKED");
-    }
-    void OnModifyUserRoleClicked() override {
-        FatalErrorMessageBox("2ModifyUser CLICKED");
-    }
-    void OnUpdateUsersClicked() override {
-        FatalErrorMessageBox("2UpdateUsers CLICKED");
-    }
-
-    void OnUnblockUserClicked() override {
-        FatalErrorMessageBox("2UnBlockUser CLICKED");
-    }
-};
-
 #endif // MAINWINDOW_H

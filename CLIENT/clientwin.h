@@ -99,32 +99,4 @@ private:
     void ExecutePublicMsg();
 };
 
-class AdminUserForm : public Formadmin {
-public:
-    AdminUserForm(ClientWin* client);
-
-private:
-    void Init();
-    void OnDeleteRoomClicked() override ;
-    void OnCreateRoomClicked() override ;
-private:
-    void OnBlockUserClicked() override;
-    void OnUnblockUserClicked() override;
-    void OnDeleteUserClicked() override;
-    void OnModifyUserRoleClicked() override ;
-    void OnUpdateUsersClicked() override ;
-
-
-    ClientWin* _clientwin;
-};
-
-
-
-
-
-
-
-
-
-
 #endif // CLIENTWIN_H
