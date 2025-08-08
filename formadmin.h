@@ -3,8 +3,7 @@
 
 #include <QWidget>
 #include<QListWidgetItem>
-#include "constants.h"
-#include "constants_load.h"
+#include "structs.h"
 class ClientWin;
 class GraphicsServer;
 #include"helpfoo.h"
@@ -71,7 +70,13 @@ private:
 private:
     void TabUsersSelected() override{}
     void TabRoomsSelected() override{}
+private:
+    void HaldleSocket();
+
     ClientWin* _clientwin;
+    SocketComplect _sock;
+    std::shared_ptr<QTcpSocket> _socket_for_admin;
+    QHostAddress _adrs;
 };
 
 class AdminServerForm : public Formadmin {

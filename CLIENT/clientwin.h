@@ -11,6 +11,7 @@
 #include "../formlogin.h"
 #include "../formadmin.h"
 #include "../ui_formadmin.h"
+#include "./ui_clientwin.h"
 
 QT_BEGIN_NAMESPACE
 

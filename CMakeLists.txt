@@ -80,7 +80,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         server_create_and_getters.cpp
 
         server_sigslots.cpp
-        server_session.cpp
+        server_sessions.cpp
         chatroom.cpp
         server_room.cpp
 
@@ -88,7 +88,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         socket_complect.cpp
         formadmin.h formadmin.cpp formadmin.ui
         server_setters_admin.cpp
-        server_session_admin.cpp
+
         server_graphics.h
         server_base.cpp
         formadminserver.cpp

@@ -35,7 +35,6 @@ struct SocketComplect{
     std::optional<QByteArray> GetExecuteObject();
     int AddToBuffer(const QByteArray& arr);
     void GuardSendMessageOtherSide(QByteArray arr);
-
 private:
      std::shared_ptr<std::mutex> _mtx;
 };

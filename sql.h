@@ -44,6 +44,30 @@ public:
     }
 
 
+    str_type GetSerializedUsers(const str_type& pattern){
+
+        json_arr array;
+        {//lg
+        LGR(_mtx);
+            for(auto&& user : _user_passhash)
+            {
+                const str_type& str = user.first;
+                //Если паттерн не "..."
+                if(!(pattern == CONSTANTS::RF_THREEDOTS)){
+                    //Если нет вхождения паттерна пропускаем
+                    if(!str.contains(pattern)){continue;};
+                }
+                json_obj obj;
+                obj.insert(CONSTANTS::LF_NAME, user.first);
+                auto role = user.second.role;
+                obj.insert(CONSTANTS::LF_ROLE, _ROLE_NAME.at(role));
+                array.push_back(std::move(obj));
+            }
+
+        }//lg
+        auto bytes = json::WritetoQByteAnyJson(array);
+        return bytes;
+    }
 
 private:
     friend class FormMaster;

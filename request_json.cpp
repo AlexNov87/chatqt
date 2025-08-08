@@ -143,15 +143,6 @@ json_obj AdminMakeRequestUnbanUser
     return obj;
 }
 
-json_obj AdminMakeRequestFindUsers(str_type find_pattern){
-    json_obj obj = MakeRequestTemplate
-        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::FIND_USERS);
-    obj.insert(CONSTANTS::LF_VALUE,
-               find_pattern.isEmpty() ? CONSTANTS::RF_THREEDOTS
-                                      : std::move(find_pattern));
-return obj;
-}
-
 json_obj AdminMakeRequestUpdareRole
     (str_type name, str_type password, str_type to_set_role, Role role){
     json_obj obj = MakeRequestTemplate
@@ -162,5 +153,13 @@ json_obj AdminMakeRequestUpdareRole
     return obj;
 }
 
+json_obj AdminMakeRequestFindUsers(str_type find_pattern){
+    json_obj obj = MakeRequestTemplate
+        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::FIND_USERS);
+    obj.insert(CONSTANTS::LF_VALUE,
+               find_pattern.isEmpty() ? CONSTANTS::RF_THREEDOTS
+                                      : std::move(find_pattern));
+    return obj;
+}
 
 }//namespace

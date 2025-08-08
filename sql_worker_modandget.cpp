@@ -59,7 +59,6 @@ std::optional<json_obj> SQLWorker::AuthorizatedError
     if(_user_passhash.at(name).password != password){
       return ans_obj::MakeAdminErrorObject("Wrong password", act);
     }
-
     return std::nullopt;
 }
 
@@ -67,13 +66,13 @@ std::optional<json_obj> SQLWorker::AuthorizatedError
     (str_type name, str_type password, ACTIONS act){
     LGR(_mtx);
     if(!_user_passhash.contains(name)){
-        ans_obj::MakeErrorObject("User not found", act);
+      return  ans_obj::MakeErrorObject("User not found", act);
     }
     if(!_user_passhash.at(name).is_active){
-        ans_obj::MakeErrorObject("You are banned on this_server", act);
+      return   ans_obj::MakeErrorObject("You are banned on this_server", act);
     }
     if(_user_passhash.at(name).password != password){
-        ans_obj::MakeErrorObject("Wrong password", act);
+       return  ans_obj::MakeErrorObject("Wrong password", act);
     }
     return std::nullopt;
 }

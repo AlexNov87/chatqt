@@ -29,10 +29,35 @@
                 &AdminUserForm::OnUnblockUserClicked
                 );
         connect(this, &QWidget::destroyed , [&]{ _clientwin->_admin_opened = false; });
+
+
+        _socket_for_admin = std::make_shared<QTcpSocket>();
+        _sock.socket = _socket_for_admin.get();
+
+        if(!_adrs.setAddress(_clientwin->ui->le_setip->text())){
+            FatalErrorMessageBox("Failed set ip");
+        }
+        _sock.socket->connectToHost(_adrs, _clientwin->ui->sb_port->value());
+
+        FatalErrorMessageBox(_adrs.toString()+ "  " +
+                             QString::number(_clientwin->ui->sb_port->value()));
+
+        if(!_sock.socket->waitForConnected(3000)) {
+            FatalErrorMessageBox("Failed to connect");
+        }
+
+        connect(_socket_for_admin.get(),
+                &QTcpSocket::readyRead, this, &AdminUserForm::HaldleSocket);
+
     }
 
+    void AdminUserForm::HaldleSocket(){
+
+    }
 
     void AdminUserForm::OnDeleteRoomClicked() {
+
+
         FatalErrorMessageBox("1DeleteRoom CLICKED");
     }
     void AdminUserForm::OnCreateRoomClicked()  {

@@ -54,6 +54,9 @@ json_obj GraphicsServer::DeleteUserJs(str_type name, str_type password, str_type
     if(auto res = AuthorizatedAndHasPermissionAdmin(name, password,this_act)){
         return *res;
     }
+    for(auto&& rm: _rooms ){
+        rm.second->DeleteUserByName(to_delete);
+    }
     auto lam = [&]{
         return this->_sql_work->DeleteUser(name, password, to_delete);
     };
@@ -78,6 +81,9 @@ json_obj GraphicsServer::BanUserJs(str_type name, str_type password,
     ADMIN_ACTIONS this_act = ADMIN_ACTIONS::BAN_USER;
     if(auto res = AuthorizatedAndHasPermissionAdmin(name, password,this_act)){
         return *res;
+    }
+    for(auto&& rm: _rooms ){
+        rm.second->DeleteUserByName(to_ban);
     }
     auto lam = [&]{
         return this->_sql_work->BanUser(to_ban, name);

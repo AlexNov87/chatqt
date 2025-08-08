@@ -25,11 +25,9 @@ void GraphicsServer::OnReadyRead()
         return;
     }
     SocketComplect* complect = &_socket_db.at(clientSocket);
-    QByteArray socket_stuff = clientSocket->readAll();
-    complect->AddToBuffer(socket_stuff);
-    std::shared_ptr<ServerSession> session =
-        std::make_shared<ServerSession>(shared_from_this(), complect);
-    session->Execute();
+    ExecuteIncoming(shared_from_this(), complect);
+
+
 }
 
 void GraphicsServer::OnDisconnected()

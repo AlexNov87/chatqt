@@ -16,30 +16,42 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
-class ServerSession {
-public:
-    ServerSession(std::shared_ptr<GraphicsServer> srv
-                  , SocketComplect* sock);
-    void Execute();
-private:
-    void MakeErrorAnsweToSocket(const json_obj& answer_obj);
-    std::optional<json_obj> FirstStepCheckErrors(const json_obj& js_obj);
-    bool IsPointersValid();
-    json_obj ExecuteExternal(const json_obj& obj);
+class ServerSession;
+class ServerAdminSession;
 
+std::optional<json_obj> FirstStepCheckServerObjectErrors
+    (const json_obj& js_obj);
+
+void ExecuteIncoming(std::shared_ptr<GraphicsServer>srv,
+                     SocketComplect* complect);
+
+/////////////////////////////////////////////////////////////
+class AbstractSession {
+public:
+    virtual json_obj SessionResult() = 0;
+protected:
+    AbstractSession(std::shared_ptr<GraphicsServer>srv,
+                    json_obj object, SocketComplect* sock);
+    json_obj obj;
     std::shared_ptr<GraphicsServer> _srv;
     SocketComplect* _sock;
 };
 
-class ServerAdminSession {
+class ServerSession : public AbstractSession {
 public:
-    ServerAdminSession(std::shared_ptr<GraphicsServer> srv
-     , SocketComplect* sock) : _srv(srv), _sock(sock){}
-
-private:
-    std::shared_ptr<GraphicsServer> _srv;
-    SocketComplect* _sock;
+    ServerSession(std::shared_ptr<GraphicsServer> srv ,json_obj object , SocketComplect* sock);
+    json_obj SessionResult() override;
 };
+
+class ServerAdminSession : public AbstractSession {
+public:
+    ServerAdminSession(std::shared_ptr<GraphicsServer> srv,
+    json_obj object , SocketComplect* sock);
+    json_obj SessionResult() override;
+};
+/////////////////////////////////////////////////////////////////
+
+
 
 class MainWindow : public QMainWindow
 {

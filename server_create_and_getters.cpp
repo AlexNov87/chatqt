@@ -72,4 +72,63 @@ json_obj GraphicsServer::LoginUserJs
 
 }
 
+///////////////////////////////////////////
+std::optional<json_obj> FirstStepCheckServerObjectErrors
+    (const json_obj& js_obj){
+    //Проверка, если данный объект является объектом ошибки.
+    bool is_err = json::IsErrorJsonObject(js_obj);
+    if(is_err){
+        return js_obj;
+    }
+
+    static std::set<str_type> obj_complect{CONSTANTS::LF_ACTION};
+    //Есть ли в объекте поле действия.
+    auto reason = json::IsContainsFieldAndStringAndNotEmpty(js_obj, obj_complect);
+    if(reason){
+        return ans_obj::MakeErrorObject(*reason, ACTIONS::SYSTEM);
+    }
+
+    //Если это действие есть в списке
+    str_type act_value = (js_obj).value(CONSTANTS::LF_ACTION).toString();
+    if(!_ACT_SERVER.contains(act_value) && !_ACT_ADMIN.contains(act_value)){
+        return ans_obj::MakeErrorObject("Can not find action: " + act_value, ACTIONS::SYSTEM);
+    };
+    return std::nullopt;
+}
+
+void ExecuteIncoming(std::shared_ptr<GraphicsServer>srv,
+                     SocketComplect* complect){
+
+    QByteArray socket_stuff = complect->socket->readAll();
+    complect->AddToBuffer(socket_stuff);
+
+    while (auto qbyte = complect->GetExecuteObject()){
+
+        json_obj json_stuff = json::ReadJsonObjectFromQbyteArray(*qbyte);
+        //Проверяем текущий объект на валидность. Если объект будет не вален,
+        //то вернется объект, содержащий ошибку.
+        std::optional<json_obj> err_obj = FirstStepCheckServerObjectErrors(json_stuff);
+        if(err_obj){
+            QByteArray arr;
+            arr = json::WritetoQByteAnyJson(*err_obj);
+            WriteToSocketWithFlushAddingSplitSym(complect->socket, arr);
+            continue;
+        }
+        json_obj answer;
+        str_type act_value = (json_stuff).value(CONSTANTS::LF_ACTION).toString();
+
+        if(_ACT_SERVER.contains(act_value)){
+            std::shared_ptr<ServerSession> session =
+                std::make_shared<ServerSession>(srv, std::move(json_stuff), complect);
+            answer = session->SessionResult();
+        }
+
+
+
+
+        QByteArray arr = json::WritetoQByteAnyJson(answer);
+        complect->GuardSendMessageOtherSide(arr);
+    }
+}
+
 

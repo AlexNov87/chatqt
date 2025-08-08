@@ -36,7 +36,6 @@ json_obj GraphicsServer::SetPort(int port)  {
     return ans_obj::GuardExceptSetter(lam, this_act);
 }
 
-
 json_obj GraphicsServer::SetMaxUsers(int max) {
 
     ACTIONS this_act = ACTIONS::SYSTEM;

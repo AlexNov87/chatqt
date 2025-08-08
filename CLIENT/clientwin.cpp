@@ -1,6 +1,6 @@
 #include "clientwin.h"
 #include "client_designer.h"
-#include "./ui_clientwin.h"
+
 
 void ClientWin::onReadyRead()
 {
