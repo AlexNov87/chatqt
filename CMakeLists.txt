@@ -26,15 +26,13 @@ add_library(LIB_CONSTANTS
    constants.cpp
    constants_admin.cpp
    constants_load.cpp
-
-
 )
 target_link_libraries(LIB_CONSTANTS PUBLIC Qt${QT_VERSION_MAJOR}::Core)
 
 add_library(LIB_HELPFOO
 helpfoo.h
-initializators_help.h
 helpfoo.cpp
+initializators_help.h
 initializators_help.cpp
 answer_obj.h
 answer_obj.cpp
@@ -77,7 +75,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         structs.h
         structs_smallimpl.cpp
         structs_ch.h
-
 
         server_setters.cpp
         server_create_and_getters.cpp

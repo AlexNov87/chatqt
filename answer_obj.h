@@ -14,6 +14,14 @@ json_obj AdminSuccessCreateRoom(str_type name);
 json_obj AdminSuccessDeleteRoom(str_type name);
 json_obj AdminSuccessDeleteUser(str_type name);
 
+json_obj AdminSuccessBanUser();
+json_obj AdminSuccessUnbanUser();
+json_obj AdminSuccessUpdateRoleUser();
+json_obj AdminUserList(str_type usetlist);
+json_obj AdminRoomList(str_type roomlist);
+
+
+
 template<typename Foo>
 json_obj GuardExceptSetter(Foo foo, ADMIN_ACTIONS this_act){
     try{

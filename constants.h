@@ -30,6 +30,8 @@ struct CONSTANTS
     static chart ADMIN_ACT_SYSTEM;
     static chart ADMIN_ACT_UNBAN_USER;
     static chart ADMIN_ACT_UPDATE_ROLE;
+    static chart ADMIN_ACT_USER_LIST;
+    static chart ADMIN_ACT_ROOM_LIST;
 
 
     // Map Parameters
@@ -86,8 +88,9 @@ enum class ACTIONS {
 enum class ADMIN_ACTIONS {
     BAN_USER,CREATE_ROOM,
     DELETE_ROOM, DELETE_USER,
-    FIND_USERS, SYSTEM ,
-    UPDATE_ROLE, UNBAN_USER
+    FIND_USERS,  SYSTEM,
+    UPDATE_ROLE, UNBAN_USER,
+    USER_LIST, ROOM_LIST
 };
 
 enum class Role {

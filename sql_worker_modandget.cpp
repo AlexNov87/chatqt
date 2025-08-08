@@ -37,12 +37,12 @@ json_obj SQLWorker::DeleteUser(str_type name, str_type password, str_type to_del
         }
     }
 
-    QSqlQuery quer = QueryPreparedToDeleteUser(name);
+    QSqlQuery quer = QueryPreparedToDeleteUser(to_delete);
     if(!quer.exec()){
         return ans_obj::MakeAdminErrorObject("Failed to delete user on SQL"
                                         , this_act);
     }
-
+    _user_passhash.erase(to_delete);
     return ans_obj::AdminSuccessDeleteUser(to_delete);
 }
 
@@ -101,39 +101,73 @@ bool SQLWorker::IsBanned(str_type name){
     }
     return false;
 }
+
 json_obj SQLWorker::UpdateUserRole(str_type name, Role role, str_type initiator)
 {
     LGR(_mtx);
+    ADMIN_ACTIONS this_act = ADMIN_ACTIONS::UPDATE_ROLE;
+    if(!_user_passhash.contains(name) || !_user_passhash.contains(initiator)){
+        return ans_obj::MakeAdminErrorObject
+            ("Could not find user or initiator", this_act);
+    }
+
     if(_user_passhash.at(initiator).role <= _user_passhash.at(name).role){
         return ans_obj::MakeAdminErrorObject
-            ("You have no permission to modify role of this user", ADMIN_ACTIONS::UPDATE_ROLE);
+            ("You have no permission to modify role of this user", this_act );
     }
     const auto& rolename = _ROLE_NAME.at(role);
     auto query = QueryUpdateUserRole(name, _roles_id.at(rolename));
-    QueryExecute(query);
-    return {};
+    if(query.exec()){
+        _user_passhash.at(name).role = role;
+        return ans_obj::AdminSuccessUpdateRoleUser();
+    }
+    return ans_obj::MakeAdminErrorObject
+        ("Role was not updated", this_act);
 
-  //  return query.exec();
 }
+
 json_obj SQLWorker::BanUser(str_type name, str_type initiator){
     LGR(_mtx);
+    ADMIN_ACTIONS this_act = ADMIN_ACTIONS::BAN_USER;
+    if(!_user_passhash.contains(name) || !_user_passhash.contains(initiator)){
+        return ans_obj::MakeAdminErrorObject
+            ("Could not find user or initiator", this_act);
+    }
+
     if(_user_passhash.at(initiator).role <= _user_passhash.at(name).role){
         return ans_obj::MakeAdminErrorObject
-            ("You have no permission to ban this user", ADMIN_ACTIONS::BAN_USER);
+            ("You have no permission to ban this user", this_act);
     }
     auto query = QueryUpdateUserActiveStatus(name,false);
-    QueryExecute(query);
-    return {};
+    if(query.exec()){
+        return ans_obj::AdminSuccessBanUser();
+        this->_user_passhash.at(name).is_active = false;
+    }
+    return ans_obj::MakeAdminErrorObject
+        ("Failed to ban this user", this_act);
+
 }
+
 json_obj SQLWorker::UnbanUser(str_type name, str_type initiator){
+    ADMIN_ACTIONS this_act = ADMIN_ACTIONS::UNBAN_USER;
     LGR(_mtx);
+    if(!_user_passhash.contains(name) || !_user_passhash.contains(initiator)){
+        return ans_obj::MakeAdminErrorObject
+            ("Could not find user or initiator", this_act);
+    }
+
     if(_user_passhash.at(initiator).role <= _user_passhash.at(name).role){
         return ans_obj::MakeAdminErrorObject
-            ("You have no permission to unban this user", ADMIN_ACTIONS::UNBAN_USER);
+            ("You have no permission to unban this user", this_act);
     }
     auto query = QueryUpdateUserActiveStatus(name, true);
-    QueryExecute(query);
-    return {};
+    if(query.exec()){
+        return ans_obj::AdminSuccessUnbanUser();
+        this->_user_passhash.at(name).is_active = true;
+    }
+    return ans_obj::MakeAdminErrorObject
+        ("Failed to unban this user", this_act);
+
 }
 
 

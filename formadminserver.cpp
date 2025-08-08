@@ -14,19 +14,15 @@ void AdminServerForm::Init(){
     connect(ui->pb_users_blockuser , &QCommandLinkButton::clicked,
             this, &AdminServerForm::OnBlockUserClicked
             );
+    connect(ui->pb_users_unblockuser,&QCommandLinkButton::clicked, this,
+            &AdminServerForm::OnUnblockUserClicked
+            );
     connect(ui->pb_users_deleteuser , &QCommandLinkButton::clicked,
             this, &AdminServerForm::OnDeleteUserClicked
             );
     connect(ui->pb_users_set_role, &QCommandLinkButton::clicked,
             this, &AdminServerForm::OnModifyUserRoleClicked
             );
-    connect(ui->pb_users_updateusers, &QCommandLinkButton::clicked,
-            this, &AdminServerForm::OnUpdateUsersClicked
-            );
-    connect(ui->pb_users_unblockuser,&QCommandLinkButton::clicked, this,
-            &AdminServerForm::OnUnblockUserClicked
-            );
-    connect(this, &QWidget::destroyed, [&]{ _srv->_is_admin_showed = false;});
 
     connect(ui->pb_users_finduser, &QCommandLinkButton::clicked,
             this, &AdminServerForm::OnFindUsersClicked);
@@ -37,6 +33,7 @@ void AdminServerForm::Init(){
     connect(ui->pb_get_all_users, &QCommandLinkButton::clicked,
             this, &AdminServerForm::OnGetAllUsersClicked);
 
+    connect(this, &QWidget::destroyed, [&]{ _srv->_is_admin_showed = false;});
     UpdateRoomsInternal();
 
 }
@@ -102,21 +99,42 @@ void AdminServerForm::OnUnblockUserClicked() {
         NonBlockingErrorBox(obj);
         return;
     }
-    QMessageBox::information(this, "BLOCK_USER","BLOCK_USER_SUCCESS");
+    QMessageBox::information(this, "UNBLOCK_USER","UNBLOCK_USER_SUCCESS");
 }
 
 
 void AdminServerForm::OnDeleteUserClicked() {
     const auto& master = _srv->_sql_work->GetMaster();
+    auto obj = _srv->DeleteUserJs(master.first, master.second,
+    ui->lbl_users_usertinfoname->text());
+    if(json::IsErrorJsonObject(obj)){
+        NonBlockingErrorBox(obj);
+        return;
+    }
+    OnFindUsersClicked();
 }
 void AdminServerForm::OnModifyUserRoleClicked()  {
     const auto& master = _srv->_sql_work->GetMaster();
+    auto text = "ROLE_" + ui->comboBox->currentText();
+    if(!_NAME_ROLE.contains(text)){
+        FatalErrorMessageBox("NO ROLE:"+ text);
+        return;
+    }
+    Role role = _NAME_ROLE.at(text);
+   auto obj = _srv->UpdateUserRoleJs
+        (master.first, master.second,
+        ui->lbl_users_usertinfoname->text(), role);
+    if(json::IsErrorJsonObject(obj)){
+        NonBlockingErrorBox(obj);
+        return;
+    }
+    OnFindUsersClicked();
+    ui->lbl_users_usertinforole->setText(text);
+    QMessageBox::information(this, "CHANGE_ROLE","CHANGE_ROLE_SUCCESS");
 }
 void AdminServerForm::OnUpdateUsersClicked(){
-    const auto& master = _srv->_sql_work->GetMaster();
+    OnFindUsersClicked();
 }
-
-
 
 void AdminServerForm::OnFindUsersClicked() {
 

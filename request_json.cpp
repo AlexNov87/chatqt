@@ -160,6 +160,7 @@ json_obj AdminMakeRequestUpdareRole
     obj.insert(CONSTANTS::LF_USER_RECIEVER, std::move(to_set_role));
     obj.insert(CONSTANTS::LF_ROLE, _ROLE_NAME.at(role));
     return obj;
-
 }
+
+
 }//namespace

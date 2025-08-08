@@ -19,6 +19,12 @@ public:
     static std::optional<json_obj>
     CheckJoinRoomAnswer(const json_obj& obj);
 
+    static std::optional<json_obj>
+    CheckPrivateMessageAnswer(const json_obj& obj);
+
+    static std::optional<json_obj>
+    CheckPublicMessageAnswer(const json_obj& obj);
+
 };
 
 #endif // ANSWER_CHECKER_H

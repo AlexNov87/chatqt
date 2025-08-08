@@ -60,16 +60,6 @@ void AnswerSession::StartExecute() {
         ExecuteDisconnect();
     }
     break;
-    case ACTIONS::PRIVATE_MESSAGE :
-    {
-       /**/
-    }
-    break;
-    case ACTIONS::PUBLIC_MESSAGE :
-    {
-         /**/
-    }
-    break;
     case ACTIONS::INCOME_PUBLIC :
     {
         ExecutePublicMsg();
@@ -88,6 +78,14 @@ void AnswerSession::StartExecute() {
 }
 
 void AnswerSession::ExecutePrivateMsg(){
+
+    std::optional<json_obj> err =
+        ServerAnswerChecker::CheckPrivateMessageAnswer(_obj);
+
+    if(err){
+        NonBlockingErrorBox(*err);
+        return;
+    }
     this->_client->ui->lw_message->addItem(
         "Private from: " +
         _obj.value(CONSTANTS::LF_NAME).toString() + ": " +
@@ -97,7 +95,13 @@ void AnswerSession::ExecutePrivateMsg(){
 }
 
 void AnswerSession::ExecutePublicMsg(){
+    std::optional<json_obj> err =
+        ServerAnswerChecker::CheckPublicMessageAnswer(_obj);
 
+    if(err){
+        NonBlockingErrorBox(*err);
+        return;
+    }
     this->_client->ui->lw_message->addItem(
         _obj.value(CONSTANTS::LF_NAME).toString() + ": " +
         _obj.value(CONSTANTS::LF_PUBLIC_MESSAGE).toString()
@@ -131,9 +135,7 @@ void AnswerSession::ExecuteRoomMembers() {
         if(roomname != _obj.value(CONSTANTS::LF_ROOMNAME).toString()){
            return;
         }
-
         QStringList& members = std::get<QStringList>(result);
-
        auto members_form = this->_client->ui->lw_members;
        members_form->clear();
        members_form->addItems(std::move(members));
@@ -157,6 +159,9 @@ void AnswerSession::ExecuteJoinRoom(){
 }
 
 void  AnswerSession::ExecuteDisconnect(){
+
+
+
     _client->_my_token.clear();
     _client->_in_room = false;
 }

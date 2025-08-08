@@ -9,9 +9,6 @@ json_obj GraphicsServer::AddRoomJs(str_type name,
         (name, password,this_act)){
         return *res;
     }
-
-
-
     auto lam = [&]{
             LGR(_mtx_room);
             bool res =  _rooms.insert( {roomname , std::make_shared<ChatRoom>(this, name, roomname)}).second;

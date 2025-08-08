@@ -107,6 +107,7 @@ json_obj AdminSuccessDeleteRoom(str_type name){
     obj.insert(CONSTANTS::LF_ROOMNAME, std::move(name));
     return obj;
 }
+
 json_obj AdminSuccessDeleteUser(str_type name){
     json_obj obj = MakeSuccessTemplate(ADMIN_ACTIONS::DELETE_USER);
     obj.insert(CONSTANTS::LF_NAME, std::move(name));
@@ -118,4 +119,29 @@ json_obj AdminSuccessCreateRoom(str_type name){
     obj.insert(CONSTANTS::LF_ROOMNAME, std::move(name));
     return obj;
 }
+
+/////////////////
+
+json_obj AdminSuccessBanUser(){
+    json_obj obj = MakeSuccessTemplate(ADMIN_ACTIONS::BAN_USER);
+    return obj;
+}
+json_obj AdminSuccessUnbanUser(){
+    json_obj obj = MakeSuccessTemplate(ADMIN_ACTIONS::UNBAN_USER);
+    return obj;
+}
+json_obj AdminSuccessUpdateRoleUser(){
+    json_obj obj = MakeSuccessTemplate(ADMIN_ACTIONS::UPDATE_ROLE);
+    return obj;
+}
+json_obj AdminUserList(str_type usetlist){
+    json_obj obj = MakeSuccessTemplate(ADMIN_ACTIONS::USER_LIST);
+    return obj;
+}
+json_obj AdminRoomList(str_type roomlist){
+    json_obj obj = MakeSuccessTemplate(ADMIN_ACTIONS::ROOM_LIST);
+    return obj;
+}
+
+
 }//namespace

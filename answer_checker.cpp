@@ -60,7 +60,6 @@ ServerAnswerChecker::CheckMembersRoomListAnswer(const json_obj& obj){
          return ans_obj::MakeErrorObject
              (*reason , ACTIONS::GET_ROOM_USERS);
      }
-
      return CheckTemplateArrayField
         (obj, CONSTANTS::LF_USERS, ACTIONS::GET_ROOM_USERS);
 }
@@ -76,5 +75,29 @@ ServerAnswerChecker::CheckJoinRoomAnswer(const json_obj& obj){
     }
     return std::nullopt;
 }
+
+
+std::optional<json_obj>
+ServerAnswerChecker::CheckPrivateMessageAnswer(const json_obj& obj){
+    static std::set<str_type>
+        ch_fields{CONSTANTS::LF_NAME , CONSTANTS::LF_PRIVATE_MESSAGE};
+    auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj,ch_fields);
+    if(reason){
+        return ans_obj::MakeErrorObject(*reason, ACTIONS::PRIVATE_MESSAGE);
+    }
+    return std::nullopt;
+}
+
+std::optional<json_obj>
+ServerAnswerChecker::CheckPublicMessageAnswer(const json_obj& obj){
+    static std::set<str_type>
+        ch_fields{CONSTANTS::LF_NAME , CONSTANTS::LF_PUBLIC_MESSAGE};
+    auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj,ch_fields);
+    if(reason){
+        return ans_obj::MakeErrorObject(*reason, ACTIONS::PUBLIC_MESSAGE);
+    }
+    return std::nullopt;
+}
+
 
 
