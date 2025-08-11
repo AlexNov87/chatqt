@@ -1,0 +1,16 @@
+# Файлы сборки и временные
+build/
+*.o
+*.obj
+*.log
+*.user
+*.pro.user
+*.qmake.stash
+*.qmake.cache
+Makefile
+Makefile.Debug
+Makefile.Release
+
+# Другие временные файлы
+*.tmp
+*.swp
