@@ -15,6 +15,7 @@ json_obj SQLWorker::RegisterNewUser(str_type name, str_type pass){
         return ans_obj::MakeErrorObject("Failed Register new user"
                                         , ACTIONS::CREATE_USER);
     }
+     _is_users_cached = false;
     _user_passhash.insert({name , UserRole{pass, Role::USER}});
     return ans_obj::SuccessCreateUser(name);
 }
@@ -42,6 +43,7 @@ json_obj SQLWorker::DeleteUser(str_type name, str_type password, str_type to_del
         return ans_obj::MakeAdminErrorObject("Failed to delete user on SQL"
                                         , this_act);
     }
+    _is_users_cached = false;
     _user_passhash.erase(to_delete);
     return ans_obj::AdminSuccessDeleteUser(to_delete);
 }
@@ -169,6 +171,22 @@ json_obj SQLWorker::UnbanUser(str_type name, str_type initiator){
 
 }
 
-
+const str_type& SQLWorker::GetSerializedUsers(){
+    json_arr array;
+    LGR(_mtx);
+    if(_is_users_cached){return _serializated_users;}
+    for(auto&& user : _user_passhash)
+    {
+        const str_type& str = user.first;
+        json_obj obj;
+        obj.insert(CONSTANTS::LF_NAME, user.first);
+        auto role = user.second.role;
+        obj.insert(CONSTANTS::LF_ROLE, _ROLE_NAME.at(role));
+        array.push_back(std::move(obj));
+    }
+    _serializated_users = json::WritetoQByteAnyJson(array);
+    _is_users_cached = true;
+    return _serializated_users;
+}
 
 }//namespace sql

@@ -157,6 +157,27 @@ public:
     int _max_message_len = 512;
     std::shared_ptr<sql::SQLWorker> _sql_work;
 
+    bool _is_cached_roomlist = false;
+    str_type _cached_roomlist_json_with_owners;
+
+    const str_type& GetRoomlistWithOwners(){
+        if(_is_cached_roomlist){return _cached_roomlist_json_with_owners;}
+        json_arr arr;
+
+        LGR(_mtx_room);
+        for (auto && [name, roomptr] : _rooms){
+            json_obj obj;
+            obj.insert(CONSTANTS::LF_ROOMNAME, name);
+            obj.insert(CONSTANTS::LF_NAME,roomptr->GetCreator());
+            arr.push_back(std::move(obj));
+        }
+
+        _cached_roomlist_json_with_owners = json::WritetoQByteAnyJson(arr);
+        _is_cached_roomlist = true;
+        return _cached_roomlist_json_with_owners;
+    }
+
+
 };
 
 #endif // STRUCTS_CH_H

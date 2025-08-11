@@ -48,6 +48,8 @@ public:
     ServerAdminSession(std::shared_ptr<GraphicsServer> srv,
     json_obj object , SocketComplect* sock);
     json_obj SessionResult() override;
+    void SendAdminRoomList();
+    void SendAdminUsersList();
 };
 /////////////////////////////////////////////////////////////////
 

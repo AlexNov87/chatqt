@@ -11,6 +11,7 @@ json_obj GraphicsServer::AddRoomJs(str_type name,
     }
     auto lam = [&]{
             LGR(_mtx_room);
+            _is_cached_roomlist = false;
             bool res =  _rooms.insert( {roomname , std::make_shared<ChatRoom>(this, name, roomname)}).second;
             if(!res){
                 return ans_obj::MakeAdminErrorObject
@@ -30,6 +31,7 @@ json_obj GraphicsServer::AddRoomJs(str_type name,
 json_obj GraphicsServer::DeleteRoomJs(str_type name, str_type password, str_type roomname)  {
 
     ADMIN_ACTIONS this_act = ADMIN_ACTIONS::DELETE_ROOM;
+    _is_cached_roomlist = false;
     if(auto res = AuthorizatedAndHasPermissionAdmin(name, password,this_act)){
         return *res;
     }

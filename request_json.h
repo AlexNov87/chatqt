@@ -40,7 +40,7 @@ json_obj AdminMakeRequestBanUser
     (str_type name, str_type password, str_type to_ban);
 json_obj AdminMakeRequestUnbanUser
     (str_type name, str_type password, str_type to_unban);
-json_obj AdminMakeRequestFindUsers(str_type find_pattern);
+json_obj AdminMakeRequestFindUsers();
 json_obj AdminMakeRequestUpdareRole
     (str_type name, str_type password, str_type to_set_role, Role role);
 

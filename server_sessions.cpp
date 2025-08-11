@@ -17,6 +17,17 @@ ServerAdminSession::ServerAdminSession(std::shared_ptr<GraphicsServer> srv,
     json_obj object, SocketComplect* sock) :
 AbstractSession(srv, std::move(object), sock){}
 
+void ServerAdminSession::SendAdminRoomList(){
+    str_type room_arr = this->_srv->GetRoomlistWithOwners();
+    json_obj roomlistwithowners = ans_obj::AdminRoomList(std::move(room_arr));
+    _sock->GuardSendMessageOtherSide(json::WritetoQByteAnyJson(roomlistwithowners));
+}
+
+void ServerAdminSession::SendAdminUsersList(){
+    str_type user_arr(this->_srv->_sql_work->GetSerializedUsers());
+    json_obj userswithroles(ans_obj::AdminUserList(std::move(user_arr)));
+    _sock->GuardSendMessageOtherSide(json::WritetoQByteAnyJson(userswithroles));
+}
 
 json_obj ServerAdminSession::SessionResult() {
 
@@ -36,8 +47,7 @@ json_obj ServerAdminSession::SessionResult() {
                 str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
                 str_type roomname = obj.value(CONSTANTS::LF_ROOMNAME).toString();
 
-                 /* ОТОСЛАТЬ НОВЫЙ СПИСОК КОМНАТ*/
-
+                SendAdminRoomList();
                 return _srv->AddRoomJs(std::move(name),std::move(password),
                                        std::move(roomname));
     }
@@ -56,15 +66,13 @@ json_obj ServerAdminSession::SessionResult() {
              str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
              str_type roomname = obj.value(CONSTANTS::LF_ROOMNAME).toString();
 
-               /* ОТОСЛАТЬ НОВЫЙ СПИСОК КОМНАТ*/
-
+             SendAdminRoomList();
              return _srv->DeleteRoomJs(std::move(name),std::move(password),
                                        std::move(roomname));
          }
     break;
     case ADMIN_ACTIONS::DELETE_USER:
              {
-
                  static std::set<str_type> current_complect{
                      CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_USER_RECIEVER
                  };
@@ -76,18 +84,81 @@ json_obj ServerAdminSession::SessionResult() {
                  str_type name = obj.value(CONSTANTS::LF_NAME).toString();
                  str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
                  str_type todelete = obj.value(CONSTANTS::LF_USER_RECIEVER).toString();
-                 return _srv->DeleteRoomJs(std::move(name),std::move(password),
+
+                 SendAdminUsersList();
+                 return _srv->DeleteUserJs(std::move(name),std::move(password),
                                            std::move(todelete));
              }
 
         break;
     case ADMIN_ACTIONS::FIND_USERS:
+             {
+                 str_type user_arr(this->_srv->_sql_work->GetSerializedUsers());
+                 json_obj userswithroles(ans_obj::AdminUserList(std::move(user_arr)));
+                 return userswithroles;
+             }
         break;
     case ADMIN_ACTIONS::BAN_USER:
+             {
+                 static std::set<str_type> current_complect{
+                     CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_USER_RECIEVER
+                 };
+                 auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+
+                 if(reason){
+                     return ans_obj::MakeAdminErrorObject(*reason, act);
+                 }
+                 str_type name = obj.value(CONSTANTS::LF_NAME).toString();
+                 str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
+                 str_type toban = obj.value(CONSTANTS::LF_USER_RECIEVER).toString();
+
+                 return _srv->BanUserJs(std::move(name),std::move(password),
+                                        std::move(toban));
+
+           }
         break;
     case ADMIN_ACTIONS::UNBAN_USER:
+           {
+               static std::set<str_type> current_complect{
+                   CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,CONSTANTS::LF_USER_RECIEVER
+               };
+               auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+
+               if(reason){
+                   return ans_obj::MakeAdminErrorObject(*reason, act);
+               }
+               str_type name = obj.value(CONSTANTS::LF_NAME).toString();
+               str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
+               str_type tounban = obj.value(CONSTANTS::LF_USER_RECIEVER).toString();
+
+               return _srv->UnBanUserJs(std::move(name),std::move(password),
+                                      std::move(tounban));
+
+           }
         break;
+
     case ADMIN_ACTIONS::UPDATE_ROLE:
+           {
+               static std::set<str_type> current_complect{
+                   CONSTANTS::LF_NAME , CONSTANTS::LF_PASSWORD ,
+                   CONSTANTS::LF_USER_RECIEVER, CONSTANTS::LF_ROLE
+               };
+               auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+
+               if(reason){
+                   return ans_obj::MakeAdminErrorObject(*reason, act);
+               }
+
+               str_type name = obj.value(CONSTANTS::LF_NAME).toString();
+               str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
+               str_type tounban = obj.value(CONSTANTS::LF_USER_RECIEVER).toString();
+               const auto& role = obj.value(CONSTANTS::LF_ROLE).toString();
+               if(!_NAME_ROLE.contains(role)){
+                   return ans_obj::MakeAdminErrorObject("Role is unrecognized", act);
+               };
+               return _srv->UpdateUserRoleJs(std::move(name),std::move(password),
+                                             std::move(tounban), _NAME_ROLE.at(role));
+            }
         break;
     default:
         break;

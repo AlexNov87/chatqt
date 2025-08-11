@@ -134,12 +134,14 @@ json_obj AdminSuccessUpdateRoleUser(){
     json_obj obj = MakeSuccessTemplate(ADMIN_ACTIONS::UPDATE_ROLE);
     return obj;
 }
-json_obj AdminUserList(str_type usetlist){
+json_obj AdminUserList(str_type userlist){
     json_obj obj = MakeSuccessTemplate(ADMIN_ACTIONS::USER_LIST);
+    obj.insert(CONSTANTS::LF_USERS, std::move(userlist));
     return obj;
 }
 json_obj AdminRoomList(str_type roomlist){
     json_obj obj = MakeSuccessTemplate(ADMIN_ACTIONS::ROOM_LIST);
+    obj.insert(CONSTANTS::LF_ROOMLIST, std::move(roomlist));
     return obj;
 }
 
