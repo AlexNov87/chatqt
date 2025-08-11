@@ -77,10 +77,8 @@ private:
     str_type _my_room;
 };
 
-
 class AnswerSession
 {
-
 public:
  AnswerSession(ClientWin* client, const json_obj& obj)
         : _client(client), _obj(obj) {}
@@ -90,7 +88,6 @@ public:
 private:
     ClientWin* _client;
     const json_obj& _obj;
-
     std::optional<ACTIONS> GetAction();
     void ExecuteRoomList();
     void ExecuteRoomMembers();
@@ -99,5 +96,4 @@ private:
     void ExecutePrivateMsg();
     void ExecutePublicMsg();
 };
-
 #endif // CLIENTWIN_H

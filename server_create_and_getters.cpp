@@ -118,14 +118,16 @@ void ExecuteIncoming(std::shared_ptr<GraphicsServer>srv,
         str_type act_value = (json_stuff).value(CONSTANTS::LF_ACTION).toString();
 
         if(_ACT_SERVER.contains(act_value)){
-            std::shared_ptr<ServerSession> session =
-                std::make_shared<ServerSession>(srv, std::move(json_stuff), complect);
-            answer = session->SessionResult();
+           ServerSession session(srv, std::move(json_stuff), complect);
+           answer = session.SessionResult();
         }
-
-
-
-
+        else if(_ACTION_ADMIN_NAME.contains(act_value)){
+           ServerAdminSession session(srv, std::move(json_stuff), complect);
+           answer = session.SessionResult();
+        }
+        else{
+            answer = ans_obj::MakeErrorObject("UNKNOWN ACTION EXECUTE INCOMING", ACTIONS::SYSTEM);
+        }
         QByteArray arr = json::WritetoQByteAnyJson(answer);
         complect->GuardSendMessageOtherSide(arr);
     }

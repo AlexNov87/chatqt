@@ -79,6 +79,32 @@ private:
     QHostAddress _adrs;
 };
 
+class AnswerAdminSession
+{
+public:
+    AnswerAdminSession(AdminUserForm* uform, const json_obj& obj);
+    void StartExecute();
+
+private:
+    AdminUserForm* _user_form;
+    const json_obj& _obj;
+
+    std::optional<ADMIN_ACTIONS> GetAction();
+    void ExecuteRoomList();
+    void ExecuteUserslist();
+
+    void ExecuteAddRoom();
+    void ExecuteDeleteRoom();
+
+    void ExecuteDeleteUser();
+    void ExecuteBanUser();
+    void ExecuteUnbanUser();
+
+    void ExecuteUpdateRole();
+    void ExecuteSystem();
+
+};
+
 class AdminServerForm : public Formadmin {
 public:
     AdminServerForm(GraphicsServer* srv);

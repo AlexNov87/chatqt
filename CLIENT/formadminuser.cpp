@@ -52,7 +52,13 @@
     }
 
     void AdminUserForm::HaldleSocket(){
-
+        QByteArray data = _sock.socket->readAll();
+        _sock.AddToBuffer(data);
+        while(auto obj = _sock.GetExecuteObject()){
+            json_obj js(json::ReadJsonObjectFromQbyteArray(obj));
+            AnswerAdminSession session(this, std::move(obj));
+            session.StartExecute();
+        }
     }
 
     void AdminUserForm::OnDeleteRoomClicked() {

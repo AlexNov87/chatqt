@@ -91,13 +91,20 @@ json_obj ServerAdminSession::SessionResult() {
              }
 
         break;
-    case ADMIN_ACTIONS::FIND_USERS:
+    case ADMIN_ACTIONS::GET_SERIAL_USERS:
              {
                  str_type user_arr(this->_srv->_sql_work->GetSerializedUsers());
                  json_obj userswithroles(ans_obj::AdminUserList(std::move(user_arr)));
                  return userswithroles;
              }
         break;
+    case ADMIN_ACTIONS::GET_SERIAL_ROOMS:
+    {
+                 str_type room_arr = this->_srv->GetRoomlistWithOwners();
+                 json_obj roomlistwithowners = ans_obj::AdminRoomList(std::move(room_arr));
+                 return roomlistwithowners;
+    }
+    break;
     case ADMIN_ACTIONS::BAN_USER:
              {
                  static std::set<str_type> current_complect{
@@ -163,13 +170,8 @@ json_obj ServerAdminSession::SessionResult() {
     default:
         break;
     }
-// case ADMIN_ACTIONS:
-//     break;
-
+    return ans_obj::MakeAdminErrorObject("Unknown type of admin action", act);
 }
-
-
-
 
 json_obj ServerSession::SessionResult(){
 

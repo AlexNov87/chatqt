@@ -19,15 +19,6 @@ std::optional<ACTIONS> AnswerSession::GetAction() {
         NonBlockingErrorBox(obj);
         return std::nullopt;
     }
-
-    const auto act = _obj.value(CONSTANTS::LF_INITIATOR).toString();
-    //Проверка валидности действия
-    if(!_NAME_ACTION.contains(act)){
-        auto obj =  ans_obj::MakeErrorObject
-            ("Action is not recognized", ACTIONS::SYSTEM);
-        NonBlockingErrorBox(obj);
-        return std::nullopt;
-    }
     auto action = _NAME_ACTION.at(act);
     return action;
 }

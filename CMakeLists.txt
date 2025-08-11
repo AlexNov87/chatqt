@@ -26,6 +26,7 @@ add_library(LIB_CONSTANTS
    constants.cpp
    constants_admin.cpp
    constants_load.cpp
+
 )
 target_link_libraries(LIB_CONSTANTS PUBLIC Qt${QT_VERSION_MAJOR}::Core)
 
@@ -92,6 +93,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         server_graphics.h
         server_base.cpp
         formadminserver.cpp
+        adminanswersess.cpp
     )
 
 # Define target properties for Android with Qt 6 as:

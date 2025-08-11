@@ -153,9 +153,9 @@ json_obj AdminMakeRequestUpdareRole
     return obj;
 }
 
-json_obj AdminMakeRequestFindUsers(){
+json_obj AdminMakeRequestGetUsers(){
     json_obj obj = MakeRequestTemplate
-        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::FIND_USERS);
+        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::GET_SERIAL_USERS);
     return obj;
 }
 
