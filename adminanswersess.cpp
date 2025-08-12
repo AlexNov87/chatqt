@@ -32,6 +32,7 @@ void AnswerAdminSession::StartExecute(){
     case ADMIN_ACTIONS::GET_SERIAL_USERS:
         break;
     }
+
 }
 
 std::optional<ADMIN_ACTIONS> AnswerAdminSession::GetAction(){
@@ -50,6 +51,9 @@ std::optional<ADMIN_ACTIONS> AnswerAdminSession::GetAction(){
         NonBlockingErrorBox(obj);
         return std::nullopt;
     }
+
+    const auto act = _obj.value(CONSTANTS::LF_INITIATOR).toString();
+
     auto action = _NAME_ADMIN_ACTION.at(act);
     return action;
 }

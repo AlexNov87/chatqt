@@ -88,7 +88,7 @@ json_obj MakeRequestRoomList(){
 
 namespace req_obj {
 
-json_obj MakeRequestTemplate(str_type initiator, ADMIN_ACTIONS act){
+json_obj MakeAdminRequestTemplate(str_type initiator, ADMIN_ACTIONS act){
     if(!IsCorrertInitiator(initiator)){
         FatalErrorMessageBox("Initiator is incorrect");
         std::abort();
@@ -101,7 +101,7 @@ json_obj MakeRequestTemplate(str_type initiator, ADMIN_ACTIONS act){
 json_obj AdminMakeRequestAddRooms
     (str_type name, str_type password, str_type roomname)
 {
-    json_obj obj = MakeRequestTemplate
+    json_obj obj = MakeAdminRequestTemplate
         (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::CREATE_ROOM);
     ModifyRoomReq(obj, name,password,roomname);
     return obj;
@@ -110,7 +110,7 @@ json_obj AdminMakeRequestAddRooms
 json_obj AdminMakeRequestDeleteRooms
     (str_type name, str_type password, str_type roomname)
 {
-    json_obj obj = MakeRequestTemplate
+    json_obj obj = MakeAdminRequestTemplate
         (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::DELETE_ROOM);
     ModifyRoomReq(obj, name,password,roomname);
     return obj;
@@ -118,7 +118,7 @@ json_obj AdminMakeRequestDeleteRooms
 
 json_obj AdminMakeRequestDeleteUser
     (str_type name, str_type password, str_type to_delete){
-    json_obj obj = MakeRequestTemplate
+    json_obj obj = MakeAdminRequestTemplate
         (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::DELETE_USER);
     ModifyUserAndPassword(obj, name,password);
     obj.insert(CONSTANTS::LF_USER_RECIEVER, std::move(to_delete));
@@ -127,7 +127,7 @@ json_obj AdminMakeRequestDeleteUser
 
 json_obj AdminMakeRequestBanUser
     (str_type name, str_type password, str_type to_ban){
-    json_obj obj = MakeRequestTemplate
+    json_obj obj = MakeAdminRequestTemplate
         (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::BAN_USER);
     ModifyUserAndPassword(obj, name,password);
     obj.insert(CONSTANTS::LF_USER_RECIEVER, std::move(to_ban));
@@ -136,7 +136,7 @@ json_obj AdminMakeRequestBanUser
 
 json_obj AdminMakeRequestUnbanUser
     (str_type name, str_type password, str_type to_unban){
-    json_obj obj = MakeRequestTemplate
+    json_obj obj = MakeAdminRequestTemplate
         (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::UNBAN_USER);
     ModifyUserAndPassword(obj, name,password);
     obj.insert(CONSTANTS::LF_USER_RECIEVER, std::move(to_unban));
@@ -145,7 +145,7 @@ json_obj AdminMakeRequestUnbanUser
 
 json_obj AdminMakeRequestUpdareRole
     (str_type name, str_type password, str_type to_set_role, Role role){
-    json_obj obj = MakeRequestTemplate
+    json_obj obj = MakeAdminRequestTemplate
         (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::UPDATE_ROLE);
     ModifyUserAndPassword(obj, name,password);
     obj.insert(CONSTANTS::LF_USER_RECIEVER, std::move(to_set_role));
@@ -154,8 +154,14 @@ json_obj AdminMakeRequestUpdareRole
 }
 
 json_obj AdminMakeRequestGetUsers(){
-    json_obj obj = MakeRequestTemplate
-        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::GET_SERIAL_USERS);
+    json_obj obj = MakeAdminRequestTemplate
+        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::USER_LIST);
+    return obj;
+}
+
+json_obj AdminMakeRequestGetRooms(){
+    json_obj obj = MakeAdminRequestTemplate
+        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::ROOM_LIST);
     return obj;
 }
 

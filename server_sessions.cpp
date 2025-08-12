@@ -91,14 +91,14 @@ json_obj ServerAdminSession::SessionResult() {
              }
 
         break;
-    case ADMIN_ACTIONS::GET_SERIAL_USERS:
+    case ADMIN_ACTIONS::USER_LIST :
              {
                  str_type user_arr(this->_srv->_sql_work->GetSerializedUsers());
                  json_obj userswithroles(ans_obj::AdminUserList(std::move(user_arr)));
                  return userswithroles;
              }
         break;
-    case ADMIN_ACTIONS::GET_SERIAL_ROOMS:
+    case ADMIN_ACTIONS::ROOM_LIST:
     {
                  str_type room_arr = this->_srv->GetRoomlistWithOwners();
                  json_obj roomlistwithowners = ans_obj::AdminRoomList(std::move(room_arr));

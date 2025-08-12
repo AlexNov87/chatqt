@@ -24,6 +24,7 @@ set(PROJECT_SOURCES
         ../formmaster.cpp
         ../formlogin.cpp
         ../formadmin.cpp
+        ../adminanswersess.cpp
 
 
 )

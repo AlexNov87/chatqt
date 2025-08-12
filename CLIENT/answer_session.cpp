@@ -19,6 +19,8 @@ std::optional<ACTIONS> AnswerSession::GetAction() {
         NonBlockingErrorBox(obj);
         return std::nullopt;
     }
+
+    const auto act = _obj.value(CONSTANTS::LF_INITIATOR).toString();
     auto action = _NAME_ACTION.at(act);
     return action;
 }

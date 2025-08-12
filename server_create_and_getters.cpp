@@ -121,11 +121,14 @@ void ExecuteIncoming(std::shared_ptr<GraphicsServer>srv,
            ServerSession session(srv, std::move(json_stuff), complect);
            answer = session.SessionResult();
         }
-        else if(_ACTION_ADMIN_NAME.contains(act_value)){
-           ServerAdminSession session(srv, std::move(json_stuff), complect);
+        else if(_ACT_ADMIN.contains(act_value)){
+
+            FatalErrorMessageBox("ACT ADMIN");
+            ServerAdminSession session(srv, std::move(json_stuff), complect);
            answer = session.SessionResult();
         }
         else{
+            FatalErrorMessageBox("ACT UNKNOWN");
             answer = ans_obj::MakeErrorObject("UNKNOWN ACTION EXECUTE INCOMING", ACTIONS::SYSTEM);
         }
         QByteArray arr = json::WritetoQByteAnyJson(answer);
