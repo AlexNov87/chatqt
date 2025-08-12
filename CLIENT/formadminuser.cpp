@@ -33,8 +33,6 @@
 
         connect(this, &QWidget::destroyed , [&]{ _clientwin->_admin_opened = false; });
 
-
-
         _socket_for_admin = std::make_shared<QTcpSocket>();
         _sock.socket = _socket_for_admin.get();
 
@@ -53,8 +51,6 @@
     }
 
     void AdminUserForm::HaldleSocket(){
-        FatalErrorMessageBox("HAN SOCK ADMIN USER");
-
         QByteArray data = _sock.socket->readAll();
         _sock.AddToBuffer(data);
         while(auto obj = _sock.GetExecuteObject()){
@@ -64,6 +60,7 @@
         }
     }
 
+    //ROOMS
     void AdminUserForm::OnDeleteRoomClicked() {
         auto obj = req_obj::AdminMakeRequestDeleteRooms(
             _clientwin->_my_name,
@@ -72,7 +69,9 @@
             );
         QByteArray data = json::WritetoQByteAnyJson(obj);
         _sock.GuardSendMessageOtherSide(data);
+        OnUpdateRoomClicked();
     }
+
     void AdminUserForm::OnCreateRoomClicked()  {
         auto obj = req_obj::AdminMakeRequestAddRooms(
             _clientwin->_my_name,
@@ -81,8 +80,16 @@
             );
         QByteArray data = json::WritetoQByteAnyJson(obj);
         _sock.GuardSendMessageOtherSide(data);
+        OnUpdateRoomClicked();
     }
 
+    void AdminUserForm::OnUpdateRoomClicked(){
+        auto obj = req_obj::AdminMakeRequestGetRooms();
+        QByteArray data = json::WritetoQByteAnyJson(obj);
+        _sock.GuardSendMessageOtherSide(data);
+    }
+
+//USER SETTERS
     void AdminUserForm::OnBlockUserClicked() {
         auto obj = req_obj::AdminMakeRequestBanUser(
             _clientwin->_my_name,
@@ -91,23 +98,7 @@
             );
         QByteArray data = json::WritetoQByteAnyJson(obj);
         _sock.GuardSendMessageOtherSide(data);
-    }
-    void AdminUserForm::OnDeleteUserClicked() {
-        auto obj = req_obj::AdminMakeRequestDeleteUser(
-            _clientwin->_my_name,
-            _clientwin ->_my_pass,
-            ui->lbl_users_usertinfoname->text()
-            );
-        QByteArray data = json::WritetoQByteAnyJson(obj);
-        _sock.GuardSendMessageOtherSide(data);
-    }
-    void AdminUserForm::OnModifyUserRoleClicked() {
-        FatalErrorMessageBox("1ModifyUser CLICKED");
-    }
-    void AdminUserForm::OnUpdateUsersClicked() {
-        auto obj = req_obj::AdminMakeRequestGetUsers() ;
-        QByteArray data = json::WritetoQByteAnyJson(obj);
-        _sock.GuardSendMessageOtherSide(data);
+        OnUpdateUsersClicked();
     }
 
     void AdminUserForm::OnUnblockUserClicked(){
@@ -118,14 +109,57 @@
             );
         QByteArray data = json::WritetoQByteAnyJson(obj);
         _sock.GuardSendMessageOtherSide(data);
+        OnUpdateUsersClicked();
     }
 
-    void AdminUserForm::OnFindUsersClicked() {
-        OnUpdateRoomClicked();
+    void AdminUserForm::OnDeleteUserClicked() {
+        auto obj = req_obj::AdminMakeRequestDeleteUser(
+            _clientwin->_my_name,
+            _clientwin ->_my_pass,
+            ui->lbl_users_usertinfoname->text()
+            );
+        QByteArray data = json::WritetoQByteAnyJson(obj);
+        _sock.GuardSendMessageOtherSide(data);
+        OnUpdateUsersClicked();
     }
 
-    void AdminUserForm::OnUpdateRoomClicked(){
-        auto obj = req_obj::AdminMakeRequestGetRooms();
+    void AdminUserForm::OnModifyUserRoleClicked() {
+        str_type role = "ROLE_" + ui->cb_roles->currentText();
+
+        if(!_NAME_ROLE.contains(role)){
+          FatalErrorMessageBox("There is no role "+ role);
+          return;
+        }
+
+        auto obj = req_obj::AdminMakeRequestUpdareRole(
+            _clientwin->_my_name,
+            _clientwin ->_my_pass,
+            ui->lbl_users_usertinfoname->text(),
+            _NAME_ROLE.at(role)
+        );
+
+        QByteArray data = json::WritetoQByteAnyJson(obj);
+        _sock.GuardSendMessageOtherSide(data);
+        OnUpdateUsersClicked();
+    }
+
+    //USER GETTERS
+    void AdminUserForm::OnUpdateUsersClicked() {
+        OnFindUsersClicked();
+    }
+    void AdminUserForm::OnGetAllUsersClicked(){
+        auto obj = req_obj::AdminMakeRequestGetUsers() ;
         QByteArray data = json::WritetoQByteAnyJson(obj);
         _sock.GuardSendMessageOtherSide(data);
     }
+    void AdminUserForm::OnFindUsersClicked() {
+        const auto predicate = ui->le_users_startname->text();
+        if(predicate.isEmpty()){
+            OnGetAllUsersClicked();
+            return;
+        }
+        json_obj obj = req_obj::AdminMakeRequestGetUsersPredicate(predicate);
+        QByteArray data = json::WritetoQByteAnyJson(obj);
+        _sock.GuardSendMessageOtherSide(data);
+    }
+

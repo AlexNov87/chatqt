@@ -327,7 +327,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="comboBox">
+               <widget class="QComboBox" name="cb_roles">
                 <item>
                  <property name="text">
                   <string>USER</string>

@@ -117,7 +117,7 @@ void AdminServerForm::OnDeleteUserClicked() {
 
 void AdminServerForm::OnModifyUserRoleClicked()  {
     const auto& master = _srv->_sql_work->GetMaster();
-    auto text = "ROLE_" + ui->comboBox->currentText();
+    auto text = "ROLE_" + ui->cb_roles->currentText();
     if(!_NAME_ROLE.contains(text)){
         FatalErrorMessageBox("NO ROLE:"+ text);
         return;

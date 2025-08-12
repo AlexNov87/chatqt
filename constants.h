@@ -31,6 +31,7 @@ struct CONSTANTS
     static chart ADMIN_ACT_UNBAN_USER;
     static chart ADMIN_ACT_UPDATE_ROLE;
     static chart ADMIN_ACT_USER_LIST;
+    static chart ADMIN_ACT_USERLIST_PREDICATE;
     static chart ADMIN_ACT_ROOM_LIST;
 
 
@@ -87,11 +88,13 @@ enum class ACTIONS {
 
 enum class ADMIN_ACTIONS {
     BAN_USER, UNBAN_USER,
-    DELETE_USER, USER_LIST,
+    DELETE_USER,
     UPDATE_ROLE,
 
     CREATE_ROOM,DELETE_ROOM,
-    ROOM_LIST,
+
+    USER_LIST,ROOM_LIST,
+    USERLIST_PREDICATE,
 
     SYSTEM
 

@@ -66,12 +66,14 @@ private:
     void OnModifyUserRoleClicked() override ;
     void OnUpdateUsersClicked() override ;
     void OnFindUsersClicked() override;
-    void OnGetAllUsersClicked() override{}
+    void OnGetAllUsersClicked() override;
 private:
     void TabUsersSelected() override{}
     void TabRoomsSelected() override{}
 private:
     void HaldleSocket();
+    void FillRoomTable(const);
+    void FillUserTable();
 
     ClientWin* _clientwin;
     SocketComplect _sock;

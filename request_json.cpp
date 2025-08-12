@@ -165,4 +165,11 @@ json_obj AdminMakeRequestGetRooms(){
     return obj;
 }
 
+json_obj AdminMakeRequestGetUsersPredicate(const str_type& pred){
+    json_obj obj = MakeAdminRequestTemplate
+        (CONSTANTS::RF_DIRECTION_SERVER, ADMIN_ACTIONS::USERLIST_PREDICATE );
+    obj.insert(CONSTANTS::LF_VALUE, pred);
+    return obj;
+}
+
 }//namespace

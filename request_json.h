@@ -42,6 +42,7 @@ json_obj AdminMakeRequestUnbanUser
     (str_type name, str_type password, str_type to_unban);
 json_obj AdminMakeRequestGetUsers();
 json_obj AdminMakeRequestGetRooms();
+json_obj AdminMakeRequestGetUsersPredicate(const str_type& pred);
 json_obj AdminMakeRequestUpdareRole
     (str_type name, str_type password, str_type to_set_role, Role role);
 

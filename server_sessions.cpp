@@ -17,17 +17,6 @@ ServerAdminSession::ServerAdminSession(std::shared_ptr<GraphicsServer> srv,
     json_obj object, SocketComplect* sock) :
 AbstractSession(srv, std::move(object), sock){}
 
-void ServerAdminSession::SendAdminRoomList(){
-    str_type room_arr = this->_srv->GetRoomlistWithOwners();
-    json_obj roomlistwithowners = ans_obj::AdminRoomList(std::move(room_arr));
-    _sock->GuardSendMessageOtherSide(json::WritetoQByteAnyJson(roomlistwithowners));
-}
-
-void ServerAdminSession::SendAdminUsersList(){
-    str_type user_arr(this->_srv->_sql_work->GetSerializedUsers());
-    json_obj userswithroles(ans_obj::AdminUserList(std::move(user_arr)));
-    _sock->GuardSendMessageOtherSide(json::WritetoQByteAnyJson(userswithroles));
-}
 
 json_obj ServerAdminSession::SessionResult() {
 
@@ -52,7 +41,6 @@ json_obj ServerAdminSession::SessionResult() {
                 if(json::IsErrorJsonObject(res)){
                     return res;
                 }
-                SendAdminRoomList();
                 return res;
     }
         break;
@@ -76,7 +64,7 @@ json_obj ServerAdminSession::SessionResult() {
              if(json::IsErrorJsonObject(res)){
                  return res;
              }
-             SendAdminRoomList();
+
              return res;
           }
     break;
@@ -94,12 +82,12 @@ json_obj ServerAdminSession::SessionResult() {
                  str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
                  str_type todelete = obj.value(CONSTANTS::LF_USER_RECIEVER).toString();
 
-                 auto res = _srv->DeleteUserJs(std::move(name),std::move(password),
+                 json_obj res = _srv->DeleteUserJs(std::move(name),std::move(password),
                                            std::move(todelete));
                  if(json::IsErrorJsonObject(res)){
                      return res;
                  }
-                 SendAdminUsersList();
+
                  return res;
              }
 
@@ -116,6 +104,22 @@ json_obj ServerAdminSession::SessionResult() {
                  str_type room_arr = this->_srv->GetRoomlistWithOwners();
                  json_obj roomlistwithowners = ans_obj::AdminRoomList(std::move(room_arr));
                  return roomlistwithowners;
+    }
+    break;
+    case ADMIN_ACTIONS::USERLIST_PREDICATE:
+    {
+        static std::set<str_type> current_complect{
+            CONSTANTS::LF_VALUE
+        };
+        auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj, current_complect);
+        if(reason){
+            return ans_obj::MakeAdminErrorObject(*reason, act);
+        }
+
+        str_type predicate = obj.value(CONSTANTS::LF_VALUE).toString();
+        str_type user_arr(this->_srv->_sql_work->GetSerializedUsersPredicate(predicate));
+        json_obj userswithroles(ans_obj::AdminUserList(std::move(user_arr)));
+        return userswithroles;
     }
     break;
     case ADMIN_ACTIONS::BAN_USER:
@@ -137,7 +141,6 @@ json_obj ServerAdminSession::SessionResult() {
                  if(json::IsErrorJsonObject(res)){
                      return res;
                  }
-                 SendAdminUsersList();
                  return res;
 
            }
@@ -161,7 +164,6 @@ json_obj ServerAdminSession::SessionResult() {
                if(json::IsErrorJsonObject(res)){
                    return res;
                }
-               SendAdminUsersList();
                return res;
            }
         break;
@@ -190,7 +192,6 @@ json_obj ServerAdminSession::SessionResult() {
                if(json::IsErrorJsonObject(res)){
                    return res;
                }
-               SendAdminUsersList();
                return res;
             }
         break;

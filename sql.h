@@ -46,6 +46,7 @@ public:
     str_type _serializated_users;
     bool _is_users_cached;
     const str_type& GetSerializedUsers();
+    str_type GetSerializedUsersPredicate(const str_type& predicate);
 
 private:
     friend class FormMaster;

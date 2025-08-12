@@ -189,4 +189,22 @@ const str_type& SQLWorker::GetSerializedUsers(){
     return _serializated_users;
 }
 
+str_type SQLWorker::GetSerializedUsersPredicate(const str_type& predicate){
+    json_arr array;
+    {
+     LGR(_mtx);
+    for(auto&& user : _user_passhash)
+    {
+        const str_type& str = user.first;
+        if(!str.contains(predicate)){continue;}
+        json_obj obj;
+        obj.insert(CONSTANTS::LF_NAME, user.first);
+        auto role = user.second.role;
+        obj.insert(CONSTANTS::LF_ROLE, _ROLE_NAME.at(role));
+        array.push_back(std::move(obj));
+    }
+    }
+    return json::WritetoQByteAnyJson(array);
+}
+
 }//namespace sql
