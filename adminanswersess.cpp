@@ -27,10 +27,6 @@ void AnswerAdminSession::StartExecute(){
         break;
     case ADMIN_ACTIONS::SYSTEM :
         break;
-    case ADMIN_ACTIONS::GET_SERIAL_ROOMS:
-        break;
-    case ADMIN_ACTIONS::GET_SERIAL_USERS:
-        break;
     }
 
 }

@@ -47,9 +47,13 @@ json_obj ServerAdminSession::SessionResult() {
                 str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
                 str_type roomname = obj.value(CONSTANTS::LF_ROOMNAME).toString();
 
-                SendAdminRoomList();
-                return _srv->AddRoomJs(std::move(name),std::move(password),
+                auto res = _srv->AddRoomJs(std::move(name),std::move(password),
                                        std::move(roomname));
+                if(json::IsErrorJsonObject(res)){
+                    return res;
+                }
+                SendAdminRoomList();
+                return res;
     }
         break;
     case ADMIN_ACTIONS::DELETE_ROOM:
@@ -66,10 +70,15 @@ json_obj ServerAdminSession::SessionResult() {
              str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
              str_type roomname = obj.value(CONSTANTS::LF_ROOMNAME).toString();
 
-             SendAdminRoomList();
-             return _srv->DeleteRoomJs(std::move(name),std::move(password),
+
+             auto res = _srv->DeleteRoomJs(std::move(name),std::move(password),
                                        std::move(roomname));
-         }
+             if(json::IsErrorJsonObject(res)){
+                 return res;
+             }
+             SendAdminRoomList();
+             return res;
+          }
     break;
     case ADMIN_ACTIONS::DELETE_USER:
              {
@@ -85,9 +94,13 @@ json_obj ServerAdminSession::SessionResult() {
                  str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
                  str_type todelete = obj.value(CONSTANTS::LF_USER_RECIEVER).toString();
 
-                 SendAdminUsersList();
-                 return _srv->DeleteUserJs(std::move(name),std::move(password),
+                 auto res = _srv->DeleteUserJs(std::move(name),std::move(password),
                                            std::move(todelete));
+                 if(json::IsErrorJsonObject(res)){
+                     return res;
+                 }
+                 SendAdminUsersList();
+                 return res;
              }
 
         break;
@@ -119,8 +132,13 @@ json_obj ServerAdminSession::SessionResult() {
                  str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
                  str_type toban = obj.value(CONSTANTS::LF_USER_RECIEVER).toString();
 
-                 return _srv->BanUserJs(std::move(name),std::move(password),
+                 auto res = _srv->BanUserJs(std::move(name),std::move(password),
                                         std::move(toban));
+                 if(json::IsErrorJsonObject(res)){
+                     return res;
+                 }
+                 SendAdminUsersList();
+                 return res;
 
            }
         break;
@@ -138,9 +156,13 @@ json_obj ServerAdminSession::SessionResult() {
                str_type password = obj.value(CONSTANTS::LF_PASSWORD).toString();
                str_type tounban = obj.value(CONSTANTS::LF_USER_RECIEVER).toString();
 
-               return _srv->UnBanUserJs(std::move(name),std::move(password),
+               auto res = _srv->UnBanUserJs(std::move(name),std::move(password),
                                       std::move(tounban));
-
+               if(json::IsErrorJsonObject(res)){
+                   return res;
+               }
+               SendAdminUsersList();
+               return res;
            }
         break;
 
@@ -163,8 +185,13 @@ json_obj ServerAdminSession::SessionResult() {
                if(!_NAME_ROLE.contains(role)){
                    return ans_obj::MakeAdminErrorObject("Role is unrecognized", act);
                };
-               return _srv->UpdateUserRoleJs(std::move(name),std::move(password),
+               auto res = _srv->UpdateUserRoleJs(std::move(name),std::move(password),
                                              std::move(tounban), _NAME_ROLE.at(role));
+               if(json::IsErrorJsonObject(res)){
+                   return res;
+               }
+               SendAdminUsersList();
+               return res;
             }
         break;
     default:

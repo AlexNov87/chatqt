@@ -45,7 +45,6 @@ private slots:
     void on_lw_members_itemClicked(QListWidgetItem *item);
 
     void on_pb_send_message_clicked();
-
     void on_pb_admin_form_clicked();
 
 private:

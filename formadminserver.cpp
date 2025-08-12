@@ -56,6 +56,7 @@ void AdminServerForm::OnDeleteRoomClicked() {
     ui->lbl_rooms_roomname->setText(_EMPTY_ROOM_LBL);
     UpdateRoomsInternal();
 }
+
 void AdminServerForm::OnCreateRoomClicked() {
     if(ui->le_rooms_addroom->text().isEmpty()){return;}
     const auto& master = _srv->_sql_work->GetMaster();
@@ -113,6 +114,7 @@ void AdminServerForm::OnDeleteUserClicked() {
     }
     OnFindUsersClicked();
 }
+
 void AdminServerForm::OnModifyUserRoleClicked()  {
     const auto& master = _srv->_sql_work->GetMaster();
     auto text = "ROLE_" + ui->comboBox->currentText();

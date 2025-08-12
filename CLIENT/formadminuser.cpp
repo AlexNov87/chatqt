@@ -65,13 +65,32 @@
     }
 
     void AdminUserForm::OnDeleteRoomClicked() {
-
+        auto obj = req_obj::AdminMakeRequestDeleteRooms(
+            _clientwin->_my_name,
+            _clientwin ->_my_pass,
+            ui->le_rooms_addroom->text()
+            );
+        QByteArray data = json::WritetoQByteAnyJson(obj);
+        _sock.GuardSendMessageOtherSide(data);
     }
     void AdminUserForm::OnCreateRoomClicked()  {
+        auto obj = req_obj::AdminMakeRequestAddRooms(
+            _clientwin->_my_name,
+            _clientwin ->_my_pass,
+            ui->le_rooms_addroom->text()
+            );
+        QByteArray data = json::WritetoQByteAnyJson(obj);
+        _sock.GuardSendMessageOtherSide(data);
     }
 
     void AdminUserForm::OnBlockUserClicked() {
-        FatalErrorMessageBox("1BlockUser CLICKED");
+        auto obj = req_obj::AdminMakeRequestBanUser(
+            _clientwin->_my_name,
+            _clientwin ->_my_pass,
+            ui->lbl_users_usertinfoname->text()
+            );
+        QByteArray data = json::WritetoQByteAnyJson(obj);
+        _sock.GuardSendMessageOtherSide(data);
     }
     void AdminUserForm::OnDeleteUserClicked() {
         auto obj = req_obj::AdminMakeRequestDeleteUser(
@@ -86,25 +105,27 @@
         FatalErrorMessageBox("1ModifyUser CLICKED");
     }
     void AdminUserForm::OnUpdateUsersClicked() {
-
-
         auto obj = req_obj::AdminMakeRequestGetUsers() ;
-         FatalErrorMessageBox("UPDUSERS CLICKED1");
         QByteArray data = json::WritetoQByteAnyJson(obj);
-        FatalErrorMessageBox("UPDUSERS CLICKED2");
-
         _sock.GuardSendMessageOtherSide(data);
-        FatalErrorMessageBox("UPDUSERS CLICKED3");
     }
 
     void AdminUserForm::OnUnblockUserClicked(){
-       FatalErrorMessageBox("1UnBlockUser CLICKED");
+        auto obj = req_obj::AdminMakeRequestUnbanUser(
+            _clientwin->_my_name,
+            _clientwin ->_my_pass,
+            ui->lbl_users_usertinfoname->text()
+            );
+        QByteArray data = json::WritetoQByteAnyJson(obj);
+        _sock.GuardSendMessageOtherSide(data);
     }
 
     void AdminUserForm::OnFindUsersClicked() {
-        FatalErrorMessageBox("1FINDUser CLICKED");
+        OnUpdateRoomClicked();
     }
 
     void AdminUserForm::OnUpdateRoomClicked(){
-
+        auto obj = req_obj::AdminMakeRequestGetRooms();
+        QByteArray data = json::WritetoQByteAnyJson(obj);
+        _sock.GuardSendMessageOtherSide(data);
     }
