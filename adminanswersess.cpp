@@ -4,10 +4,6 @@
 
 AnswerAdminSession::AnswerAdminSession(AdminUserForm* uform, const json_obj& obj)
     : _user_form(uform), _obj(obj) {
-
-    auto jss = json::WritetoQByteAnyJson(obj);
-    FatalErrorMessageBox("ADMIN+"+ jss);
-
 }
 
 void AnswerAdminSession::StartExecute(){
@@ -17,23 +13,27 @@ void AnswerAdminSession::StartExecute(){
     switch (*action) {
     case ADMIN_ACTIONS::BAN_USER :
         QMessageBox::information(nullptr, "", "Ban user success");
-       // this->_user_form->OnUpdateUsersClicked();
+        this->_user_form->OnUpdateUsersClicked();
         break;
     case ADMIN_ACTIONS::UNBAN_USER :
         QMessageBox::information(nullptr, "", "Unban user success");
+        this->_user_form->OnUpdateUsersClicked();
         break;
     case ADMIN_ACTIONS::CREATE_ROOM :
         QMessageBox::information(nullptr, "", "Create room success");
+        this->_user_form->OnUpdateRoomClicked();
         break;
     case ADMIN_ACTIONS::DELETE_ROOM :
         QMessageBox::information(nullptr, "", "Delete room success");
+        this->_user_form->OnUpdateRoomClicked();
         break;
     case ADMIN_ACTIONS::DELETE_USER :
         QMessageBox::information(nullptr, "", "Delete user success");
+        this->_user_form->OnUpdateUsersClicked();
         break;
     case ADMIN_ACTIONS::ROOM_LIST :
     {
-       // FatalErrorMessageBox("ROOOOOOOOOOOOOOM LIIIIIIST");
+
         auto object = ServerAnswerChecker::CheckAdminRooms(_obj);
         if(std::holds_alternative<json_obj>(object)){
             NonBlockingErrorBox(std::get<json_obj>(object));
@@ -55,7 +55,7 @@ void AnswerAdminSession::StartExecute(){
         break;
     case ADMIN_ACTIONS::USER_LIST :
     {
-       // FatalErrorMessageBox("USEEEEEEEEEEEER LIIIIIIST");
+
         auto object = ServerAnswerChecker::CheckAdminUsers(_obj);
         if(std::holds_alternative<json_obj>(object)){
             NonBlockingErrorBox(std::get<json_obj>(object));
@@ -77,6 +77,7 @@ void AnswerAdminSession::StartExecute(){
         break;
     case ADMIN_ACTIONS::UPDATE_ROLE :
         QMessageBox::information(nullptr, "", "Update role success");
+        this->_user_form->OnUpdateUsersClicked();
         break;
     case ADMIN_ACTIONS::SYSTEM :
         NonBlockingErrorBox(_obj);

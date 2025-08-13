@@ -102,8 +102,6 @@ void ExecuteIncoming(std::shared_ptr<GraphicsServer>srv,
     QByteArray socket_stuff = complect->socket->readAll();
     complect->AddToBuffer(socket_stuff);
 
-
-
     while (auto qbyte = complect->GetExecuteObject()){
 
         json_obj json_stuff = json::ReadJsonObjectFromQbyteArray(*qbyte);
@@ -113,7 +111,6 @@ void ExecuteIncoming(std::shared_ptr<GraphicsServer>srv,
         if(err_obj){
             QByteArray arrx;
             arrx = json::WritetoQByteAnyJson(*err_obj);
-            FatalErrorMessageBox("ERROR OB" + arrx);
             complect->GuardSendMessageOtherSide(arrx);
             continue;
         }
@@ -125,8 +122,6 @@ void ExecuteIncoming(std::shared_ptr<GraphicsServer>srv,
            answer = session.SessionResult();
         }
         else if(_ACT_ADMIN.contains(act_value)){
-            FatalErrorMessageBox("ACT ADMIN " + act_value);
-
             ServerAdminSession session(srv, std::move(json_stuff), complect);
             answer = session.SessionResult();
         }
