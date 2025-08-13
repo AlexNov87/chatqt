@@ -7,7 +7,6 @@
 class ClientWin;
 class GraphicsServer;
 #include"helpfoo.h"
-
 namespace Ui {
 class Formadmin;
 }
@@ -75,6 +74,7 @@ private:
     void FillRoomTable(const);
     void FillUserTable();
 
+    friend class AnswerAdminSession;
     ClientWin* _clientwin;
     SocketComplect _sock;
     std::shared_ptr<QTcpSocket> _socket_for_admin;

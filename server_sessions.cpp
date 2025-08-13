@@ -20,6 +20,9 @@ AbstractSession(srv, std::move(object), sock){}
 
 json_obj ServerAdminSession::SessionResult() {
 
+    QString qss = json::WritetoQByteAnyJson(obj);
+    FatalErrorMessageBox(qss);
+
     QString action_str = obj.value(CONSTANTS::LF_ACTION).toString();
     ADMIN_ACTIONS act = _NAME_ADMIN_ACTION.at(action_str);
     switch (act) {
@@ -96,18 +99,21 @@ json_obj ServerAdminSession::SessionResult() {
              {
                  str_type user_arr(this->_srv->_sql_work->GetSerializedUsers());
                  json_obj userswithroles(ans_obj::AdminUserList(std::move(user_arr)));
+                 FatalErrorMessageBox("111");
                  return userswithroles;
              }
         break;
     case ADMIN_ACTIONS::ROOM_LIST:
     {
-                 str_type room_arr = this->_srv->GetRoomlistWithOwners();
+        str_type room_arr = this->_srv->GetRoomlistWithOwners();
                  json_obj roomlistwithowners = ans_obj::AdminRoomList(std::move(room_arr));
-                 return roomlistwithowners;
+        FatalErrorMessageBox("222");
+        return roomlistwithowners;
     }
     break;
     case ADMIN_ACTIONS::USERLIST_PREDICATE:
     {
+
         static std::set<str_type> current_complect{
             CONSTANTS::LF_VALUE
         };
@@ -119,6 +125,7 @@ json_obj ServerAdminSession::SessionResult() {
         str_type predicate = obj.value(CONSTANTS::LF_VALUE).toString();
         str_type user_arr(this->_srv->_sql_work->GetSerializedUsersPredicate(predicate));
         json_obj userswithroles(ans_obj::AdminUserList(std::move(user_arr)));
+        FatalErrorMessageBox("333");
         return userswithroles;
     }
     break;

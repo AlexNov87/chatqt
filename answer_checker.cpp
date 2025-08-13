@@ -99,5 +99,118 @@ ServerAnswerChecker::CheckPublicMessageAnswer(const json_obj& obj){
     return std::nullopt;
 }
 
+std::variant<json_arr, json_obj> CheckHasFieldAndFieldIsArray
+    (const json_obj& obj, const str_type&needed_fields,
+    ADMIN_ACTIONS this_act){
+
+    std::set<str_type> fields{
+        needed_fields
+    };
+    //Если нет поля
+    if(auto reason =
+        json::IsContainsFieldAndStringAndNotEmpty(obj,fields)){
+        return ans_obj::MakeAdminErrorObject(*reason,this_act);
+    }
+
+    const str_type& roomlist_str =
+        obj.value(needed_fields).toString();
+
+    //пытаемся преобразовать в json
+    auto json_doc = json::ReadJsonFromQByte(roomlist_str.toUtf8());
+    if(!json_doc) {
+        return ans_obj::MakeAdminErrorObject
+            ("Can not read json in " + needed_fields
+                 + " field", this_act);
+    }
+
+    if(!(*json_doc).isArray()){
+        return ans_obj::MakeAdminErrorObject("The json object " +
+                                                 needed_fields + " is not array", this_act);
+    }
+
+    const json_arr& arr = (*json_doc).array();
+
+    for(auto&& element : arr){
+         if(!element.isObject()){
+
+             return ans_obj::MakeAdminErrorObject("The element in json object " +
+                                                      needed_fields +
+                        " is not json_object", this_act);
+         }
+    }
+
+    return arr;
+}
+
+
+
+std::variant<json_obj, std::map<str_type,str_type>>
+ServerAnswerChecker::CheckAdminRooms(const json_obj& obj){
+
+    ADMIN_ACTIONS this_act = ADMIN_ACTIONS::ROOM_LIST;
+    const str_type needed_field = CONSTANTS::LF_ROOMLIST;
+
+    auto object = CheckHasFieldAndFieldIsArray
+        (obj, needed_field, this_act);
+
+    if(std::holds_alternative<json_obj>(object)){
+        return std::get<json_obj>(object);
+    }
+    json_arr array = std::get<json_arr>(object);
+
+    static std::set<str_type> values {
+       CONSTANTS::LF_ROOMNAME, CONSTANTS::LF_NAME};
+
+    std::map<str_type, str_type> rooms_owners;
+
+    for(auto && obj : array){
+    const json_obj& objx =  obj.toObject();
+    if(auto reason = json::IsContainsFieldAndStringAndNotEmpty
+       (objx, values))
+       {
+        return ans_obj::MakeAdminErrorObject(*reason, this_act);
+       }
+        rooms_owners[objx.value(CONSTANTS::LF_ROOMNAME).toString()] =
+
+           objx.value(CONSTANTS::LF_NAME).toString();
+    };//for
+    return rooms_owners;
+}
+
+std::variant<json_obj, std::map<str_type,str_type>>
+ServerAnswerChecker::CheckAdminUsers(const json_obj& obj){
+
+    ADMIN_ACTIONS this_act = ADMIN_ACTIONS::USER_LIST;
+    const str_type needed_field = CONSTANTS::LF_USERS;
+
+    auto object = CheckHasFieldAndFieldIsArray
+        (obj, needed_field, this_act);
+
+    if(std::holds_alternative<json_obj>(object)){
+        return std::get<json_obj>(object);
+    }
+    json_arr array = std::get<json_arr>(object);
+
+    static std::set<str_type> values {
+            CONSTANTS::LF_ROLE, CONSTANTS::LF_NAME};
+
+    std::map<str_type, str_type> user_role;
+
+    for(auto && obj : array){
+        const json_obj& objx =  obj.toObject();
+        if(auto reason = json::IsContainsFieldAndStringAndNotEmpty
+            (objx, values))
+        {
+            return ans_obj::MakeAdminErrorObject
+                (*reason, this_act);
+        }
+        user_role[objx.value(CONSTANTS::LF_NAME).toString()] =
+
+            objx.value(CONSTANTS::LF_ROLE).toString();
+    };//for
+    return user_role;
+
+}
+
 
 

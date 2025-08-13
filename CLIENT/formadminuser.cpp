@@ -7,6 +7,7 @@
 
     void AdminUserForm::Init(){
 
+        /*ROOMS*/
         connect(ui->pb_rooms_createroom, &QCommandLinkButton::clicked,
                 this, &AdminUserForm::OnCreateRoomClicked);
         connect(ui->pb_rooms_delete_room, &QCommandLinkButton::clicked,
@@ -15,8 +16,12 @@
         connect(ui->pb_rooms_updaterooms, &QCommandLinkButton::clicked,
                 this, &AdminUserForm::OnUpdateRoomClicked);
 
+        /*USERS SETTERS*/
         connect(ui->pb_users_blockuser , &QCommandLinkButton::clicked,
                 this, &AdminUserForm::OnBlockUserClicked
+                );
+        connect(ui->pb_users_unblockuser,&QCommandLinkButton::clicked,
+                this,&AdminUserForm::OnUnblockUserClicked
                 );
         connect(ui->pb_users_deleteuser , &QCommandLinkButton::clicked,
                 this, &AdminUserForm::OnDeleteUserClicked
@@ -24,18 +29,22 @@
         connect(ui->pb_users_set_role, &QCommandLinkButton::clicked,
                 this, &AdminUserForm::OnModifyUserRoleClicked
                 );
+        /*USERS GETTERS*/
         connect(ui->pb_users_updateusers, &QCommandLinkButton::clicked,
                 this, &AdminUserForm::OnUpdateUsersClicked
                 );
-        connect(ui->pb_users_unblockuser,&QCommandLinkButton::clicked, this,
-                &AdminUserForm::OnUnblockUserClicked
-                );
+        connect(ui->pb_users_finduser, &QCommandLinkButton::clicked,
+                this, &AdminUserForm::OnFindUsersClicked);
+        connect(ui->pb_get_all_users, &QCommandLinkButton::clicked,
+                this, &AdminUserForm::OnGetAllUsersClicked);
 
+        /*ADMIN SET FALSE ADMINFORM IS OPENED*/
         connect(this, &QWidget::destroyed , [&]{ _clientwin->_admin_opened = false; });
 
         _socket_for_admin = std::make_shared<QTcpSocket>();
         _sock.socket = _socket_for_admin.get();
 
+        /*SOCKET READY READ*/
         connect(_sock.socket, &QTcpSocket::readyRead, this,
                 &AdminUserForm::HaldleSocket);
 

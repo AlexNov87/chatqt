@@ -1,31 +1,85 @@
+#include "answer_checker.h"
+#include "ui_formadmin.h"
 #include "formadmin.h"
+
 AnswerAdminSession::AnswerAdminSession(AdminUserForm* uform, const json_obj& obj)
-    : _user_form(uform), _obj(obj) {}
+    : _user_form(uform), _obj(obj) {
+
+    auto jss = json::WritetoQByteAnyJson(obj);
+    FatalErrorMessageBox("ADMIN+"+ jss);
+
+}
 
 void AnswerAdminSession::StartExecute(){
     auto action = GetAction();
     if(!action) {return;}
-   auto obb = json::WritetoQByteAnyJson(_obj);
-   FatalErrorMessageBox(obb);
-
+;
     switch (*action) {
     case ADMIN_ACTIONS::BAN_USER :
-     break;
+        QMessageBox::information(nullptr, "", "Ban user success");
+       // this->_user_form->OnUpdateUsersClicked();
+        break;
     case ADMIN_ACTIONS::UNBAN_USER :
+        QMessageBox::information(nullptr, "", "Unban user success");
         break;
     case ADMIN_ACTIONS::CREATE_ROOM :
+        QMessageBox::information(nullptr, "", "Create room success");
         break;
     case ADMIN_ACTIONS::DELETE_ROOM :
+        QMessageBox::information(nullptr, "", "Delete room success");
         break;
     case ADMIN_ACTIONS::DELETE_USER :
+        QMessageBox::information(nullptr, "", "Delete user success");
         break;
     case ADMIN_ACTIONS::ROOM_LIST :
+    {
+       // FatalErrorMessageBox("ROOOOOOOOOOOOOOM LIIIIIIST");
+        auto object = ServerAnswerChecker::CheckAdminRooms(_obj);
+        if(std::holds_alternative<json_obj>(object)){
+            NonBlockingErrorBox(std::get<json_obj>(object));
+            return;
+        }
+        const std::map<str_type,str_type>& room_owner =
+            std::get<std::map<str_type,str_type>>(object);
+        int row = 0;
+
+        QTableWidget* room_table = this->_user_form->ui->table_rooms;
+        room_table->setRowCount(room_owner.size());
+        for(auto& [room, owner] : room_owner){
+            room_table->setItem(row, 0,
+                                new QTableWidgetItem(std::move(room)));
+            room_table->setItem(row++, 1,
+                                new QTableWidgetItem(std::move(owner)));
+        }
+    }
         break;
     case ADMIN_ACTIONS::USER_LIST :
+    {
+       // FatalErrorMessageBox("USEEEEEEEEEEEER LIIIIIIST");
+        auto object = ServerAnswerChecker::CheckAdminUsers(_obj);
+        if(std::holds_alternative<json_obj>(object)){
+            NonBlockingErrorBox(std::get<json_obj>(object));
+            return;
+        }
+        const std::map<str_type,str_type>& user_role =
+            std::get<std::map<str_type,str_type>>(object);
+
+        int row = 0;
+        QTableWidget* user_table = this->_user_form->ui->table_users;
+        user_table->setRowCount(user_role.size());
+        for(auto& [user, role] : user_role){
+            user_table->setItem(row, 0,
+                                new QTableWidgetItem(std::move(user)));
+            user_table->setItem(row++, 1,
+                                new QTableWidgetItem(std::move(role)));
+        }
+    }
         break;
     case ADMIN_ACTIONS::UPDATE_ROLE :
+        QMessageBox::information(nullptr, "", "Update role success");
         break;
     case ADMIN_ACTIONS::SYSTEM :
+        NonBlockingErrorBox(_obj);
         break;
     }
 
