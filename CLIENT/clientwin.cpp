@@ -10,7 +10,7 @@ void ClientWin::onReadyRead()
     QByteArray data = clientSocket->readAll();
     sock.AddToBuffer(data);
     while (auto obj = sock.GetExecuteObject()) {
-        this->ui->lw_message->addItem(*obj);
+       // this->ui->lw_message->addItem(*obj);
         json_obj js = json::ReadJsonObjectFromQbyteArray(*obj);
         AnswerSession ans(this, js);
         ans.StartExecute();

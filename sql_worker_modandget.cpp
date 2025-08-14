@@ -122,6 +122,7 @@ json_obj SQLWorker::UpdateUserRole(str_type name, Role role, str_type initiator)
         _user_passhash.at(name).role = role;
         return ans_obj::AdminSuccessUpdateRoleUser();
     }
+    _is_users_cached = false;
     return ans_obj::MakeAdminErrorObject
         ("Role was not updated", this_act);
 
