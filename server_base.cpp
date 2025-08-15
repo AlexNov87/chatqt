@@ -8,8 +8,15 @@ ServerBase::ServerBase() : QTcpServer(){
     _max_conn = init.Object().value(LOAD_CONSTANTS::MAX_CONNECTIONS).toInt();
     _max_message_len = init.Object().value(LOAD_CONSTANTS::MAX_MESSAGE_LEN).toInt();
 
+    if(init.Object().contains(LOAD_CONSTANTS::DEFAULT_CHATROOMS)){
+
     for(auto&& el : init.Object().value(LOAD_CONSTANTS::DEFAULT_CHATROOMS).toArray()){
-        _rooms[el.toString()] = std::make_shared<ChatRoom>(this, "DEFAULT", el.toString());
+            const auto& tmp = el.toObject();
+        const auto& roomname = tmp.value(CONSTANTS::LF_ROOMNAME).toString();
+        const auto& owner =  tmp.value(CONSTANTS::LF_NAME).toString();
+        _rooms[roomname] = std::make_shared<ChatRoom>(this, owner , roomname);
+    }
+
     }
 }
 

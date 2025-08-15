@@ -47,6 +47,8 @@ private slots:
     void on_pb_send_message_clicked();
     void on_pb_admin_form_clicked();
 
+    void on_cb_roomlist_activated(int index);
+
 private:
     friend class AnswerSession;
     void SendRequestToGetRooms();

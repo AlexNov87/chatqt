@@ -111,3 +111,9 @@ void ClientWin::on_pb_admin_form_clicked()
     form->show();
 }
 
+
+void ClientWin::on_cb_roomlist_activated(int index)
+{
+    SendRequestToGetRooms();
+}
+

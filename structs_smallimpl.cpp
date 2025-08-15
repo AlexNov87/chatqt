@@ -73,12 +73,26 @@
          }
 
          const auto roomlist = _object.value(LOAD_CONSTANTS::DEFAULT_CHATROOMS).toArray();
-         //Если какой-нибудь элемент не строка, также останавливаем работу приложения.
+         //Если какой-нибудь элемент не вадидный объект, также останавливаем работу приложения.
          for (auto && room : roomlist){
-             if(!room.isString()){
-                 FatalErrorMessageBox("Member in room is not string");
+             if(!room.isObject()){
+                 FatalErrorMessageBox("Member in room is not object");
                  std::abort();
              }
+
+             const auto obj_room = room.toObject();
+
+             if(obj_room.size() != 2){
+                 FatalErrorMessageBox("Wrong size of room object");
+                 std::abort();
+             }
+             std::set<str_type> fields{CONSTANTS::LF_ROOMNAME, CONSTANTS::LF_NAME};
+             auto reason = json::IsContainsFieldAndStringAndNotEmpty(obj_room, fields);
+             if(reason){
+                 FatalErrorMessageBox(*reason);
+                 std::abort();
+             }
+
          }
 
      }
