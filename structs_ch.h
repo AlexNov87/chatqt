@@ -14,30 +14,11 @@ class ServerBase;
 class ChatUser
 {
 public:
-    ChatUser(str_type name, str_type token,  SocketComplect* socket) :
-        _name(std::move(name)),
-        _token(std::move(token)),
-        _socket(std::move(socket)) {}
-
-    QString GetName() const{
-        return _name;
-    }
-
-    QString GetToken() const{
-        return _token;
-    }
-
-    void RecievePublicMessage(const str_type& author, str_type message){
-        auto js = ans_obj::IncomePublicMessage(author, std::move(message));
-        QByteArray arr = json::WritetoQByteAnyJson(js);
-        _socket->GuardSendMessageOtherSide(arr);
-    }
-
-    void RecievePrivateMessage(const str_type& author, str_type message){
-         auto js = ans_obj::IncomePrivateMessage(author, std::move(message));
-         QByteArray arr = json::WritetoQByteAnyJson(js);
-        _socket->GuardSendMessageOtherSide(arr);
-    }
+    ChatUser(str_type name, str_type token,  SocketComplect* socket);
+    QString GetName() const;
+    QString GetToken() const;
+    void RecievePublicMessage(const str_type& author, str_type message);
+    void RecievePrivateMessage(const str_type& author, str_type message);
 
 protected:
 
@@ -66,16 +47,7 @@ protected:
 
     std::optional<json_obj> MessageCheckErrorTemplate
         (const str_type&token,const str_type& message, ACTIONS action);
-
-    void UpdateRoomMembersForAll(){
-        auto roommems = SerializatedJsonUsers();
-        auto js = ans_obj::SuccessRoomUsers(_name, std::move(roommems));
-        QByteArray buf = json::WritetoQByteAnyJson (js);
-        for (auto&& us : _users){
-           ChatUser& ch = *us.second;
-            ch._socket->GuardSendMessageOtherSide(buf);
-        };
-    }
+    void UpdateRoomMembersForAll();
 
     ServerBase* _srv;
     str_type _creator;
@@ -135,14 +107,10 @@ public:
     std::unordered_map<QString, std::shared_ptr<ChatRoom>> _rooms;
     std::unordered_map<QTcpSocket*, SocketComplect> _socket_db;
 
-    bool HasPermission(QString name, QString password, ACTIONS act){
-        return true;
-    }
-
     bool HasPermissionAdmin(QString name, QString password, ADMIN_ACTIONS act){
         return true;
     }
-    QString GetSerializatedRoomList();
+    str_type GetSerializatedRoomList();
 
     std::optional<json_obj> AuthorizatedAndHasPermissionAdmin
         (QString name, QString password, ADMIN_ACTIONS act);
@@ -160,22 +128,7 @@ public:
     bool _is_cached_roomlist = false;
     str_type _cached_roomlist_json_with_owners;
 
-    const str_type& GetRoomlistWithOwners(){
-        if(_is_cached_roomlist){return _cached_roomlist_json_with_owners;}
-        json_arr arr;
-
-        LGR(_mtx_room);
-        for (auto && [name, roomptr] : _rooms){
-            json_obj obj;
-            obj.insert(CONSTANTS::LF_ROOMNAME, name);
-            obj.insert(CONSTANTS::LF_NAME,roomptr->GetCreator());
-            arr.push_back(std::move(obj));
-        }
-
-        _cached_roomlist_json_with_owners = json::WritetoQByteAnyJson(arr);
-        _is_cached_roomlist = true;
-        return _cached_roomlist_json_with_owners;
-    }
+    const str_type& GetRoomlistWithOwners();
 
 
 };

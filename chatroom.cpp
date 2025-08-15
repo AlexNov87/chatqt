@@ -110,3 +110,13 @@ std::optional<json_obj> ChatRoom::MessageCheckErrorTemplate
     }
     return std::nullopt;
 }
+
+void ChatRoom::UpdateRoomMembersForAll(){
+    auto roommems = SerializatedJsonUsers();
+    auto js = ans_obj::SuccessRoomUsers(_name, std::move(roommems));
+    QByteArray buf = json::WritetoQByteAnyJson (js);
+    for (auto&& us : _users){
+        ChatUser& ch = *us.second;
+        ch._socket->GuardSendMessageOtherSide(buf);
+    };
+}
