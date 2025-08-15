@@ -67,34 +67,46 @@ tokenizer.cpp
 )
 
 
+
+add_library(LIB_STRUCTS
+structs.h
+structs_ch.h
+chatuser.cpp
+chatroom.cpp
+server_base.cpp
+structs_smallimpl.cpp
+socket_complect.cpp
+)
+target_link_libraries(LIB_STRUCTS PUBLIC
+LIB_SQL_WORK_AND_INIT
+)
+
+
+
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(chatqt
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
 
         mainwindesigner.cpp
-        structs.h
-        structs_smallimpl.cpp
-        structs_ch.h
+
 
         server_setters.cpp
         server_create_and_getters.cpp
 
         server_sigslots.cpp
         server_sessions.cpp
-        chatroom.cpp
         server_room.cpp
 
         formlogin.h formlogin.cpp formlogin.ui
-        socket_complect.cpp
         formadmin.h formadmin.cpp formadmin.ui
         server_setters_admin.cpp
 
         server_graphics.h
-        server_base.cpp
         formadminserver.cpp
         adminanswersess.cpp
-        chatuser.cpp
+
     )
 
 # Define target properties for Android with Qt 6 as:
@@ -121,6 +133,7 @@ target_link_libraries(chatqt
     LIB_HELPFOO
     LIB_SQL_WORK_AND_INIT
     LIB_RANDOMIZER
+    LIB_STRUCTS
     PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
